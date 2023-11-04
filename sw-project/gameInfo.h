@@ -5,7 +5,7 @@
 
 // 게임 요소
 #define MAP_BOUNDARY 1
-#define PLAUER 2
+#define PLAYER 2
 #define ENEMY 3
 #define BULLET 4	// 적 총알
 #define HP_ITEM 5
