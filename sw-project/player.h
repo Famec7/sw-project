@@ -11,30 +11,38 @@ int bulletNum = 1;					//
 
 int isShield_Flag = 0;
 
-typedef struct bullet {
-	int x;
-	int y;
+int 
 
-};
+void PlayerShowModel() {
 
+}
+void PlayerDeleteModel() {
+
+}
+void PlayerDetectedCollision() {
+
+}
+void PlayerShiftLeft() {
+
+}
+void PlayerShiftRight() {
+
+}
+void PlayerShiftUp() {
+
+}
+void PlayerShiftDown() {
+
+}
 //화면에 Player 상태 출력
-void TextPlayer() {
+void PlayerStatOutput() {
+
+}
+void ProcessKeyInput() {
 
 }
 void UseShield() {
 	isShield_Flag = 1;
-
-}
-void MoveLeft() {
-
-}
-void MoveRight() {
-
-}
-void MoveUp() {
-
-}
-void MoveDown() {
 
 }
 void Attack(char input) {
