@@ -3,7 +3,7 @@
 #include "Cursor.h"
 #include "gameInfo.h"
 
-void ShowBlock(char blockInfo[][4], int xSize, int ySize, int info)
+void ShowBlock(char blockInfo[][10], int xSize, int ySize, int info)
 {
 	COORD curPos = GetCurrentCursorPos();
 	int arrX = (curPos.X - GBOARD_ORIGIN_X) / 2;
@@ -23,7 +23,7 @@ void ShowBlock(char blockInfo[][4], int xSize, int ySize, int info)
 	SetCurrentCursorPos(curPos.X, curPos.Y);
 }
 
-void DeleteBlock(char blockInfo[][4], int xSize, int ySize)
+void DeleteBlock(char blockInfo[][10], int xSize, int ySize)
 {
 	COORD curPos = GetCurrentCursorPos();
 	int arrX = (curPos.X - GBOARD_ORIGIN_X) / 2;

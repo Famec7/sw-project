@@ -131,7 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Cursor.h" />
+    <ClInclude Include="gameInfo.h" />
     <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
