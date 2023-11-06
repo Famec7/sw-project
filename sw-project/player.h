@@ -148,6 +148,7 @@ void ManageShield() {
 	else {
 		//isShield_Flag == 0이면 시간에 제면서 실드를 재충전함
 		//실드 충전량이 6초내지 5초를 넘지않도록함
+
 	}
 }
 void Attack(int input) {
