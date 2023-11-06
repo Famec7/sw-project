@@ -44,6 +44,15 @@ void PlayerDeleteModel() {
 }
 int PlayerDetectedCollision(int x, int y) {
 	//충돌판정 구현 예정 ㅠㅠ
+	int arrX = (x - GBOARD_ORIGIN_X) / 2;
+	int arrY = y - GBOARD_ORIGIN_Y;
+	for (int y = 0;y < 5;y++) {
+		for (int x = 0;x < 5;x++) {
+			if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
+				 == 1)return 0;	//충돌
+		}
+	}
+	return 1;
 }
 int PlayerShiftLeft() {
 	if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y))return 0;
@@ -133,10 +142,12 @@ void UseShield() {
 }
 void ManageShield() {
 	if (isShield_Flag == 1) {
-			
+		//시간을 제면서 실드지속시간을 계산함
+		//실드 지속시간이 0에 수렴하게 되면 isShield_Flag = 0
 	}
 	else {
-
+		//isShield_Flag == 0이면 시간에 제면서 실드를 재충전함
+		//실드 충전량이 6초내지 5초를 넘지않도록함
 	}
 }
 void Attack(int input) {
