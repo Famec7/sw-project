@@ -80,7 +80,7 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 typedef struct _BossInfo
 {
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
-	int curPhase = 0;	// 0이 1번째 페이즈
+	int curPhase = 1;	// 0이 1번째 페이즈
 	int speed = 200;
 	std::string hpString[3];
 	int curBossHp = hpString[curPhase].length();
@@ -133,7 +133,7 @@ void DeleteBossModel(int bossModel[][10])
 		for (int x = 0; x < BOSS_SIZE_X; x++)
 		{
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
-			if (bossModel[y][x] == 1)
+			if (bossModel[y][x] != 0)
 			{
 				printf("  ");
 				gameBoardInfo[arrY + y][arrX + x] = 0;
