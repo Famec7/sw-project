@@ -80,9 +80,9 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 typedef struct _BossInfo
 {
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
-	int curPhase = 1;	// 0이 1번째 페이즈
+	int curPhase = 0;	// 0이 1번째 페이즈
 	int speed = 200;
-	std::string hpString[3];
+	std::string hpString[3] = { "baegopayoj","asdadafaf", "dsklanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
 } BossInfo;
 
@@ -149,7 +149,7 @@ void ShowBossHpUI()
 	//보스의 원래 위치보다 한칸 위에 표시
 	SetCurrentCursorPos(BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 1);
 	for (int i = 0; i < boss.curBossHp; i++)
-		std::cout << boss.hpString[i];
+		std::cout << boss.hpString[boss.curPhase][i];
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease()
