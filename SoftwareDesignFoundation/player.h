@@ -172,6 +172,20 @@ void ManageShield() {
 }
 void Attack(int input) {
 	COORD pos = GetCurrentCursorPos();
+	if (bulletNum = 1) {
 
+	}
+	else if (bulletNum = 2) {
+
+	}
+	else if (bulletNum = 3) {
+
+	}
+	else if (bulletNum = 4) {
+
+	}
+	else if (bulletNum = 5) {
+
+	}
 }
 
