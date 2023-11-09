@@ -1,5 +1,6 @@
 #pragma once
 #include "Cursor.h"
+#include "Block.h"
 #include <conio.h>
 
 // 게임 요소
