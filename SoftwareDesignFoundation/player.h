@@ -11,6 +11,8 @@ int curPosX = 10;
 int curPosY = 10;
 COORD playerCurPos;
 
+//test massage
+
 void playerInit() {
 	playerCurPos.X = 20;
 	playerCurPos.Y = 20;
