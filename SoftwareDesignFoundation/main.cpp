@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include "Cursor.h"
-#include "Block.h"
-#include "player.h"
-#include "gameInfo.h"
 #include "Boss.h"
+#include "player.h"
 
 int main()
 {
@@ -14,7 +10,7 @@ int main()
 	ShowBossHpUI();
 	while (1) {
 		PlayerStatOutput();
-		ShowBossModel(bossModel[boss.curPhase]);
+		ShowBossModel();
 		PlayerShowModel();
 	}
 	getchar();

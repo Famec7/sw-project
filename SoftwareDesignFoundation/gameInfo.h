@@ -1,7 +1,7 @@
 #pragma once
 #include "Cursor.h"
-#include "Block.h"
 #include <conio.h>
+#include <stdio.h>
 
 // 게임 요소
 #define MAP_BOUNDARY 1
@@ -20,6 +20,6 @@
 #define GBOARD_ORIGIN_X 10
 #define GBOARD_ORIGIN_Y 3
 
-int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2];
+extern int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2];
 
 //gameInfo를 갱신할 함수 추가?

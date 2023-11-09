@@ -127,6 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="gameInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalMob.cpp" />
   </ItemGroup>
