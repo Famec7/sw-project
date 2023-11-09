@@ -128,12 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NormalMob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="Cursor.h" />
+<<<<<<< HEAD
     <ClInclude Include="gameInfo.h" />
+=======
+    <ClInclude Include="NormalMob.h" />
+>>>>>>> main
     <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
