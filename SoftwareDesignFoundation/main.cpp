@@ -6,11 +6,11 @@ int main()
 {
 	RemoveCursor();
 	SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y);
-	SetCurrentCursorPos(50, 100);
-	while (1)
-	{
+	system("mode con:cols=100 lines=50");
+	
+	while (1) {
+		ShowBossModel(bossModel[boss.curPhase]);
 		PlayerShowModel();
-		/*ShowBossModel(bossModel[boss.curPhase]);*/
 	}
 	getchar();
 

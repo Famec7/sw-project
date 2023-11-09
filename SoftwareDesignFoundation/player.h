@@ -7,7 +7,6 @@
 
 int HP = MAX_HP;					//HP 초기화
 float shield = MAX_SHIELD;		//실드 초기화
-COORD playerCurPos;
 
 int bulletNum = 1;			//초알의 개수
 
@@ -22,12 +21,14 @@ int playerModel[][5] = {		//충돌판정은 머리부분 3*3만
 	{0, 2, 0, 2, 0}
 };
 
+COORD playerCurPos = { 40, 20 };
+
 void PlayerShowModel() {
-	COORD curPos = GetCurrentCursorPos();
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), playerColor);	//gray
 	for (int y = 0; y < 5; y++) {
 		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
+			SetCurrentCursorPos(playerCurPos.X + (x * 2), playerCurPos.Y + y);
 			if (playerModel[y][x] == 2)
 			{
 				printf("■");
@@ -35,7 +36,7 @@ void PlayerShowModel() {
 		}
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	//커서 색 초기화
-	SetCurrentCursorPos(curPos.X, curPos.Y);
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
 }
 void PlayerDeleteModel() {
 	COORD curPos = GetCurrentCursorPos();
