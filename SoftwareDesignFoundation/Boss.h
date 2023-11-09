@@ -82,11 +82,12 @@ typedef struct _BossInfo
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	int curPhase = 0;	// 0이 1번째 페이즈
 	int speed = 200;
-	std::string hpString[3] = { "baegopayoj","asdadafaf", "dsklanfklanfslkgns" };
+	std::string hpString[3] = { "012345","asdadafaf", "dsklanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
 } BossInfo;
 
 BossInfo boss;
+COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 1 };
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit()
@@ -94,6 +95,9 @@ void BossInit()
 	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
+	int length = boss.hpString[boss.curPhase].length();
+	hpCurPos.X = BOSS_ORIGIN_X - length / 2 + BOSS_SIZE_X;
+	hpCurPos.Y = BOSS_ORIGIN_Y - 1;
 }
 /****************보스 모델을 띄우는 함수*********************/
 void ShowBossModel(int bossModel[][10])
@@ -147,7 +151,7 @@ void DeleteBossModel(int bossModel[][10])
 void ShowBossHpUI()
 {
 	//보스의 원래 위치보다 한칸 위에 표시
-	SetCurrentCursorPos(BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 1);
+	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	for (int i = 0; i < boss.curBossHp; i++)
 		std::cout << boss.hpString[boss.curPhase][i];
 }
@@ -155,8 +159,10 @@ void ShowBossHpUI()
 void BossLifeDecrease()
 {
 	// 현재 체력 한칸 줄이고 다시 UI에 표시
+	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
+	printf(" ");
 	boss.curBossHp--;
-	ShowBossHpUI();
+	hpCurPos.X += 1;
 }
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
