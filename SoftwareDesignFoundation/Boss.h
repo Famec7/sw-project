@@ -2,7 +2,6 @@
 #include "gameInfo.h"
 #include <string>
 #include <iostream>
-#include <time.h>
 
 #define BOSS_SIZE_Y 10
 #define BOSS_SIZE_X 10
@@ -17,9 +16,21 @@ typedef struct _BossInfo
 	int speed = 200;
 	std::string hpString[3] = { "012345","asdadafaf", "dsklanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
+	int isAttack = false;
 } BossInfo;
 
+enum BossState
+{
+	Idle,
+	Pattern1,
+	Pattern2,
+	Pattern3
+};
+
 extern BossInfo boss;
+
+/*보스 업데이트 함수*/
+void BossUpdate();
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit();
@@ -39,3 +50,5 @@ void BossShiftRight();
 void BossRandomMove();
 /****************보스 충돌 함수*********************/
 int BossDetectedCollision(int posX, int posY);
+
+void BossPattern1();

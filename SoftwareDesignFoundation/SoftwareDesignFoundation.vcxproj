@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="gameInfo.cpp" />
     <ClCompile Include="main.cpp" />
@@ -136,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="gameInfo.h" />
     <ClInclude Include="NormalMob.h" />

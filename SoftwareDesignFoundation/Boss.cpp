@@ -1,22 +1,77 @@
 #include "Boss.h"
+#include "Bullet.h"
+#include "gameInfo.h"
 
-int hellBulletModel[10] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 1, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 2 };
 
 void ShowMuzzle() {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
+	int arrX = (muzzleCurPos.X - GBOARD_ORIGIN_X) / 2;
+	int arrY = muzzleCurPos.Y - GBOARD_ORIGIN_Y;
+	int num = rand() % 40;
 
-	int _switch = 1;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
-		if (hellBulletModel[i] == 1)
+		gameBoardInfo[arrY][arrX + i] = 1;
+		
+
+		if (num == i || num == i + 1 || num == i - 1)
+		{
+			hellBulletModel[i] = 1;
 			printf("■");
-		else if (hellBulletModel[i] == 2)
+		}
+		else
+		{
+			hellBulletModel[i] = 2;
 			printf("▣");
-		hellBulletModel[i] += _switch;
-		_switch *= -1;
+		}
+	}
+
+	/*for (int i = 0; i < 40; i++)
+	{
+		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
+		gameBoardInfo[arrY][arrX + i] = 1;
+		if (hellBulletModel[i] == 1)
+		{
+			printf("■");
+			hellBulletModel[i] += 1;
+		}
+		else if (hellBulletModel[i] == 2)
+		{
+			printf("▣");
+			hellBulletModel[i] -= 1;
+		}
+	}*/
+}
+
+void DeleteMuzzle() {
+	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
+	int arrX = (muzzleCurPos.X - GBOARD_ORIGIN_X) / 2;
+	int arrY = muzzleCurPos.Y - GBOARD_ORIGIN_Y;
+
+	for (int i = 0; i < 40; i++)
+	{
+		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
+		gameBoardInfo[arrY][arrX + i] = 0;
+		printf("  ");
+	}
+}
+
+void FireBullet() {
+	srand(time(NULL));
+	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
+
+	for (int i = 0; i < 40; i++)
+	{
+		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1);
+		if (hellBulletModel[i] == 2)
+		{
+			double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.4;
+			MakeBullet(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1, 4, speed);
+		}
 	}
 }
 
@@ -87,7 +142,11 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	}
 };
 
+// 보스의 현재 상태
+BossState curState = BossState::Idle;
+// 보스 정보
 BossInfo boss;
+// 보스의 hp를 띄울 위치
 COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 1 };
 
 /****************보스 스탯 초기화 함수*********************/
@@ -99,6 +158,8 @@ void BossInit()
 	int length = boss.hpString[boss.curPhase].length();
 	hpCurPos.X = BOSS_ORIGIN_X - length / 2 + BOSS_SIZE_X;
 	hpCurPos.Y = BOSS_ORIGIN_Y - 1;
+	curState = BossState::Idle;
+	boss.isAttack = false;
 }
 /****************보스 모델을 띄우는 함수*********************/
 void ShowBossModel()
@@ -238,4 +299,64 @@ int BossDetectedCollision(int posX, int posY)
 	}
 
 	return 0;
+}
+
+// 4초동안 총구 돌리고 3초동안 멈출 때 총알 쏘기
+void BossPattern1()
+{
+	if (Time.time > 0)
+	{
+		if ((int)Time.time % 4 == 0 && boss.isAttack == 0)
+		{
+			boss.isAttack = 1;
+		}
+		else if (boss.isAttack == 1) {
+			ShowMuzzle();
+			boss.isAttack = 2;
+		}
+		else if (boss.isAttack == 2) {
+			FireBullet();
+			if ((int)Time.time % 3 == 0)
+				boss.isAttack = 0;
+		}
+	}
+}
+
+void BossPattern2()
+{
+
+}
+
+void BossPattern3()
+{
+
+}
+
+// 6 ~ 7초동안 idle
+// 10~13초 동안 pattern
+void BossUpdate()
+{
+	/*int idleTime = rand() % 2 + 6;*/
+	int idleTime = 2;
+	if (Time.time > idleTime)
+		curState = BossState::Pattern1;
+
+	ShowBossModel();
+	switch (curState)
+	{
+	case Idle:
+		BossRandomMove();
+		break;
+	case Pattern1:
+		BossPattern1();
+		break;
+	case Pattern2:
+		BossPattern2();
+		break;
+	case Pattern3:
+		BossPattern3();
+		break;
+	default:
+		break;
+	}
 }

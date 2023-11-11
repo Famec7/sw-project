@@ -2,6 +2,7 @@
 #include "Cursor.h"
 #include <conio.h>
 #include <stdio.h>
+#include <time.h>
 
 // 게임 요소
 #define MAP_BOUNDARY 1
@@ -22,4 +23,13 @@
 
 extern int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2];
 
+struct TimeStruct{
+	double time;
+	double deltaTime;
+};
+
+extern TimeStruct Time;
+
 //gameInfo를 갱신할 함수 추가?
+void InitTime();
+void UpdateTime();

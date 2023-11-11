@@ -1,4 +1,5 @@
 #include "Boss.h"
+#include "Bullet.h"
 #include "player.h"
 
 int main()
@@ -8,13 +9,14 @@ int main()
 	system("mode con:cols=100 lines=50");
 
 	ShowBossHpUI();
+	InitTime();
 	while (1) {
-		PlayerStatOutput();
-		ShowBossModel();
-		PlayerShowModel();
+		UpdateTime();
+		BossUpdate();
+		UpdateBullet();
+		Sleep(100);
 	}
 	getchar();
-
 
 	return 0;
 }
