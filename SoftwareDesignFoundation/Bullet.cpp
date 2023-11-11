@@ -59,13 +59,14 @@ void UpdateBullet()
 			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			printf("  ");
 			gameBoardInfo[arrY][arrX] = 0;
+			(*itr).curPos.Y += 1;
 			if ((*itr).info == BULLET)
 				(*itr).curPos.Y += 1;
 			else
 				(*itr).curPos.Y -= 1;
 			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			if (!BulletDetectedCollision((*itr).curPos.X, (*itr).curPos.Y, (*itr).info)) {
-				bullets.erase(itr);
+				itr = bullets.erase(itr);
 				continue;
 			}
 			gameBoardInfo[arrY][arrX] = (*itr).info;
