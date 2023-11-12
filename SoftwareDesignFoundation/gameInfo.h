@@ -14,11 +14,11 @@
 #define BOSS 7
 
 // 맵 크기
-#define GBOARD_HEIGHT 100
-#define GBOARD_WIDTH 100
+#define GBOARD_HEIGHT 40
+#define GBOARD_WIDTH 40
 
 // 맵 위치
-#define GBOARD_ORIGIN_X 10
+#define GBOARD_ORIGIN_X 7
 #define GBOARD_ORIGIN_Y 3
 
 extern int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2];
@@ -33,3 +33,4 @@ extern TimeStruct Time;
 //gameInfo를 갱신할 함수 추가?
 void InitTime();
 void UpdateTime();
+void DrawGameBoard(void);
