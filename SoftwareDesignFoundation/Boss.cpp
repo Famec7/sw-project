@@ -214,17 +214,23 @@ void ShowBossHpUI()
 {
 	//보스의 원래 위치보다 한칸 위에 표시
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
-	for (int i = 0; i < boss.curBossHp; i++)
+	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
+	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++)
 		std::cout << boss.hpString[boss.curPhase][i];
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease()
 {
 	// 현재 체력 한칸 줄이고 다시 UI에 표시
-	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
-	printf(" ");
+	for (int i = 0; i < boss.hpString[boss.curPhase].length(); i++)
+	{
+		SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
+		printf(" ");
+	}
 	boss.curBossHp--;
-	hpCurPos.X += 1;
+	if (boss.curBossHp == 0)
+		boss.curPhase += 1;
+	ShowBossHpUI();
 }
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
@@ -336,6 +342,9 @@ void BossPattern3()
 // 10~13초 동안 pattern
 void BossUpdate()
 {
+	if (BossDetectedCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
+		BossLifeDecrease();
+
 	/*int idleTime = rand() % 2 + 6;*/
 	int idleTime = 2;
 	if (Time.time > idleTime)
