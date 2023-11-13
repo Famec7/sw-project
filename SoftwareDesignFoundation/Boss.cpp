@@ -16,7 +16,7 @@ void ShowMuzzle() {
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
 		gameBoardInfo[arrY][arrX + i] = 1;
-		
+
 
 		if (num == i || num == i + 1 || num == i - 1)
 		{
@@ -308,22 +308,26 @@ int BossDetectedCollision(int posX, int posY)
 }
 
 // 4ÃÊµ¿¾È ÃÑ±¸ µ¹¸®°í 3ÃÊµ¿¾È ¸ØÃâ ¶§ ÃÑ¾Ë ½î±â
+// isAttack = 1 -> ÃÑ±¸ º¸ÀÌ±â, isAttack = 2 -> ÃÑ¾Ë ½î±â
 void BossPattern1()
 {
-	if (Time.time > 0)
+	static double showMuzzleTime = 4;
+	static double fireBulletTime = 3;
+
+	showMuzzleTime -= Time.deltaTime;
+	if (showMuzzleTime < 0 && boss.isAttack == 0)
 	{
-		if ((int)Time.time % 4 == 0 && boss.isAttack == 0)
+		boss.isAttack = 1;
+		ShowMuzzle();
+	}
+	else if (boss.isAttack == 1) {
+		/*FireBullet();*/
+		fireBulletTime -= Time.deltaTime;
+		if (fireBulletTime < 0)
 		{
-			boss.isAttack = 1;
-		}
-		else if (boss.isAttack == 1) {
-			ShowMuzzle();
-			boss.isAttack = 2;
-		}
-		else if (boss.isAttack == 2) {
-			FireBullet();
-			if ((int)Time.time % 3 == 0)
-				boss.isAttack = 0;
+			boss.isAttack = 0;
+			showMuzzleTime = 4;
+			fireBulletTime = 3;
 		}
 	}
 }
@@ -339,16 +343,30 @@ void BossPattern3()
 }
 
 // 6 ~ 7ÃÊµ¿¾È idle
-// 10~13ÃÊ µ¿¾È pattern
+// 10~11ÃÊ µ¿¾È pattern
+
+double idleTime = rand() % 2 + 6;
+double patternOneTime = rand() % 2 + 10;
+
 void BossUpdate()
 {
 	if (BossDetectedCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
-	/*int idleTime = rand() % 2 + 6;*/
-	int idleTime = 2;
-	if (Time.time > idleTime)
+	if (idleTime > 0 && curState == BossState::Idle)
+		idleTime -= Time.deltaTime;
+	else if(idleTime < 0) {
 		curState = BossState::Pattern1;
+		idleTime = rand() % 2 + 6;
+	}
+
+	if (curState == BossState::Pattern1 && patternOneTime > 0)
+		patternOneTime -= Time.deltaTime;
+	else if(patternOneTime < 0) {
+		curState = BossState::Idle;
+		patternOneTime = rand() % 2 + 10;
+		DeleteMuzzle();
+	}
 
 	ShowBossModel();
 	switch (curState)
