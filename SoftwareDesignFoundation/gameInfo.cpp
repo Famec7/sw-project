@@ -33,13 +33,16 @@ void DrawGameBoard(void)
         if (y == GBOARD_HEIGHT)
         {
             printf("¦¦");
+            gameBoardInfo[GBOARD_HEIGHT][0] = MAP_BOUNDARY;
         }
         else if (y == 0) {
             printf("¦£");
+            gameBoardInfo[0][0] = MAP_BOUNDARY;
         }
         else
         {
             printf("¦¢");
+            gameBoardInfo[y][0] = MAP_BOUNDARY;
         }
     }
     for (int y = 0; y <= GBOARD_HEIGHT; y++)
@@ -48,24 +51,29 @@ void DrawGameBoard(void)
         if (y == GBOARD_HEIGHT)
         {
             printf(" ¦¥ ");
+            gameBoardInfo[GBOARD_HEIGHT][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
         else if (y == 0) {
             printf(" ¦¤");
+            gameBoardInfo[0][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
         else
         {
             printf(" ¦¢");
+            gameBoardInfo[y][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
     }
     for (int x = 1; x <= GBOARD_WIDTH + 1; x++)
     {
         SetCurrentCursorPos(GBOARD_ORIGIN_X + x * 2, GBOARD_ORIGIN_Y + GBOARD_HEIGHT);
         printf("¦¡");
+        gameBoardInfo[GBOARD_HEIGHT][x] = MAP_BOUNDARY;
     }
     for (int x = 1; x <= GBOARD_WIDTH + 1; x++)
     {
         SetCurrentCursorPos(GBOARD_ORIGIN_X + x * 2, GBOARD_ORIGIN_Y);
         printf("¦¡");
+        gameBoardInfo[0][x] = MAP_BOUNDARY;
     }
 
 
