@@ -7,7 +7,7 @@
 #define BOSS_SIZE_X 10
 
 #define BOSS_ORIGIN_X 40
-#define BOSS_ORIGIN_Y 2
+#define BOSS_ORIGIN_Y 4
 
 typedef struct _BossInfo
 {

@@ -4,7 +4,7 @@
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
-COORD muzzleCurPos = { GBOARD_ORIGIN_X + 1, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 2 };
+COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 2 };
 
 void ShowMuzzle() {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
@@ -147,7 +147,7 @@ BossState curState = BossState::Idle;
 // 보스 정보
 BossInfo boss;
 // 보스의 hp를 띄울 위치
-COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 1 };
+COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 2 };
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit()
@@ -235,6 +235,8 @@ void BossLifeDecrease()
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
 {
+	if (!BossDetectedCollision(boss.curPos.X - 1, boss.curPos.Y))
+		return;
 	DeleteBossModel();
 	boss.curPos.X -= 2;
 	ShowBossModel();
@@ -242,6 +244,8 @@ void BossShiftLeft()
 /****************보스를 오른쪽으로 이동하는 함수*********************/
 void BossShiftRight()
 {
+	if (!BossDetectedCollision(boss.curPos.X + 1, boss.curPos.Y))
+		return;
 	DeleteBossModel();
 	boss.curPos.X += 2;
 	ShowBossModel();
@@ -321,7 +325,7 @@ void BossPattern1()
 		ShowMuzzle();
 	}
 	else if (boss.isAttack == 1) {
-		/*FireBullet();*/
+		FireBullet();
 		fireBulletTime -= Time.deltaTime;
 		if (fireBulletTime < 0)
 		{
