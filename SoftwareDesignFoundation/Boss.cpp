@@ -255,38 +255,35 @@ void BossRandomMove()
 {
 	srand(time(NULL));
 	int direction = rand() % 2;	// 방향 정하기 0 : 오른쪽, 1 : 왼쪽
-	int minDistance = 3;	// 최소 이동거리
-	int range = 10;	// 이동 범위
 	if (direction == 0)
-	{
-		int right = rand() % range + minDistance;
-		for (int i = 0; i < right; i++)
-		{
-			BossShiftRight();
-			Sleep(boss.speed);
-		}
-		int left = rand() % range + minDistance;
-		for (int i = 0; i < left; i++)
-		{
-			BossShiftLeft();
-			Sleep(boss.speed);
-		}
-	}
+		BossShiftRight();
 	else
-	{
-		int left = rand() % range + minDistance;
-		for (int i = 0; i < left; i++)
-		{
-			BossShiftLeft();
-			Sleep(boss.speed);
-		}
-		int right = rand() % range + minDistance;
-		for (int i = 0; i < right; i++)
-		{
-			BossShiftRight();
-			Sleep(boss.speed);
-		}
-	}
+		BossShiftLeft();
+	//int minDistance = 3;	// 최소 이동거리
+	//int range = 10;	// 이동 범위
+	//static int right = rand() % range + minDistance;
+	//static int left = rand() % range + minDistance;
+	//static int curSpeed = boss.speed;
+	//if (direction == 0)
+	//{
+	//	for (int i = 0; i < right; i++)
+	//		BossShiftRight();
+	//	if(right == 0)
+	//		BossShiftLeft();
+	//}
+	//else
+	//{
+	//	for (int i = 0; i < left; i++)
+	//	{
+	//		BossShiftLeft();
+	//		Sleep(boss.speed);
+	//	}
+	//	for (int i = 0; i < right; i++)
+	//	{
+	//		BossShiftRight();
+	//		Sleep(boss.speed);
+	//	}
+	//}
 }
 /****************보스 충돌 함수*********************/
 int BossDetectedCollision(int posX, int posY)
@@ -359,14 +356,14 @@ void BossUpdate()
 
 	if (idleTime > 0 && curState == BossState::Idle)
 		idleTime -= Time.deltaTime;
-	else if(idleTime < 0) {
+	else if (idleTime < 0) {
 		curState = BossState::Pattern1;
 		idleTime = rand() % 2 + 6;
 	}
 
 	if (curState == BossState::Pattern1 && patternOneTime > 0)
 		patternOneTime -= Time.deltaTime;
-	else if(patternOneTime < 0) {
+	else if (patternOneTime < 0) {
 		curState = BossState::Idle;
 		patternOneTime = rand() % 2 + 10;
 		DeleteMuzzle();

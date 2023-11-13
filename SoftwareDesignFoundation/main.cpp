@@ -11,7 +11,10 @@ int main()
 	DrawGameBoard();
 	ShowBossHpUI();
 	InitTime();
+	playerInit();
+	PlayerShowModel();
 	while (1) {
+		ProcessKeyInput();
 		UpdateTime();
 		BossUpdate();
 		UpdateBullet();
