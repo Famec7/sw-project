@@ -19,6 +19,7 @@ int main()
 		BossUpdate();
 		UpdateBullet();
 		PlayerStatOutput();
+		ManageShield();
 
 		if (IsGameOver()) {
 			SetCurrentCursorPos(25, 25);
