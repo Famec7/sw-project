@@ -133,6 +133,7 @@
     <ClCompile Include="gameInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalMob.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
