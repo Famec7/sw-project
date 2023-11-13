@@ -1,24 +1,24 @@
 #include "player.h"
 
-int HP = MAX_HP;					//HP ÃÊ±âÈ­
-float shield = MAX_SHIELD;		//½Çµå ÃÊ±âÈ­
+int HP = MAX_HP;					//HP ì´ˆê¸°í™”
+float shield = MAX_SHIELD;		//ì‹¤ë“œ ì´ˆê¸°í™”
 COORD playerCurPos;
 
 int countTime1, countTime2;
 
-int bulletNum = 3;			//ÃÊ¾ËÀÇ °³¼ö
+int bulletNum = 3;			//ì´ˆì•Œì˜ ê°œìˆ˜
 
-int isShield_Flag = 0;		//½Çµå°¡ »ç¿ëÁßÀÎ°¡ 0 == ¹Ì»ç¿ë, 1 == »ç¿ëÁß
+int isShield_Flag = 0;		//ì‹¤ë“œê°€ ì‚¬ìš©ì¤‘ì¸ê°€ 0 == ë¯¸ì‚¬ìš©, 1 == ì‚¬ìš©ì¤‘
 
-int playerColor = 7;		//ÇÃ·¹ÀÌ¾îÀÇ »ö 7 == gray, 9 == ÆÄ¶õ»ö(½Çµå), 4 == »¡°£»ö(¸Â¾ÒÀ»¶§)
-int playerModel[5][5] = {		//Ãæµ¹ÆÇÁ¤Àº ¸Ó¸®ºÎºĞ 3*3¸¸
+int playerColor = 7;		//í”Œë ˆì´ì–´ì˜ ìƒ‰ 7 == gray, 9 == íŒŒë€ìƒ‰(ì‹¤ë“œ), 4 == ë¹¨ê°„ìƒ‰(ë§ì•˜ì„ë•Œ)
+int playerModel[5][5] = {		//ì¶©ëŒíŒì •ì€ ë¨¸ë¦¬ë¶€ë¶„ 3*3ë§Œ
 	{0, 2, 2, 2, 0},
 	{0, 2, 2, 2, 0},
 	{2, 2, 2, 2, 2},
 	{0, 2, 2, 2, 0},
 	{0, 2, 0, 2, 0}
 };
-//È­¸é¿¡ Player »óÅÂ Ãâ·Â
+//í™”ë©´ì— Player ìƒíƒœ ì¶œë ¥
 char hpText[] = { 'P', 'l', 'a', 'y', 'e', 'r',
 				'h', 'p',
 				'i', 's',
@@ -33,37 +33,33 @@ void PlayerShowModel() {
 	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
 	COORD curPos = GetCurrentCursorPos();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), playerColor);	//gray
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
-			if (playerModel[y][x] == 2)printf("¡á");
-		}
-	}
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	//Ä¿¼­ »ö ÃÊ±âÈ­
-	int x, y, arrCurX, arrCurY;
+	int x, y;
+	int arrCurX = (curPos.X - GBOARD_ORIGIN_X) / 2;
+	int arrCurY = (curPos.Y - GBOARD_ORIGIN_Y);
 	for (y = 0; y < 5; y++) {
 		for (x = 0; x < 5; x++) {
-			arrCurX = (curPos.X - GBOARD_ORIGIN_X);
-			arrCurY = (curPos.Y - GBOARD_ORIGIN_Y);
-			if (playerModel[y][x] == 2)gameBoardInfo[arrCurY + y][arrCurX + x] = 2;
+			if (playerModel[y][x] == 2) {
+				SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
+				printf("â– ");
+				gameBoardInfo[arrCurY + y][arrCurX + x] = 2;
+			}
 		}
 	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);	//ì»¤ì„œ ìƒ‰ ì´ˆê¸°í™”
 }
 void PlayerDeleteModel() {
 	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
 	COORD curPos = GetCurrentCursorPos();
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
-			if (playerModel[y][x] == 2)printf("  ");
-		}
-	}
-	int x, y, arrCurX, arrCurY;
+	int x, y;
+	int arrCurX = (curPos.X - GBOARD_ORIGIN_X) / 2;
+	int arrCurY = (curPos.Y - GBOARD_ORIGIN_Y);
 	for (y = 0; y < 5; y++) {
 		for (x = 0; x < 5; x++) {
-			arrCurX = (curPos.X - GBOARD_ORIGIN_X) / 2;
-			arrCurY = (curPos.Y - GBOARD_ORIGIN_Y);
-			if (playerModel[y][x] == 2)gameBoardInfo[arrCurY + y][arrCurX + x] = 0;
+			SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
+			if (playerModel[y][x] == 2) {
+				printf("  ");
+				gameBoardInfo[arrCurY + y][arrCurX + x] = 0;
+			}
 		}
 	}
 }
@@ -74,18 +70,13 @@ int PlayerDetectedCollision(int x, int y) {
 		for (int x = 0; x < 5; x++) {
 			if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
 				HP--;
-				return 1;	//ÃÑ¾Ë Ãæµ¹
+				return 1;	//ì´ì•Œ ì¶©ëŒ
 			}
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
-				== 1)return 0;	//º® Ãæµ¹
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
-				== 3)return 0;	//Àû Ãæµ¹
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
-				== 5)return 0;	//¾ÆÀÌÅÛ Ãæµ¹
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
-				== 6)return 0;	//¾ÆÀÌÅÛ Ãæµ¹
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x]
-				== 7)return 0;	//º¸½º Ãæµ¹
+			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 1)return 0;	//ë²½ ì¶©ëŒ
+			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 3)return 0;	//ì  ì¶©ëŒ
+			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 5)return 0;	//ì•„ì´í…œ ì¶©ëŒ
+			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 6)return 0;	//ì•„ì´í…œ ì¶©ëŒ
+			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 7)return 0;	//ë³´ìŠ¤ ì¶©ëŒ
 		}
 	}
 	return 1;
@@ -123,23 +114,24 @@ int PlayerShiftDown() {
 	return 1;
 }
 void PlayerStatOutput() {
-	SetCurrentCursorPos(10, 10);
+	SetCurrentCursorPos(10, 45);
 	printf("                 ");
-	SetCurrentCursorPos(10, 10);
+	SetCurrentCursorPos(10, 45);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 	for (int i = 0; i < 14; i++) {
-		if (i == HP)break;	//HP°¡ 2ÀÌ¸é pl¸¸ Ãâ·Â, i°¡ 2ÀÌ¸é a¸¦ Ãâ·ÂÇÏ°ÔµÇ, ÀÌ¸¦ ¸øÇÏ°Ô ¸·À½
+		if (i == HP)break;	//HPê°€ 2ì´ë©´ plë§Œ ì¶œë ¥, iê°€ 2ì´ë©´ aë¥¼ ì¶œë ¥í•˜ê²Œë˜, ì´ë¥¼ ëª»í•˜ê²Œ ë§‰ìŒ
 		if (i == 6 || i == 8 || i == 10) printf(" ");
 		printf("%c", hpText[i]);
 	}
-	SetCurrentCursorPos(10, 16);
+	SetCurrentCursorPos(10, 46);
 	printf("                 ");
-	SetCurrentCursorPos(10, 16);
+	SetCurrentCursorPos(10, 46);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 	for (int i = 0; i < 6; i++) {
 		if (i == (int)shield)break;
 		printf("%c", shieldText[i]);
 	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 void Attack(int input) {
 	COORD pos = playerCurPos;
@@ -228,18 +220,18 @@ void ProcessKeyInput() {	//GetAsyncKeyState
 }
 void UseShield() {
 	if (shield >= 6.0f) {
-		isShield_Flag = 1;		//½Çµå »ç¿ëÁß
-		playerColor = 9;		//ÇÃ·¹ÀÌ¾îÀÇ »öÀº ÆÄ¶õ»ö
+		isShield_Flag = 1;		//ì‹¤ë“œ ì‚¬ìš©ì¤‘
+		playerColor = 9;		//í”Œë ˆì´ì–´ì˜ ìƒ‰ì€ íŒŒë€ìƒ‰
 	}
 }
 void ManageShield() {
 	if (isShield_Flag == 1) {
-		//½Ã°£À» Á¦¸é¼­ ½ÇµåÁö¼Ó½Ã°£À» °è»êÇÔ
-		//½Çµå Áö¼Ó½Ã°£ÀÌ 0¿¡ ¼ö·ÅÇÏ°Ô µÇ¸é isShield_Flag = 0
+		//ì‹œê°„ì„ ì œë©´ì„œ ì‹¤ë“œì§€ì†ì‹œê°„ì„ ê³„ì‚°í•¨
+		//ì‹¤ë“œ ì§€ì†ì‹œê°„ì´ 0ì— ìˆ˜ë ´í•˜ê²Œ ë˜ë©´ isShield_Flag = 0
 	}
 	else {
-		//isShield_Flag == 0ÀÌ¸é ½Ã°£¿¡ Á¦¸é¼­ ½Çµå¸¦ ÀçÃæÀüÇÔ
-		//½Çµå ÃæÀü·®ÀÌ 6ÃÊ³»Áö 5ÃÊ¸¦ ³ÑÁö¾Êµµ·ÏÇÔ
+		//isShield_Flag == 0ì´ë©´ ì‹œê°„ì— ì œë©´ì„œ ì‹¤ë“œë¥¼ ì¬ì¶©ì „í•¨
+		//ì‹¤ë“œ ì¶©ì „ëŸ‰ì´ 6ì´ˆë‚´ì§€ 5ì´ˆë¥¼ ë„˜ì§€ì•Šë„ë¡í•¨
 	}
 }
 void ManageGameboard() {
@@ -257,7 +249,7 @@ void ManageGameboard() {
 			}
 			if (gameBoardInfo[i][j] == 2) {
 				SetCurrentCursorPos(j * 2, i);
-				//printf("¡á");
+				//printf("â– ");
 				//gameBoardInfo[i][j] = 0;
 				//SetCurrentCursorPos(i + GBOARD_ORIGIN_Y, j + GBOARD_ORIGIN_X);
 				//printf(" ");
@@ -267,4 +259,9 @@ void ManageGameboard() {
 			}
 		}
 	}
+}
+
+int IsGameOver() {
+	if (HP <= 0)return 1;
+	else return 0;
 }
