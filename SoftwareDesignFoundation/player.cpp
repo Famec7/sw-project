@@ -1,7 +1,7 @@
 #include "player.h"
 
 int HP = MAX_HP;					//HP 초기화
-float shield = MAX_SHIELD;		//실드 초기화
+double shield = MAX_SHIELD;		//실드 초기화
 COORD playerCurPos;
 
 int countTime1, countTime2;
@@ -68,15 +68,17 @@ int PlayerDetectedCollision(int x, int y) {
 	int arrY = y - GBOARD_ORIGIN_Y;
 	for (int y = 0; y < 5; y++) {
 		for (int x = 0; x < 5; x++) {
-			if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
-				HP--;
-				return 1;	//총알 충돌
+			if (isShield_Flag == 0) {
+				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
+					HP--;
+					return 1;	//총알 충돌
+				}
+				else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 1)return 0;	//벽 충돌
+				else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 3)return 0;	//적 충돌
+				else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 5)return 0;	//아이템 충돌
+				else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 6)return 0;	//아이템 충돌
+				else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 7)return 0;	//보스 충돌
 			}
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 1)return 0;	//벽 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 3)return 0;	//적 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 5)return 0;	//아이템 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 6)return 0;	//아이템 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 7)return 0;	//보스 충돌
 		}
 	}
 	return 1;
@@ -208,7 +210,7 @@ void ProcessKeyInput() {	//GetAsyncKeyState
 				PlayerShiftDown();
 				break;
 			case 13:		//enter
-				//UseShield();
+				UseShield();
 				break;
 			default:
 				Attack(key);
@@ -226,12 +228,17 @@ void UseShield() {
 }
 void ManageShield() {
 	if (isShield_Flag == 1) {
-		//시간을 제면서 실드지속시간을 계산함
-		//실드 지속시간이 0에 수렴하게 되면 isShield_Flag = 0
+		shield -= Time.deltaTime;
+		if (shield <= 0) {
+			isShield_Flag = 0;
+			shield = 0;
+			playerColor = 7;
+		}
 	}
 	else {
-		//isShield_Flag == 0이면 시간에 제면서 실드를 재충전함
-		//실드 충전량이 6초내지 5초를 넘지않도록함
+		if (shield >= MAX_SHIELD)return;
+		shield += Time.deltaTime;
+		if (shield >= MAX_SHIELD)shield = MAX_SHIELD;
 	}
 }
 void ManageGameboard() {
@@ -260,7 +267,6 @@ void ManageGameboard() {
 		}
 	}
 }
-
 int IsGameOver() {
 	if (HP <= 0)return 1;
 	else return 0;
