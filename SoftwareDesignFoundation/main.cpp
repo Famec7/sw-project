@@ -18,6 +18,14 @@ int main()
 		UpdateTime();
 		BossUpdate();
 		UpdateBullet();
+		PlayerStatOutput();
+		ManageShield();
+
+		if (IsGameOver()) {
+			SetCurrentCursorPos(25, 25);
+			printf("GAME OVER!!");
+			return 0;
+		}
 		Sleep(100);
 	}
 	getchar();
