@@ -12,13 +12,19 @@ void ShowMuzzle() {
 	int arrY = muzzleCurPos.Y - GBOARD_ORIGIN_Y;
 	int num = rand() % 40;
 
+	int start = num - 3;
+	int end = num + 2;
+
+	if (start < 0)
+		start = 0;
+	if (end > 40)
+		end = 40;
 	for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
 		gameBoardInfo[arrY][arrX + i] = 1;
 
-
-		if (num == i || num == i + 1 || num == i - 1)
+		if (i >= start && i <= end)
 		{
 			hellBulletModel[i] = 1;
 			printf("бс");
