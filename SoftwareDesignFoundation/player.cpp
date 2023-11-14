@@ -43,7 +43,7 @@ void PlayerShowModel() {
 	int x, y, arrCurX, arrCurY;
 	for (y = 0; y < 5; y++) {
 		for (x = 0; x < 5; x++) {
-			arrCurX = (curPos.X - GBOARD_ORIGIN_X);
+			arrCurX = (curPos.X - GBOARD_ORIGIN_X) / 2;
 			arrCurY = (curPos.Y - GBOARD_ORIGIN_Y);
 			if (playerModel[y][x] == 2)gameBoardInfo[arrCurY + y][arrCurX + x] = 2;
 		}
