@@ -155,6 +155,7 @@ void BossInit()
 	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
+	boss.speed = 0.2;
 	int length = boss.hpString[boss.curPhase].length();
 	hpCurPos.X = BOSS_ORIGIN_X - length / 2 + BOSS_SIZE_X;
 	hpCurPos.Y = BOSS_ORIGIN_Y - 1;
@@ -250,15 +251,22 @@ void BossShiftRight()
 	boss.curPos.X += 2;
 	ShowBossModel();
 }
+
+double curSpeed = boss.speed;
 /****************보스의 전체적인 움직임*********************/
 void BossRandomMove()
 {
 	srand(time(NULL));
 	int direction = rand() % 2;	// 방향 정하기 0 : 오른쪽, 1 : 왼쪽
-	if (direction == 0)
-		BossShiftRight();
-	else
-		BossShiftLeft();
+	curSpeed -= Time.deltaTime;
+	if (curSpeed < 0)
+	{
+		if (direction == 0)
+			BossShiftRight();
+		else
+			BossShiftLeft();
+		curSpeed = boss.speed;
+	}
 	//int minDistance = 3;	// 최소 이동거리
 	//int range = 10;	// 이동 범위
 	//static int right = rand() % range + minDistance;
