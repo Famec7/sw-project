@@ -37,7 +37,7 @@ int BulletDetectedCollision(int posX, int posY, int info) {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 
-	if (gameBoardInfo[arrY][arrX] != 0)
+	if (gameBoardInfo[arrY][arrX] != 0 || gameBoardInfo[arrY][arrX - 1] != 0 || gameBoardInfo[arrY][arrX + 1] != 0)
 		return 0;
 
 	return 1;
