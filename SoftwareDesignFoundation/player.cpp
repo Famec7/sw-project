@@ -1,4 +1,5 @@
 #include "player.h"
+#include "Bullet.h"
 
 int HP = MAX_HP;					//HP 초기화
 float shield = MAX_SHIELD;		//실드 초기화
@@ -198,33 +199,48 @@ void Attack(int input) {
 
 }
 void ProcessKeyInput() {	//GetAsyncKeyState
-	int key;
-	for (int i = 0; i < 10; i++) {
-		if (_kbhit() != 0) {
-			key = _getch();
-			switch (key) {
-			case 75:
-				PlayerShiftLeft();
-				break;
-			case 77:
-				PlayerShiftRight();
-				break;
-			case 72:
-				PlayerShiftUp();
-				break;
-			case 80:
-				PlayerShiftDown();
-				break;
-			case 13:		//enter
-				//UseShield();
-				break;
-			default:
-				Attack(key);
-				break;
-			}
+	if (_kbhit() == 0) return;
+
+	if (GetAsyncKeyState(VK_LEFT)) { PlayerShiftLeft();}
+	if (GetAsyncKeyState(VK_RIGHT)) { PlayerShiftRight();}
+	if (GetAsyncKeyState(VK_DOWN)) { PlayerShiftDown();}
+	if (GetAsyncKeyState(VK_UP)) { PlayerShiftUp();}
+	
+	for (int i = 0; i <= 'z' - 'a'; i++)
+	{
+		if (GetAsyncKeyState(0x41 + i))
+		{
+			MakeBullet(playerCurPos.X + 3, playerCurPos.Y - 2, 'a' + i, 0.1f);
 		}
-		/*Sleep(25);*/
 	}
+	//return;
+
+	//int key = 0;
+	//if (_kbhit() != 0)
+	//{
+	//	key = _getch();
+	//	switch (key) {
+	//	//case 75:
+	//	//	PlayerShiftLeft();
+	//	//	break;
+	//	//case 77:
+	//	//	PlayerShiftRight();
+	//	//	break;
+	//	//case 72:
+	//	//	PlayerShiftUp();
+	//	//	break;
+	//	//case 80:
+	//	//	PlayerShiftDown();
+	//	//	break;
+	//	//case 13:		//enter
+	//	//	//UseShield();
+	//	//	break;
+	//	default:
+	//		
+	//		break;
+	//	}
+	//}
+	//Sleep(25);
 }
 void UseShield() {
 	if (shield >= 6.0f) {

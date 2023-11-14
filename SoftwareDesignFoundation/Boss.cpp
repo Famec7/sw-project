@@ -236,7 +236,7 @@ void BossLifeDecrease()
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
 {
-	if (!BossDetectedCollision(boss.curPos.X - 1, boss.curPos.Y))
+	if (!BossCullingCollision(boss.curPos.X - 1, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X -= 2;
@@ -245,7 +245,7 @@ void BossShiftLeft()
 /****************보스를 오른쪽으로 이동하는 함수*********************/
 void BossShiftRight()
 {
-	if (!BossDetectedCollision(boss.curPos.X + 1, boss.curPos.Y))
+	if (!BossCullingCollision(boss.curPos.X + 1, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X += 2;
@@ -294,27 +294,45 @@ void BossRandomMove()
 	//}
 }
 /****************보스 충돌 함수*********************/
-int BossDetectedCollision(int posX, int posY)
+int BossCullingCollision(int posX, int posY)
 {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 
+	int length = boss.hpString[boss.curPhase].length();
 	for (int y = 0; y < BOSS_SIZE_Y; y++)
 	{
 		for (int x = 0; x < BOSS_SIZE_X; x++)
 		{
 			if (bossModel[y][x] != 0)
 			{
-				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][boss.curBossHp - 1]))
+				if (gameBoardInfo[arrY + y][arrX + x] != 0)
 					return 1;
-				else if (gameBoardInfo[arrY + y][arrX + x] != 0)
-					return 2;
 			}
 		}
 	}
-
 	return 0;
 }
+int BossDetectionCollision(int posX, int posY)
+{
+	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
+	int arrY = posY - GBOARD_ORIGIN_Y;
+
+	int length = boss.hpString[boss.curPhase].length();
+	for (int y = 0; y < BOSS_SIZE_Y; y++)
+	{
+		for (int x = 0; x < BOSS_SIZE_X; x++)
+		{
+			if (bossModel[y][x] != 0)
+			{
+				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
+					return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 
 // 4초동안 총구 돌리고 3초동안 멈출 때 총알 쏘기
 // isAttack = 1 -> 총구 보이기, isAttack = 2 -> 총알 쏘기
@@ -366,7 +384,7 @@ double patternOneTime = rand() % 2 + 10;
 
 void BossUpdate()
 {
-	if (BossDetectedCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
+	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
 	if (idleTime > 0 && curState == BossState::Idle)

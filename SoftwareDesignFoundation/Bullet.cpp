@@ -8,7 +8,7 @@ void PrintBullet(int info)
 	if (info == BULLET)
 		printf("¤ý");
 	else
-		std::cout << (char)info;
+		printf("%c ", (char)info);
 }
 
 void MakeBullet(int posX, int posY, int info, double speed)
@@ -60,12 +60,17 @@ void UpdateBullet()
 				(*itr).curPos.Y += 1;
 			else
 				(*itr).curPos.Y -= 1;
-			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
+
 			if (!BulletDetectedCollision((*itr).curPos.X, (*itr).curPos.Y, (*itr).info)) {
 				itr = bullets.erase(itr);
 				continue;
 			}
-			gameBoardInfo[arrY + 1][arrX] = (*itr).info;
+			if ((*itr).info == BULLET)
+				gameBoardInfo[arrY + 1][arrX] = (*itr).info;
+			else
+				gameBoardInfo[arrY - 1][arrX] = (*itr).info;
+
+			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			PrintBullet((*itr).info);
 			(*itr).time = (*itr).speed;
 		}
