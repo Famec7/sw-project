@@ -69,7 +69,7 @@ void FireBullet() {
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1);
 		if (hellBulletModel[i] == 2)
 		{
-			double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.4;
+			double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.2;
 			MakeBullet(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1, 4, speed);
 		}
 	}
@@ -322,6 +322,7 @@ void BossPattern1()
 {
 	static double showMuzzleTime = 4;
 	static double fireBulletTime = 3;
+	static double fireCycleTime = 0.2;
 
 	showMuzzleTime -= Time.deltaTime;
 	if (showMuzzleTime < 0 && boss.isAttack == 0)
@@ -330,13 +331,19 @@ void BossPattern1()
 		ShowMuzzle();
 	}
 	else if (boss.isAttack == 1) {
-		FireBullet();
+		fireCycleTime -= Time.deltaTime;
+		if (fireCycleTime < 0)
+		{
+			FireBullet();
+			fireCycleTime = 1;
+		}
 		fireBulletTime -= Time.deltaTime;
 		if (fireBulletTime < 0)
 		{
 			boss.isAttack = 0;
 			showMuzzleTime = 4;
 			fireBulletTime = 3;
+			fireCycleTime = 1;
 		}
 	}
 }

@@ -56,7 +56,6 @@ void UpdateBullet()
 			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			printf("  ");
 			gameBoardInfo[arrY][arrX] = 0;
-			(*itr).curPos.Y += 1;
 			if ((*itr).info == BULLET)
 				(*itr).curPos.Y += 1;
 			else
@@ -66,7 +65,7 @@ void UpdateBullet()
 				itr = bullets.erase(itr);
 				continue;
 			}
-			gameBoardInfo[arrY][arrX] = (*itr).info;
+			gameBoardInfo[arrY + 1][arrX] = (*itr).info;
 			PrintBullet((*itr).info);
 			(*itr).time = (*itr).speed;
 		}
