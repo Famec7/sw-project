@@ -14,7 +14,7 @@ typedef struct _BossInfo
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	int curPhase = 0;	// 0이 1번째 페이즈
 	double speed = 0.2;
-	std::string hpString[3] = { "asdafksj","asdadafaf", "dsklanfklanfslkgns" };
+	std::string hpString[3] = { "CodeIsCompileTimeError","asdadafaf", "dsklanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
 	int isAttack = false;
 } BossInfo;
@@ -42,10 +42,6 @@ void DeleteBossModel();
 void ShowBossHpUI();
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease();
-/****************보스를 왼쪽으로 이동하는 함수*********************/
-void BossShiftLeft();
-/****************보스를 오른쪽으로 이동하는 함수*********************/
-void BossShiftRight();
 /****************보스의 전체적인 움직임*********************/
 void BossRandomMove();
 /****************보스 충돌 함수*********************/

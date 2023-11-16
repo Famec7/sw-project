@@ -220,10 +220,12 @@ void DeleteBossModel()
 void ShowBossHpUI()
 {
 	//보스의 원래 위치보다 한칸 위에 표시
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
 	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++)
 		std::cout << boss.hpString[boss.curPhase][i];
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease()
@@ -313,7 +315,15 @@ int BossCullingCollision(int posX, int posY)
 			if (bossModel[y][x] != 0)
 			{
 				if (gameBoardInfo[arrY + y][arrX + x] != 0)
+				{
+					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY)
+					{
+						SetCurrentCursorPos(posX + x, posY + y);
+						printf("  ");
+						gameBoardInfo[arrY + y][arrX + x] = 0;
+					}	// 더블 버퍼링을 쓰는 방식 고민
 					return 1;
+				}
 			}
 		}
 	}
@@ -331,7 +341,8 @@ int BossDetectionCollision(int posX, int posY)
 		{
 			if (bossModel[y][x] != 0)
 			{
-				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
+				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
+					gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
 					return 1;
 			}
 		}
@@ -346,14 +357,13 @@ void BossPattern1()
 {
 	static double showMuzzleTime = 4;
 	static double fireBulletTime = 3;
-	static double fireCycleTime = 0.2;
+	static double fireCycleTime = 0.01;
 
 	showMuzzleTime -= Time.deltaTime;
-	if (showMuzzleTime < 0 && boss.isAttack == 0)
-	{
-		boss.isAttack = 1;
+	if (showMuzzleTime > 0 && boss.isAttack == 0)
 		ShowMuzzle();
-	}
+	else if (showMuzzleTime < 0 && boss.isAttack == 0)
+		boss.isAttack = 1;
 	else if (boss.isAttack == 1) {
 		fireCycleTime -= Time.deltaTime;
 		if (fireCycleTime < 0)
@@ -367,7 +377,7 @@ void BossPattern1()
 			boss.isAttack = 0;
 			showMuzzleTime = 4;
 			fireBulletTime = 3;
-			fireCycleTime = 1;
+			fireCycleTime = 0.01;
 		}
 	}
 }
@@ -386,7 +396,7 @@ void BossPattern3()
 // 10~11초 동안 pattern
 
 double idleTime = rand() % 2 + 6;
-double patternOneTime = rand() % 2 + 10;
+double patternOneTime = rand() % 2 + 14;
 
 void BossUpdate()
 {
