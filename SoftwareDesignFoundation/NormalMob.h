@@ -20,12 +20,16 @@ typedef struct NormalMobInfo {
 	char hp[10];
 	int mobHp;
 	int numberingMob; //몹의 충돌에서 몹을 구분하기 위함
+	double mobIdleTime = 10;
+	double moveTime = 2;
+	double attackTime = 0.5;
+	int state; // move == 0, attack == 1, idle == 2
 	NormalMobInfo* next; // 연결리스트로 구현하기 위함
 }NormalMobInfo;
 
 
 void CreateNormalMob();
-void RemoveNormalMob(NormalMobInfo* deadNormalMob);
+NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob);
 void PrintNormalMob(NormalMobInfo* printingNormalMob);
 void DeletePrintedNormalMob(NormalMobInfo* normalMob);
 void ShowNormalMob();
@@ -37,7 +41,7 @@ void ShiftLeft(NormalMobInfo* normalMob);
 void ShiftRight(NormalMobInfo* normalMob);
 void ShiftDown(NormalMobInfo* normalMob);
 void NormalMobShoot(NormalMobInfo* normalMob);
-void DecreaseNormalMobHp(NormalMobInfo* normalMob);
+NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob);
 void ShowNormalMobHp(NormalMobInfo* normalMob);
 void NormalMobUpdate();
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob);

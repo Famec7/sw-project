@@ -20,6 +20,7 @@ void CreateNormalMob() {
 	int cnt = 1;
 	normalMob->pos = MakeNormalMobPos();
 	normalMob->mobHp = strlen(normalMob->hp);
+	normalMob->state = rand() % 3;
 	normalMob->next = NULL;
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;
@@ -35,21 +36,22 @@ void CreateNormalMob() {
 	normalMob->numberingMob = cnt;
 	lastNormalMob->next = normalMob;
 }
-void RemoveNormalMob(NormalMobInfo* deadNormalMob) {
+NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob) {
 	NormalMobInfo* normalMob = normalMobListHead;
 	NormalMobInfo* prev = NULL;
 
-	while (normalMob != deadNormalMob) {
+	while (normalMob != deadNormalMob) { // 소멸하는 노말 몹 찾기
 		prev = normalMob;
 		normalMob = normalMob->next;
 	}
 	if (prev == NULL) { //Head에 있는 몹을 제거하는 경우, 몹이 1마리인 경우
 		normalMobListHead = deadNormalMob->next;
 		free(deadNormalMob);
-		return;
+		return normalMobListHead;
 	}
 	prev->next = deadNormalMob->next;
 	free(deadNormalMob);
+	return prev->next;
 
 
 }
@@ -58,9 +60,8 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 	int normalMob_y = printingNormalMob->pos.Y;
 	int arrX = (normalMob_x - GBOARD_ORIGIN_X) / 2;
 	int arrY = normalMob_y - GBOARD_ORIGIN_Y;
-
-	SetCurrentCursorPos(normalMob_x, normalMob_y - 1); // 일반 몹 모델 위에 체력을 띄움
-	printf(printingNormalMob->hp);
+	
+	ShowNormalMobHp(printingNormalMob);
 
 	for (int y = 0; y < 2; y++) {
 		for (int x = 0; x < 5; x++) {
@@ -174,7 +175,7 @@ void NormalMobShoot(NormalMobInfo* normalMob) {
 
 
 }
-void DecreaseNormalMobHp(NormalMobInfo* normalMob) {
+NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	// 현재 체력 한칸 줄이고 다시 UI에 표시
 	for (int i = 0; i < normalMob->mobHp; i++)
 	{
@@ -184,9 +185,10 @@ void DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	normalMob->mobHp--;
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
-		RemoveNormalMob(normalMob);
+		return RemoveNormalMob(normalMob);
 	}
 	ShowNormalMobHp(normalMob);
+	return normalMob;
 
 }
 void ShowNormalMobHp(NormalMobInfo* normalMob) {
@@ -227,34 +229,42 @@ COORD MakeNormalMobPos() {
 	COORD pos = { 13 + 20 * cnt, 17 };
 	return pos;
 }
+
+
+
 void NormalMobUpdate() {
 	NormalMobInfo* normalMob = normalMobListHead;
-
-	double idleTime = 10;
-	double attackTime = 3;
-	int state = rand() % 2; // idle == 0, attack == 1
 
 	ShowNormalMob();
 
 	while (normalMob != NULL) {
-		if (NormalMobDetectedBulletCollision(normalMob) == 1)
-			DecreaseNormalMobHp(normalMob);
-
-
-		if (idleTime > 0 && state == 0)
-			idleTime -= Time.deltaTime;
-		else if (idleTime < 0) {
-			state = 1;
-			idleTime = 10;
+		if (NormalMobDetectedBulletCollision(normalMob) == 1) {
+			normalMob = DecreaseNormalMobHp(normalMob);
+			if (normalMob == NULL) break;
 		}
 
-		if (state == 1 && attackTime > 0)
-			attackTime -= Time.deltaTime;
-		else if (attackTime < 0) {
-			state = 0;
-			attackTime = 3;
+
+		if (normalMob->moveTime > 0 && normalMob->state == 0)
+			normalMob->moveTime -= Time.deltaTime;
+		else if (normalMob->moveTime < 0) {
+			normalMob->state = rand() % 2 + 1;
+			normalMob->moveTime = 2;
 		}
-		switch (state) {
+
+		if (normalMob->state == 1 && normalMob->attackTime > 0)
+			normalMob->attackTime -= Time.deltaTime;
+		else if (normalMob->attackTime < 0) {
+			normalMob->state = (rand() % 2) * 2;
+			normalMob->attackTime = 0.5;
+		}
+
+		if (normalMob->state == 2 && normalMob->mobIdleTime > 0)
+			normalMob->mobIdleTime -= Time.deltaTime;
+		else if (normalMob->mobIdleTime < 0) {
+			normalMob->state = rand() % 2;
+			normalMob->mobIdleTime = 10;
+		}
+		switch (normalMob->state) {
 		case 0:
 			MoveNormalMob();
 			break;
