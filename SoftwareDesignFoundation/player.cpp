@@ -26,8 +26,8 @@ char hpText[] = { 'P', 'l', 'a', 'y', 'e', 'r', 'h',
 char shieldText[] = { 's', 'h', 'i', 'e', 'l', 'd' };
 
 void playerInit() {
-	playerCurPos.X = 20;
-	playerCurPos.Y = 20;
+	playerCurPos.X = 45;
+	playerCurPos.Y = 35;
 }
 void PlayerShowModel() {
 	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
@@ -310,6 +310,12 @@ void ManageGameboard() {
 			}
 		}
 	}
+}
+void PlayerUpdate() {
+	PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y);
+	PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y);
+	PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1);
+	PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1);
 }
 int IsGameOver() {
 	if (HP <= 0)

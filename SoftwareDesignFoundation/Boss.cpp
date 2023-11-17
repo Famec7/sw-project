@@ -16,9 +16,15 @@ void ShowMuzzle() {
 	int end = num + 2;
 
 	if (start < 0)
+	{
 		start = 0;
+		end = start + 5;
+	}
 	if (end > 40)
+	{
 		end = 40;
+		start = end - 5;
+	}
 	for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
@@ -220,7 +226,7 @@ void DeleteBossModel()
 void ShowBossHpUI()
 {
 	//보스의 원래 위치보다 한칸 위에 표시
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
 	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++)
@@ -244,7 +250,7 @@ void BossLifeDecrease()
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
 {
-	if (!BossCullingCollision(boss.curPos.X - 1, boss.curPos.Y))
+	if (!BossCullingCollision(boss.curPos.X - 2, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X -= 2;
@@ -253,7 +259,7 @@ void BossShiftLeft()
 /****************보스를 오른쪽으로 이동하는 함수*********************/
 void BossShiftRight()
 {
-	if (!BossCullingCollision(boss.curPos.X + 1, boss.curPos.Y))
+	if (!BossCullingCollision(boss.curPos.X + 2, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X += 2;

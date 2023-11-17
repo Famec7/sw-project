@@ -18,7 +18,7 @@
 #define GBOARD_WIDTH 40
 
 // ¸Ê À§Ä¡
-#define GBOARD_ORIGIN_X 7
+#define GBOARD_ORIGIN_X 8
 #define GBOARD_ORIGIN_Y 3
 
 extern int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2];

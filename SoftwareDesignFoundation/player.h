@@ -23,5 +23,6 @@ void ProcessKeyInput();
 void UseShield();
 void ManageShield();
 void ManageGameboard();
+void PlayerUpdate();
 
 int IsGameOver();

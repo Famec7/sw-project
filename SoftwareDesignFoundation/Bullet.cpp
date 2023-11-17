@@ -6,7 +6,7 @@ std::list<Bullet> bullets;
 void PrintBullet(int info)
 {
 	if (info == BULLET)
-		printf("¤ý");
+		printf("¡å");
 	else
 		printf("%c ", (char)info);
 }
