@@ -12,6 +12,10 @@
 #define HP_ITEM 5
 #define UPGRADE_ITEM 6
 #define BOSS 7
+#define NORMAL_MOB_1 8
+#define NORMAL_MOB_1 9
+#define NORMAL_MOB_1 10
+#define NORMAL_MOB_1 11
 
 // ¸Ê Å©±â
 #define GBOARD_HEIGHT 40
