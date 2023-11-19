@@ -294,7 +294,10 @@ int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob) {
 			{
 				if (gameBoardInfo[arrY + y][arrX + x] == int(normalMob->hp[length - normalMob->mobHp]) ||
 					gameBoardInfo[arrY + y][arrX + x] - 32 == int(normalMob->hp[length - normalMob->mobHp]))
+				{
+					DeleteBullet(arrX + x, arrY + y);
 					return 1;
+				}
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "Bullet.h"
 #include "player.h"
+#include "NormalMob.h"
 
 int main()
 {
@@ -13,11 +14,13 @@ int main()
 	playerInit();
 	PlayerShowModel();
 	DrawGameBoard();
+	CreateNormalMob();
 	while (1) {
 		ProcessKeyInput();
 		UpdateTime();
+		/*BossUpdate();*/
 		UpdateBullet();
-		BossUpdate();
+		NormalMobUpdate();
 		PlayerUpdate();
 		PlayerStatOutput();
 		ManageShield();
