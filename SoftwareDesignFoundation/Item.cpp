@@ -1,4 +1,5 @@
 #include "Item.h"
+#include "gameInfo.h"
 
 char itemModel[][3][3] = {
     {
@@ -28,8 +29,46 @@ void DropItem(COORD pos) {
     }
 }
 
-void CreateItem(COORD pos, int itemId) {
+int ItemDetectedCollision(ITEM item) {
+    int x, y;
+    for (x = 0; x < 3; x++) {
+        if (gameBoardInfo[item.itemPos.Y - GBOARD_ORIGIN_Y + 3][(item.itemPos.X - GBOARD_ORIGIN_X) / 2 + x] != 0) {
+            if(gameBoardInfo[item.itemPos.Y - GBOARD_ORIGIN_Y + 3][(item.itemPos.X - GBOARD_ORIGIN_X) / 2 + x]==itemHpString[maxItemHp-item.itemHp])
+                return 1;
+        }
+    }
+    return 0;
+}
+
+void UpdateItem() {
     int i;
+    for (i = 0; i < maxCreateItem; i++) {
+        if (ItemDetectedCollision(itemList[i])) {
+            DecreseItemHp(&itemList[i]);
+            EraseItemHp(itemList[i]);
+            PrintItemHp(itemList[i]);
+        }
+    }
+}
+
+void EraseItemHp(ITEM item) {
+    int i;
+    SetCurrentCursorPos(item.itemPos.X + 1, item.itemPos.Y - 1);
+    for (i = 0; i < maxItemHp; i++) {
+        printf(" ");
+    }
+}
+
+void PrintItemHp(ITEM item) {
+    int i;
+    SetCurrentCursorPos(item.itemPos.X+1, item.itemPos.Y-1);
+    for (i = maxItemHp-item.itemHp; i < maxItemHp; i++) {
+        printf("%c", itemHpString[i]);
+    }
+}
+
+void CreateItem(COORD pos, int itemId) {
+    int i, x, y;
     for (i = 0; i < maxCreateItem; i++) {
         if (itemList[i].itemHp == 0) {
             itemList[i].itemHp = 4;
@@ -40,6 +79,12 @@ void CreateItem(COORD pos, int itemId) {
         }
     }
     ShowItem(itemList[i]);
+    PrintItemHp(itemList[i]);
+    for (y = 0; y < 3; y++) {
+        for (x = 0; x < 3; x++) {
+            gameBoardInfo[itemList[i].itemPos.Y-GBOARD_ORIGIN_Y + y][(itemList[i].itemPos.X-GBOARD_ORIGIN_X)/2 + x] = 5;
+        }
+    }
 }
 
 void ItemInit() {
@@ -104,9 +149,15 @@ void PrintItemHp(ITEM *item) {
 }
 
 void DecreseItemHp(ITEM* item) {
+    int x, y;
     item->itemHp--;
     if (item->itemHp == 0) {
         DeleteItem(*item);
+        for (y = 0; y < 3; y++) {
+            for (x = 0; x < 3; x++) {
+                gameBoardInfo[item->itemPos.Y - GBOARD_ORIGIN_Y + y][(item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x] = 0;
+            }
+        }
         curCreateItem--;
     }
 }
