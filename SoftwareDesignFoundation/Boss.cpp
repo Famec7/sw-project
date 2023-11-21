@@ -251,7 +251,7 @@ void BossLifeDecrease()
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
 {
-	if (!BossCullingCollision(boss.curPos.X - 2, boss.curPos.Y))
+	if (BossCullingCollision(boss.curPos.X - 2, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X -= 2;
@@ -260,7 +260,7 @@ void BossShiftLeft()
 /****************보스를 오른쪽으로 이동하는 함수*********************/
 void BossShiftRight()
 {
-	if (!BossCullingCollision(boss.curPos.X + 2, boss.curPos.Y))
+	if (BossCullingCollision(boss.curPos.X + 2, boss.curPos.Y))
 		return;
 	DeleteBossModel();
 	boss.curPos.X += 2;
@@ -319,16 +319,16 @@ int BossCullingCollision(int posX, int posY)
 	{
 		for (int x = 0; x < BOSS_SIZE_X; x++)
 		{
-			if (bossModel[y][x] != 0)
+			if (bossModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS)
 			{
 				if (gameBoardInfo[arrY + y][arrX + x] != 0)
 				{
 					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY)
 					{
-						SetCurrentCursorPos(posX + x, posY + y);
+						SetCurrentCursorPos(posX + x * 2, posY + y);
 						printf("  ");
 						gameBoardInfo[arrY + y][arrX + x] = 0;
-					}	// 더블 버퍼링을 쓰는 방식 고민
+					}
 					return 1;
 				}
 			}
