@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS 
 #include "NormalMob.h"
-
+#include "Item.h"
 
 NormalMobInfo* normalMobListHead = NULL;
 
@@ -185,6 +185,9 @@ NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	normalMob->mobHp--;
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
+		COORD itemPos = normalMob->pos;
+		itemPos.Y += 2;
+		DropItem(itemPos);
 		return RemoveNormalMob(normalMob);
 	}
 	ShowNormalMobHp(normalMob);

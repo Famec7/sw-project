@@ -19,9 +19,7 @@ int main() {
 	playerInit();
 	PlayerShowModel();
 	DrawGameBoard();
-	pos.X = 30;
-	pos.Y = 6;
-	DropItem(pos);
+	CreateNormalMob();
 	while (1) {
 		ProcessKeyInput();
 		UpdateTime();
@@ -29,6 +27,7 @@ int main() {
 		UpdateItem();
 		NormalMobUpdate();
 		BossUpdate();
+		UpdateItem();
 		PlayerUpdate();
 		PlayerStatOutput();
 		ManageShield();

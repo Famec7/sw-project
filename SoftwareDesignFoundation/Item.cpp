@@ -128,7 +128,7 @@ void ShowItem(ITEM item) {
 int CreateItemRandom() {
     int createItem;
     createItem = rand() % 100;
-    if (createItem < 30 && (HP<MAX_HP || bulletNum<MAX_BULLET)) return 1;
+    if (createItem < 100 && (HP<MAX_HP || bulletNum<MAX_BULLET)) return 1;
     else return 0;
 }
 
@@ -161,7 +161,7 @@ void DecreseItemHp(ITEM* item) {
         for (x = 0; x < 3; x++) {
             DeleteBullet((item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x, item->itemPos.Y - GBOARD_ORIGIN_Y + 3);
         }
-        if (item->itemId == 5) {
+        if (item->itemId == 0) {
             if (HP < MAX_HP) {
                 HP++;
             }
