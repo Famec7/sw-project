@@ -254,6 +254,7 @@ void ProcessKeyInput() { // GetAsyncKeyState
 			}
 		}
 	}
+	Sleep(50);
 	// return;
 
 	// int key = 0;

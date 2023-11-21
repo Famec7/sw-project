@@ -131,6 +131,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="gameInfo.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalMob.cpp" />
     <ClCompile Include="player.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="gameInfo.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="NormalMob.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Render.h" />

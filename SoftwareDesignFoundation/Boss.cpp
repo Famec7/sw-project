@@ -373,7 +373,10 @@ void BossPattern1()
 
 	showMuzzleTime -= Time.deltaTime;
 	if (showMuzzleTime > 0 && boss.isAttack == 0)
+	{
 		ShowMuzzle();
+		Sleep(10);
+	}
 	else if (showMuzzleTime < 0 && boss.isAttack == 0)
 		boss.isAttack = 1;
 	else if (boss.isAttack == 1) {
