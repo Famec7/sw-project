@@ -128,15 +128,15 @@ void ShowItem(ITEM item) {
 int CreateItemRandom() {
     int createItem;
     createItem = rand() % 100;
-    if (createItem < 30) return 1;
+    if (createItem < 30 && (HP<MAX_HP || bulletNum<MAX_BULLET)) return 1;
     else return 0;
 }
 
 int ItemIdRandom() {
     int createItemId;
     createItemId = rand() % 2;
-    if (createItemId == 0) return 0;
-    else return 1;
+    if (createItemId == 0 && HP<MAX_HP) return 0;
+    else if(createItemId==1 && bulletNum<MAX_BULLET) return 1;
 }
 
 void PrintItemHp(ITEM *item) {
@@ -158,6 +158,20 @@ void DecreseItemHp(ITEM* item) {
                 gameBoardInfo[item->itemPos.Y - GBOARD_ORIGIN_Y + y][(item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x] = 0;
             }
         }
+        for (x = 0; x < 3; x++) {
+            DeleteBullet((item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x, item->itemPos.Y - GBOARD_ORIGIN_Y + 3);
+        }
+        if (item->itemId == 5) {
+            if (HP < MAX_HP) {
+                HP++;
+            }
+        }
+        else if (item->itemId == 1) {
+            if (bulletNum < 5) {
+                bulletNum++;
+            }
+        }
+
         curCreateItem--;
     }
 }
