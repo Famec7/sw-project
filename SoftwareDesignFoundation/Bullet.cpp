@@ -43,6 +43,23 @@ int BulletDetectedCollision(int posX, int posY, int info) {
 	return 1;
 }
 
+void DeleteBullet(int arrX, int arrY)
+{
+	for (auto itr = bullets.begin(); itr != bullets.end(); itr++)
+	{
+		int arrX2 = ((*itr).curPos.X - GBOARD_ORIGIN_X) / 2;
+		int arrY2 = (*itr).curPos.Y - GBOARD_ORIGIN_Y;
+		if (arrX == arrX2 && arrY == arrY2)
+		{
+			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
+			printf("  ");
+			gameBoardInfo[arrY][arrX] = 0;
+			itr = bullets.erase(itr);
+			break;
+		}
+	}
+}
+
 void UpdateBullet()
 {
 	auto itr = bullets.begin();

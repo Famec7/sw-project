@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "Bullet.h"
 #include "gameInfo.h"
+#include "NormalMob.h"
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
@@ -356,6 +357,11 @@ int BossDetectionCollision(int posX, int posY)
 	return 0;
 }
 
+void SummonNormalMob()
+{
+	for (int i = 0; i < 4; i++)
+		CreateNormalMob();
+}
 
 // 4ÃÊµ¿¾È ÃÑ±¸ µ¹¸®°í 3ÃÊµ¿¾È ¸ØÃâ ¶§ ÃÑ¾Ë ½î±â
 // isAttack = 1 -> ÃÑ±¸ º¸ÀÌ±â, isAttack = 2 -> ÃÑ¾Ë ½î±â
