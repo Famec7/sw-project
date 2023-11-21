@@ -161,7 +161,7 @@ void DecreseItemHp(ITEM* item) {
         for (x = 0; x < 3; x++) {
             DeleteBullet((item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x, item->itemPos.Y - GBOARD_ORIGIN_Y + 3);
         }
-        if (item->itemId == 5) {
+        if (item->itemId == 0) {
             if (HP < MAX_HP) {
                 HP++;
             }
