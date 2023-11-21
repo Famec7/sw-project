@@ -42,7 +42,7 @@ void PlayerShowModel() {
 		for (x = 0; x < 5; x++) {
 			if (playerModel[y][x] == 2) {
 				SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
-				printf("??);
+				printf("бс");
 				gameBoardInfo[arrCurY + y][arrCurX + x] = 2;
 			}
 		}
