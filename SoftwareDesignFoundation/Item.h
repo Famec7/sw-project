@@ -2,6 +2,8 @@
 #include "Cursor.h"
 #include <stdio.h>
 #include <time.h>
+#include "player.h"
+#include "Bullet.h"
 
 #define maxCreateItem 5
 #define maxItemHp 4
