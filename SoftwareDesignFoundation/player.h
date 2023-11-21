@@ -18,7 +18,7 @@ int PlayerShiftRight();
 int PlayerShiftUp();
 int PlayerShiftDown();
 void PlayerStatOutput();
-void Attack(int input);
+//void Attack(int input);
 void ProcessKeyInput();
 void UseShield();
 void ManageShield();
