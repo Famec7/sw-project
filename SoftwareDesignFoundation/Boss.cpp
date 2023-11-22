@@ -248,6 +248,54 @@ void BossLifeDecrease()
 		boss.curPhase += 1;
 	ShowBossHpUI();
 }
+/****************보스 충돌 함수*********************/
+int BossCullingCollision(int posX, int posY)
+{
+	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
+	int arrY = posY - GBOARD_ORIGIN_Y;
+
+	int length = boss.hpString[boss.curPhase].length();
+	for (int y = 0; y < BOSS_SIZE_Y; y++)
+	{
+		for (int x = 0; x < BOSS_SIZE_X; x++)
+		{
+			if (bossModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS)
+			{
+				if (gameBoardInfo[arrY + y][arrX + x] != 0)
+				{
+					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY)
+					{
+						SetCurrentCursorPos(posX + x * 2, posY + y);
+						printf("  ");
+						gameBoardInfo[arrY + y][arrX + x] = 0;
+					}
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+int BossDetectionCollision(int posX, int posY)
+{
+	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
+	int arrY = posY - GBOARD_ORIGIN_Y;
+
+	int length = boss.hpString[boss.curPhase].length();
+	for (int y = 0; y < BOSS_SIZE_Y; y++)
+	{
+		for (int x = 0; x < BOSS_SIZE_X; x++)
+		{
+			if (bossModel[y][x] != 0)
+			{
+				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
+					gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
+					return 1;
+			}
+		}
+	}
+	return 0;
+}
 /****************보스를 왼쪽으로 이동하는 함수*********************/
 void BossShiftLeft()
 {
@@ -308,58 +356,11 @@ void BossRandomMove()
 	//	}
 	//}
 }
-/****************보스 충돌 함수*********************/
-int BossCullingCollision(int posX, int posY)
-{
-	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
-	int arrY = posY - GBOARD_ORIGIN_Y;
-
-	int length = boss.hpString[boss.curPhase].length();
-	for (int y = 0; y < BOSS_SIZE_Y; y++)
-	{
-		for (int x = 0; x < BOSS_SIZE_X; x++)
-		{
-			if (bossModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS)
-			{
-				if (gameBoardInfo[arrY + y][arrX + x] != 0)
-				{
-					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY)
-					{
-						SetCurrentCursorPos(posX + x * 2, posY + y);
-						printf("  ");
-						gameBoardInfo[arrY + y][arrX + x] = 0;
-					}
-					return 1;
-				}
-			}
-		}
-	}
-	return 0;
-}
-int BossDetectionCollision(int posX, int posY)
-{
-	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
-	int arrY = posY - GBOARD_ORIGIN_Y;
-
-	int length = boss.hpString[boss.curPhase].length();
-	for (int y = 0; y < BOSS_SIZE_Y; y++)
-	{
-		for (int x = 0; x < BOSS_SIZE_X; x++)
-		{
-			if (bossModel[y][x] != 0)
-			{
-				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
-					gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
-					return 1;
-			}
-		}
-	}
-	return 0;
-}
 
 void SummonNormalMob()
 {
-	for (int i = 0; i < 4; i++)
+	int count = rand() % 4 + 1;
+	for (int i = 0; i < count; i++)
 		CreateNormalMob();
 }
 
@@ -371,9 +372,9 @@ void BossPattern1()
 	static double fireBulletTime = 3;
 	static double fireCycleTime = 0.01;
 
-	showMuzzleTime -= Time.deltaTime;
 	if (showMuzzleTime > 0 && boss.isAttack == 0)
 	{
+		showMuzzleTime -= Time.deltaTime;
 		ShowMuzzle();
 		Sleep(10);
 	}
@@ -393,6 +394,7 @@ void BossPattern1()
 			showMuzzleTime = 4;
 			fireBulletTime = 3;
 			fireCycleTime = 0.01;
+			DeleteMuzzle();
 		}
 	}
 }
@@ -415,13 +417,18 @@ double patternOneTime = rand() % 2 + 14;
 
 void BossUpdate()
 {
+	srand(time(NULL));
 	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
 	if (idleTime > 0 && curState == BossState::Idle)
 		idleTime -= Time.deltaTime;
 	else if (idleTime < 0) {
-		curState = BossState::Pattern1;
+		int randomNum = rand() % 10;
+		if (randomNum < 3 && EmptyNormalMob())
+			curState = BossState::Summon;
+		else if(EmptyNormalMob())
+			curState = BossState::Pattern1;
 		idleTime = rand() % 2 + 6;
 	}
 
@@ -433,7 +440,12 @@ void BossUpdate()
 		DeleteMuzzle();
 	}
 
-	ShowBossModel();
+	if(curState == BossState::Summon && EmptyNormalMob())
+	{
+		SummonNormalMob();
+		curState = BossState::Idle;
+	}
+
 	switch (curState)
 	{
 	case Idle:

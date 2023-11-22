@@ -3,6 +3,7 @@
 #include "Item.h"
 
 NormalMobInfo* normalMobListHead = NULL;
+int mobCount = 0;
 
 char NORMAL_MOB_MODEL[2][5] = { // ¸ðµ¨¸µ ¹ÌÁ¤
 	{1,0,0,0,1},
@@ -15,6 +16,8 @@ char NORMAL_MOB_HP_DATASET[3][10] = {
 };
 
 void CreateNormalMob() {
+	if (mobCount > 2)
+		return;
 	NormalMobInfo* normalMob = (NormalMobInfo*)malloc(sizeof(NormalMobInfo));
 	strcpy(normalMob->hp, NORMAL_MOB_HP_DATASET[rand() % 3]);
 	int cnt = 1;
@@ -35,6 +38,7 @@ void CreateNormalMob() {
 	}
 	normalMob->numberingMob = cnt;
 	lastNormalMob->next = normalMob;
+	mobCount++;
 }
 NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob) {
 	NormalMobInfo* normalMob = normalMobListHead;
@@ -186,8 +190,8 @@ NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
 		COORD itemPos = normalMob->pos;
-		itemPos.Y += 2;
 		DropItem(itemPos);
+		mobCount--;
 		return RemoveNormalMob(normalMob);
 	}
 	ShowNormalMobHp(normalMob);
@@ -304,5 +308,15 @@ int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob) {
 			}
 		}
 	}
+	return 0;
+}
+
+int GetNormalMobCount() {
+	return mobCount;
+}
+
+int EmptyNormalMob() {
+	if (normalMobListHead == NULL)
+		return 1;
 	return 0;
 }

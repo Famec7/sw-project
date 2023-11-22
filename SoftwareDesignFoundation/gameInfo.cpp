@@ -7,6 +7,8 @@ clock_t clock_tick;
 
 TimeStruct Time;
 
+#define DELTA_TIME_MAX (0.05)
+
 void InitTime()
 {
 	clock_tick = clock();
@@ -22,7 +24,7 @@ void UpdateTime()
 	double deltaTime = (double)delta / CLOCKS_PER_SEC;
 
 	Time.time += deltaTime;
-	Time.deltaTime = deltaTime;
+	Time.deltaTime = deltaTime < DELTA_TIME_MAX ? deltaTime : DELTA_TIME_MAX;
 }
 
 void DrawGameBoard(void)

@@ -19,7 +19,6 @@ int main() {
 	playerInit();
 	PlayerShowModel();
 	DrawGameBoard();
-	CreateNormalMob();
 	while (1) {
 		ProcessKeyInput();
 		UpdateTime();

@@ -24,27 +24,15 @@ enum BossState
 	Idle,
 	Pattern1,
 	Pattern2,
-	Pattern3
+	Pattern3,
+	Summon
 };
 
 extern BossInfo boss;
 
+/****************보스 스탯 초기화 함수*********************/
+void BossInit();
 /*보스 업데이트 함수*/
 void BossUpdate();
 
-/****************보스 스탯 초기화 함수*********************/
-void BossInit();
-/****************보스 모델을 띄우는 함수*********************/
-void ShowBossModel();
-/****************보스 모델을 삭제하는 함수*********************/
-void DeleteBossModel();
-/****************보스 HP UI를 띄우는 함수*********************/
 void ShowBossHpUI();
-/****************보스 체력 한칸 줄이는 함수*********************/
-void BossLifeDecrease();
-/****************보스의 전체적인 움직임*********************/
-void BossRandomMove();
-/****************보스 충돌 함수*********************/
-int BossCullingCollision(int posX, int posY);
-int BossDetectionCollision(int posX, int posY);
-void BossPattern1();

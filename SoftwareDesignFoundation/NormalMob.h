@@ -47,3 +47,6 @@ void NormalMobUpdate();
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob);
 int NormalMobDetectedCollision(int posX, int posY, int numbering);
 COORD MakeNormalMobPos();
+
+int GetNormalMobCount();
+int EmptyNormalMob();
