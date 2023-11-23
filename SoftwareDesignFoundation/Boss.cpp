@@ -417,11 +417,10 @@ double patternOneTime = rand() % 2 + 14;
 
 void BossUpdate()
 {
-	srand(time(NULL));
 	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
-	if (idleTime > 0 && curState == BossState::Idle)
+	if (idleTime > 0 && curState == BossState::Idle && EmptyNormalMob())
 		idleTime -= Time.deltaTime;
 	else if (idleTime < 0) {
 		int randomNum = rand() % 10;

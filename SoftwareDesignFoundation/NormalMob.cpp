@@ -190,6 +190,7 @@ NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
 		COORD itemPos = normalMob->pos;
+		itemPos.Y -= 1;
 		DropItem(itemPos);
 		mobCount--;
 		return RemoveNormalMob(normalMob);
