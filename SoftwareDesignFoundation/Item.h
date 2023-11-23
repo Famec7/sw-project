@@ -4,12 +4,15 @@
 #include <time.h>
 #include "player.h"
 #include "Bullet.h"
+#include "gameInfo.h"
 
 #define maxCreateItem 5
 #define maxItemHp 4
+#define itemTime 10
 
 typedef struct ITEM {
     int itemHp, itemId;
+    double time;
     COORD itemPos;
 }ITEM;
 

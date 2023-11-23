@@ -33,7 +33,7 @@ int ItemDetectedCollision(ITEM item) {
     int x, y;
     for (x = 0; x < 3; x++) {
         if (gameBoardInfo[item.itemPos.Y - GBOARD_ORIGIN_Y + 3][(item.itemPos.X - GBOARD_ORIGIN_X) / 2 + x] != 0) {
-            if(gameBoardInfo[item.itemPos.Y - GBOARD_ORIGIN_Y + 3][(item.itemPos.X - GBOARD_ORIGIN_X) / 2 + x]==itemHpString[maxItemHp-item.itemHp])
+            if (gameBoardInfo[item.itemPos.Y - GBOARD_ORIGIN_Y + 3][(item.itemPos.X - GBOARD_ORIGIN_X) / 2 + x] == itemHpString[maxItemHp - item.itemHp])
                 return 1;
         }
     }
@@ -48,6 +48,13 @@ void UpdateItem() {
             EraseItemHp(itemList[i]);
             PrintItemHp(itemList[i]);
         }
+        if (itemList[i].time == 0) {
+            itemList[i].itemHp = 0;
+            DecreseItemHp(&itemList[i]);
+        }
+        if (itemList[i].time > 0) {
+            itemList[i].time -= Time.deltaTime;
+        }
     }
 }
 
@@ -61,8 +68,8 @@ void EraseItemHp(ITEM item) {
 
 void PrintItemHp(ITEM item) {
     int i;
-    SetCurrentCursorPos(item.itemPos.X+1, item.itemPos.Y-1);
-    for (i = maxItemHp-item.itemHp; i < maxItemHp; i++) {
+    SetCurrentCursorPos(item.itemPos.X + 1, item.itemPos.Y - 1);
+    for (i = maxItemHp - item.itemHp; i < maxItemHp; i++) {
         printf("%c", itemHpString[i]);
     }
 }
@@ -74,6 +81,7 @@ void CreateItem(COORD pos, int itemId) {
             itemList[i].itemHp = 4;
             itemList[i].itemId = itemId;
             itemList[i].itemPos = pos;
+            itemList[i].time = itemTime;
             curCreateItem++;
             break;
         }
@@ -82,7 +90,7 @@ void CreateItem(COORD pos, int itemId) {
     PrintItemHp(itemList[i]);
     for (y = 0; y < 3; y++) {
         for (x = 0; x < 3; x++) {
-            gameBoardInfo[itemList[i].itemPos.Y-GBOARD_ORIGIN_Y + y][(itemList[i].itemPos.X-GBOARD_ORIGIN_X)/2 + x] = 5;
+            gameBoardInfo[itemList[i].itemPos.Y - GBOARD_ORIGIN_Y + y][(itemList[i].itemPos.X - GBOARD_ORIGIN_X) / 2 + x] = 5;
         }
     }
 }
@@ -128,18 +136,18 @@ void ShowItem(ITEM item) {
 int CreateItemRandom() {
     int createItem;
     createItem = rand() % 100;
-    if (createItem < 100 && (HP<MAX_HP || bulletNum<MAX_BULLET)) return 1;
+    if (createItem < 30 && (HP < MAX_HP || bulletNum < MAX_BULLET)) return 1;
     else return 0;
 }
 
 int ItemIdRandom() {
     int createItemId;
     createItemId = rand() % 2;
-    if (createItemId == 0 && HP<MAX_HP) return 0;
-    else if(createItemId==1 && bulletNum<MAX_BULLET) return 1;
+    if (createItemId == 0 && HP < MAX_HP) return 0;
+    else if (createItemId == 1 && bulletNum < MAX_BULLET) return 1;
 }
 
-void PrintItemHp(ITEM *item) {
+void PrintItemHp(ITEM* item) {
     int i;
     SetCurrentCursorPos(item->itemPos.X, item->itemPos.Y);
     for (i = 0; i < item->itemHp; i++) {
