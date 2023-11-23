@@ -170,8 +170,6 @@ void BossInit()
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	boss.speed = 0.2;
 	int length = boss.hpString[boss.curPhase].length();
-	hpCurPos.X = BOSS_ORIGIN_X - length / 2 + BOSS_SIZE_X;
-	hpCurPos.Y = BOSS_ORIGIN_Y - 1;
 	curState = BossState::Idle;
 	boss.isAttack = false;
 }
@@ -234,6 +232,13 @@ void ShowBossHpUI()
 		std::cout << boss.hpString[boss.curPhase][i];
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
+void ChangePhase()
+{
+	DeleteBossModel();
+	BossInit();
+	boss.curPhase += 1;
+	ShowBossModel();
+}
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease()
 {
@@ -245,7 +250,7 @@ void BossLifeDecrease()
 	}
 	boss.curBossHp--;
 	if (boss.curBossHp == 0)
-		boss.curPhase += 1;
+		ChangePhase();
 	ShowBossHpUI();
 }
 /****************보스 충돌 함수*********************/

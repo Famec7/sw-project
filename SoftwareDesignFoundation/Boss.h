@@ -14,7 +14,7 @@ typedef struct _BossInfo
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	int curPhase = 0;	// 0이 1번째 페이즈
 	double speed = 0.2;
-	std::string hpString[3] = { "CodeIsCompileTimeError","asdadafaf", "dsklanfklanfslkgns" };
+	std::string hpString[3] = { "CodeIsCompileTimeError","NullReferenceException", "dsklzanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
 	int isAttack = false;
 } BossInfo;
