@@ -48,6 +48,13 @@ void UpdateItem() {
             EraseItemHp(itemList[i]);
             PrintItemHp(itemList[i]);
         }
+        if (itemList[i].time == 0) {
+            itemList[i].itemHp = 0;
+            DecreseItemHp(&itemList[i]);
+        }
+        if (itemList[i].time > 0) {
+            itemList[i].time -= Time.deltaTime;
+        }
     }
 }
 
@@ -74,6 +81,7 @@ void CreateItem(COORD pos, int itemId) {
             itemList[i].itemHp = 4;
             itemList[i].itemId = itemId;
             itemList[i].itemPos = pos;
+            itemList[i].time = itemTime;
             curCreateItem++;
             break;
         }
