@@ -82,7 +82,7 @@ void FireBullet() {
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1);
 		if (hellBulletModel[i] == 2)
 		{
-			double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.2;
+			double speed = 0.01 + ((double)rand() / RAND_MAX) * 0.05;
 			MakeBullet(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1, 4, speed);
 		}
 	}
@@ -429,7 +429,7 @@ void BossUpdate()
 		idleTime -= Time.deltaTime;
 	else if (idleTime < 0) {
 		int randomNum = rand() % 10;
-		if (randomNum < 3 && EmptyNormalMob())
+		if (randomNum < 4 && EmptyNormalMob())
 			curState = BossState::Summon;
 		else if(EmptyNormalMob())
 			curState = BossState::Pattern1;

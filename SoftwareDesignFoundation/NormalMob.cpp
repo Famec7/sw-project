@@ -174,7 +174,7 @@ void NormalMobShoot(NormalMobInfo* normalMob) {
 
 	SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
 
-	double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.2;
+	double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.05;
 	MakeBullet(normalMob->pos.X + 5, normalMob->pos.Y + 2, 4, speed);
 
 
