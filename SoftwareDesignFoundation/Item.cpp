@@ -45,14 +45,12 @@ void UpdateItem() {
     for (i = 0; i < maxCreateItem; i++) {
         if (ItemDetectedCollision(itemList[i])) {
             DecreseItemHp(&itemList[i]);
-            EraseItemHp(itemList[i]);
-            PrintItemHp(itemList[i]);
         }
-        if (itemList[i].time == 0) {
-            itemList[i].itemHp = 0;
+        if (itemList[i].time <= 0) {
+            itemList[i].itemHp = 1;
             DecreseItemHp(&itemList[i]);
         }
-        if (itemList[i].time > 0) {
+        else {
             itemList[i].time -= Time.deltaTime;
         }
     }
@@ -179,7 +177,8 @@ void DecreseItemHp(ITEM* item) {
                 bulletNum++;
             }
         }
-
+        EraseItemHp(*item);
+        PrintItemHp(*item);
         curCreateItem--;
     }
 }
