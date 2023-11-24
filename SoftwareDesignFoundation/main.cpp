@@ -27,7 +27,7 @@ int main() {
 		UpdateBullet();
 		UpdateItem();
 		NormalMobUpdate();
-		BossUpdate();
+		UpdateBoss();
 		UpdateItem();
 		PlayerUpdate();
 		PlayerStatOutput();

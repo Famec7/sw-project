@@ -322,6 +322,7 @@ void BossShiftRight()
 }
 
 double curSpeed = boss.speed;
+
 /****************보스의 전체적인 움직임*********************/
 void BossRandomMove()
 {
@@ -336,31 +337,6 @@ void BossRandomMove()
 			BossShiftLeft();
 		curSpeed = boss.speed;
 	}
-	//int minDistance = 3;	// 최소 이동거리
-	//int range = 10;	// 이동 범위
-	//static int right = rand() % range + minDistance;
-	//static int left = rand() % range + minDistance;
-	//static int curSpeed = boss.speed;
-	//if (direction == 0)
-	//{
-	//	for (int i = 0; i < right; i++)
-	//		BossShiftRight();
-	//	if(right == 0)
-	//		BossShiftLeft();
-	//}
-	//else
-	//{
-	//	for (int i = 0; i < left; i++)
-	//	{
-	//		BossShiftLeft();
-	//		Sleep(boss.speed);
-	//	}
-	//	for (int i = 0; i < right; i++)
-	//	{
-	//		BossShiftRight();
-	//		Sleep(boss.speed);
-	//	}
-	//}
 }
 
 void SummonNormalMob()
@@ -370,102 +346,136 @@ void SummonNormalMob()
 		CreateNormalMob();
 }
 
-// 4초동안 총구 돌리고 3초동안 멈출 때 총알 쏘기
-// isAttack = 1 -> 총구 보이기, isAttack = 2 -> 총알 쏘기
-void BossPattern1()
+/****************보스의 패턴*********************/
+void ChangeState(BossState next);
+void StartIdleState();
+void UpdateIdleState();
+void StartHellBulletState();
+void UpdateHellBulletState();
+void StartBlurState();
+void UpdateBlurState();
+void StartSummonState();
+void UpdateSummonState();
+void UpdateBoss();
+
+void ChangeState(BossState next)
 {
-	static double showMuzzleTime = 4;
-	static double fireBulletTime = 3;
-	static double fireCycleTime = 0.01;
-
-	if (showMuzzleTime > 0 && boss.isAttack == 0)
-	{
-		showMuzzleTime -= Time.deltaTime;
-		ShowMuzzle();
-		Sleep(10);
-	}
-	else if (showMuzzleTime < 0 && boss.isAttack == 0)
-		boss.isAttack = 1;
-	else if (boss.isAttack == 1) {
-		fireCycleTime -= Time.deltaTime;
-		if (fireCycleTime < 0)
-		{
-			FireBullet();
-			fireCycleTime = 1;
-		}
-		fireBulletTime -= Time.deltaTime;
-		if (fireBulletTime < 0)
-		{
-			boss.isAttack = 0;
-			showMuzzleTime = 4;
-			fireBulletTime = 3;
-			fireCycleTime = 0.01;
-			DeleteMuzzle();
-		}
-	}
-}
-
-void BossPattern2()
-{
-
-}
-
-void BossPattern3()
-{
-
-}
-
-// 6 ~ 7초동안 idle
-// 10~11초 동안 pattern
-
-double idleTime = rand() % 2 + 6;
-double patternOneTime = rand() % 2 + 14;
-
-void BossUpdate()
-{
-	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
-		BossLifeDecrease();
-
-	if (idleTime > 0 && curState == BossState::Idle && EmptyNormalMob())
-		idleTime -= Time.deltaTime;
-	else if (idleTime < 0) {
-		int randomNum = rand() % 10;
-		if (randomNum < 4 && EmptyNormalMob())
-			curState = BossState::Summon;
-		else if(EmptyNormalMob())
-			curState = BossState::Pattern1;
-		idleTime = rand() % 2 + 6;
-	}
-
-	if (curState == BossState::Pattern1 && patternOneTime > 0)
-		patternOneTime -= Time.deltaTime;
-	else if (patternOneTime < 0) {
-		curState = BossState::Idle;
-		patternOneTime = rand() % 2 + 10;
-		DeleteMuzzle();
-	}
-
-	if(curState == BossState::Summon && EmptyNormalMob())
-	{
-		SummonNormalMob();
-		curState = BossState::Idle;
-	}
+	curState = next;
 
 	switch (curState)
 	{
-	case Idle:
-		BossRandomMove();
+	case BossState::Idle:
+		StartIdleState();
 		break;
-	case Pattern1:
-		BossPattern1();
+	case BossState::HellBullet:
+		StartHellBulletState();
 		break;
-	case Pattern2:
-		BossPattern2();
+	case BossState::Blur:
+		StartBlurState();
 		break;
-	case Pattern3:
-		BossPattern3();
+	case BossState::Summon:
+		StartSummonState();
 		break;
 	default:
 		break;
 	}
+}
+
+void UpdateBoss()
+{
+	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
+		BossLifeDecrease();
+
+	switch (curState)
+	{
+	case Idle:
+		UpdateIdleState();
+		break;
+	case HellBullet:
+		UpdateHellBulletState();
+		break;
+	case Blur:
+		UpdateBlurState();
+		break;
+	case Summon:
+		UpdateSummonState();
+		break;
+	default:
+		break;
+	}
+}
+
+void StartIdleState()
+{
+	curState = BossState::Idle;
+}
+void UpdateIdleState()
+{
+	static double idleTime = rand() % 2 + 6;
+
+	if (idleTime < 0)
+	{
+		idleTime = rand() % 2 + 6;
+		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount- 1) + 1);
+		ChangeState(nextState);
+	}
+	else
+	{
+		BossRandomMove();
+		idleTime -= Time.deltaTime;
+	}
+}
+
+void StartHellBulletState()
+{
+		curState = BossState::HellBullet;
+}
+void UpdateHellBulletState()
+{
+	static double showMuzzleTime = 4;
+	static double fireBulletTime = 3;
+	static double fireCycleTime = 0.1;
+
+	if (showMuzzleTime > 0)
+	{
+		showMuzzleTime -= Time.deltaTime;
+		ShowMuzzle();
+	}
+	else if (showMuzzleTime < 0) {
+		fireCycleTime -= Time.deltaTime;
+		if (fireCycleTime < 0)
+		{
+			FireBullet();
+			fireCycleTime = 0.1;
+		}
+		fireBulletTime -= Time.deltaTime;
+		if (fireBulletTime < 0)
+		{
+			showMuzzleTime = 4;
+			fireBulletTime = 3;
+			fireCycleTime = 0.1;
+			DeleteMuzzle();
+			ChangeState(BossState::Idle);
+		}
+	}
+}
+
+void StartBlurState()
+{
+	curState = BossState::Blur;
+}
+void UpdateBlurState()
+{
+	ChangeState(BossState::Idle);
+}
+void StartSummonState()
+{
+	curState = BossState::Summon;
+	SummonNormalMob();
+}
+void UpdateSummonState()
+{
+	if(EmptyNormalMob())
+		ChangeState(BossState::Idle);
+	BossRandomMove();
 }

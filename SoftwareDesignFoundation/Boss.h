@@ -22,10 +22,11 @@ typedef struct _BossInfo
 enum BossState
 {
 	Idle,
-	Pattern1,
-	Pattern2,
-	Pattern3,
-	Summon
+	HellBullet,
+	Blur,
+	Summon,
+
+	StateCount
 };
 
 extern BossInfo boss;
@@ -33,6 +34,6 @@ extern BossInfo boss;
 /****************보스 스탯 초기화 함수*********************/
 void BossInit();
 /*보스 업데이트 함수*/
-void BossUpdate();
+void UpdateBoss();
 
 void ShowBossHpUI();
