@@ -17,20 +17,14 @@ clock_t OldTime;
 
 void ScreenInit()
 {
-	FPSTextInfo = new char[BUF_SIZE];
-	memset(FPSTextInfo, '\0', sizeof(char) * BUF_SIZE);
-	OldTime = clock();
-
-	CONSOLE_CURSOR_INFO cci;
-
+	g_nScreenIndex = 0;
 	g_hScreen[0] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	g_hScreen[1] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-
-	// 커서를 숨긴다.
-	cci.dwSize = 1;
-	cci.bVisible = FALSE;
-	SetConsoleCursorInfo(g_hScreen[0], &cci);
-	SetConsoleCursorInfo(g_hScreen[1], &cci);
+	g_numOfFrame = 0;
+	g_numOfFPS = 0;
+	FPSTextInfo = new char[BUF_SIZE];
+	CurTime = clock();
+	OldTime = clock();
 }
 
 void ScreenFlipping()
@@ -43,27 +37,27 @@ void ScreenClear()
 {
 	COORD Coor = { 0, 0 };
 	DWORD dw;
-	FillConsoleOutputCharacter(g_hScreen[g_nScreenIndex], ' ', 80 * 40, Coor, &dw);
+	FillConsoleOutputCharacter(g_hScreen[g_nScreenIndex], ' ', 80 * 25, Coor, &dw);
 }
 
 void ScreenPrint(int x, int y, char* string)
 {
 	DWORD dw;
-	COORD CursorPosition = { x, y };
+	COORD CursorPosition = { (short)x, (short)y };
 	SetConsoleCursorPosition(g_hScreen[g_nScreenIndex], CursorPosition);
 	WriteFile(g_hScreen[g_nScreenIndex], string, strlen(string), &dw, NULL);
 }
 
 void Render()
 {
-	ScreenClear();
-	if (CurTime - OldTime >= 1000) // 출력 코드
+	OldTime = CurTime;
+	CurTime = clock();
+	g_numOfFrame++;
+	if (CurTime - OldTime > 1000)
 	{
-		sprintf(FPSTextInfo, "FPS : %d", g_numOfFPS);
-		OldTime = CurTime;
+		g_numOfFPS = g_numOfFrame;
 		g_numOfFrame = 0;
 	}
-	g_numOfFrame++;
+	sprintf(FPSTextInfo, "FPS : %d", g_numOfFPS);
 	ScreenPrint(0, 0, FPSTextInfo);
-	ScreenFlipping();
 }

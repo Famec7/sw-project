@@ -19,7 +19,9 @@ int main() {
 	playerInit();
 	PlayerShowModel();
 	DrawGameBoard();
+	ScreenInit();
 	while (1) {
+		Render();
 		ProcessKeyInput();
 		UpdateTime();
 		UpdateBullet();

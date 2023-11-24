@@ -161,6 +161,7 @@ BossState curState = BossState::Idle;
 BossInfo boss;
 // 보스의 hp를 띄울 위치
 COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 2 };
+RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2, boss.curPos.Y + BOSS_SIZE_Y };
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit()
