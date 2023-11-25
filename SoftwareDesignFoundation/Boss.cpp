@@ -1,10 +1,77 @@
 #include "Boss.h"
 #include "Bullet.h"
 #include "gameInfo.h"
+#include "NormalMob.h"
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
-COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 2 };
+int fingerUpModel[5][5] = {
+	{0, 2, 0, 0, 0},
+	{0, 2, 0, 0, 0},
+	{0, 2, 2, 2, 0},
+	{2, 2, 2, 2, 0},
+	{0, 2, 2, 0, 0}
+};
+int fingerRightModel[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 2, 0, 0, 0},
+	{2, 2, 2, 2, 2},
+	{2, 2, 2, 0, 0},
+	{0, 2, 2, 0, 0}
+};
+int fingerDownModel[5][5] = {
+	{0, 2, 2, 0, 0},
+	{2, 2, 2, 2, 0},
+	{0, 2, 2, 2, 0},
+	{0, 2, 0, 0, 0},
+	{0, 2, 0, 0, 0}
+};
+int fingerLeftModel[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 0, 2, 0},
+	{2, 2, 2, 2, 2},
+	{0, 0, 2, 2, 2},
+	{0, 0, 2, 2, 0}
+};
+
+void ShowFinger(int num) {
+	for (int y = 0; y < 5; y++) {
+		for (int x = 0; x < 5; x++) {
+			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2), boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+			if (num == 0) {			//up
+				if (fingerUpModel[y][x] == 2) {
+					printf("‚ñ†");
+				}
+			}
+			else if (num == 1) {			//right
+				if (fingerRightModel[y][x] == 2) {
+					printf("‚ñ†");
+				}
+			}
+			else if (num == 2) {					//down
+				if (fingerDownModel[y][x] == 2) {
+					printf("‚ñ†");
+				}
+			}
+			else if (num == 3) {			//left
+				if (fingerLeftModel[y][x] == 2) {
+					printf("‚ñ†");
+				}
+			}
+			
+		}
+	}
+}
+void DeleteFinger() {
+	for (int y = 0; y < 5; y++) {
+		for (int x = 0; x < 5; x++) {
+			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2), boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+			printf("  ");
+		}
+	}
+}
+
+COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
 
 void ShowMuzzle() {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
@@ -12,36 +79,47 @@ void ShowMuzzle() {
 	int arrY = muzzleCurPos.Y - GBOARD_ORIGIN_Y;
 	int num = rand() % 40;
 
+	int start = num - 3;
+	int end = num + 2;
+
+	if (start < 0)
+	{
+		start = 0;
+		end = start + 5;
+	}
+	if (end > 40)
+	{
+		end = 40;
+		start = end - 5;
+	}
 	for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
 		gameBoardInfo[arrY][arrX + i] = 1;
 
-
-		if (num == i || num == i + 1 || num == i - 1)
+		if (i >= start && i <= end)
 		{
 			hellBulletModel[i] = 1;
-			printf("°·");
+			printf("‚ñ†");
 		}
 		else
 		{
 			hellBulletModel[i] = 2;
-			printf("¢√");
+			printf("‚ñ£");
 		}
 	}
-
 	/*for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
 		gameBoardInfo[arrY][arrX + i] = 1;
 		if (hellBulletModel[i] == 1)
 		{
-			printf("°·");
+			printf("‚ñ†");
 			hellBulletModel[i] += 1;
 		}
 		else if (hellBulletModel[i] == 2)
 		{
-			printf("¢√");
+			printf("‚ñ£");
 			hellBulletModel[i] -= 1;
 		}
 	}*/
@@ -69,7 +147,7 @@ void FireBullet() {
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1);
 		if (hellBulletModel[i] == 2)
 		{
-			double speed = 0.1 + ((double)rand() / RAND_MAX) * 0.4;
+			double speed = 0.01 + ((double)rand() / RAND_MAX) * 0.05;
 			MakeBullet(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1, 4, speed);
 		}
 	}
@@ -77,18 +155,18 @@ void FireBullet() {
 
 int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	{
-		/*√ππ¯¬∞ ∆–≈œ ∏µ®*/
+		/*Ï≤´Î≤àÏß∏ Ìå®ÌÑ¥ Î™®Îç∏*/
 	/*
-	°·°·°·°·°·°·°·°·°·°·
-	°·                °·
-	°·                °·
-	°·   °·      °·   °·
-	°· °·  °·  °·  °· °·
-	°·                °·
-	°·                °·
-	°·    °·°·°·°·    °·
-	°·                °·
-	°·°·°·°·°·°·°·°·°·°·
+	‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†
+	‚ñ†                ‚ñ†
+	‚ñ†                ‚ñ†
+	‚ñ†   ‚ñ†      ‚ñ†   ‚ñ†
+	‚ñ† ‚ñ†  ‚ñ†  ‚ñ†  ‚ñ† ‚ñ†
+	‚ñ†                ‚ñ†
+	‚ñ†                ‚ñ†
+	‚ñ†    ‚ñ†‚ñ†‚ñ†‚ñ†    ‚ñ†
+	‚ñ†                ‚ñ†
+	‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†
 	*/
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -101,20 +179,20 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		},
-		/*µŒπ¯¬∞ ∆–≈œ ∏µ®*/
+		/*ÎëêÎ≤àÏß∏ Ìå®ÌÑ¥ Î™®Îç∏*/
 	/*
 
 
-		°·°·°·°·°·°·
-		°·        °·
-		°·°‹    °‹°·
-		°·        °·
-		°·  °·°·  °·
-		°·°·°·°·°·°·
+		‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†
+		‚ñ†        ‚ñ†
+		‚ñ†‚óè    ‚óè‚ñ†
+		‚ñ†        ‚ñ†
+		‚ñ†  ‚ñ†‚ñ†  ‚ñ†
+		‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†‚ñ†
 
 
 	*/
-	/*µŒπ¯¬∞ ∆–≈œ ∏µ®*/ // 1 : °·	2 : °‹
+	/*ÎëêÎ≤àÏß∏ Ìå®ÌÑ¥ Î™®Îç∏*/ // 1 : ‚ñ†	2 : ‚óè
 	{
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -127,7 +205,7 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	},
-	/*ººπ¯¬∞ ∆–≈œ ∏µ®*/
+	/*ÏÑ∏Î≤àÏß∏ Ìå®ÌÑ¥ Î™®Îç∏*/
 	{
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -142,26 +220,26 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	}
 };
 
-// ∫∏Ω∫¿« «ˆ¿Á ªÛ≈¬
+// Î≥¥Ïä§Ïùò ÌòÑÏû¨ ÏÉÅÌÉú
 BossState curState = BossState::Idle;
-// ∫∏Ω∫ ¡§∫∏
+// Î≥¥Ïä§ Ï†ïÎ≥¥
 BossInfo boss;
-// ∫∏Ω∫¿« hp∏¶ ∂ÁøÔ ¿ßƒ°
+// Î≥¥Ïä§Ïùò hpÎ•º ÎùÑÏö∏ ÏúÑÏπò
 COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 2 };
+RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2, boss.curPos.Y + BOSS_SIZE_Y };
 
-/****************∫∏Ω∫ Ω∫≈» √ ±‚»≠ «‘ºˆ*********************/
+/****************Î≥¥Ïä§ Ïä§ÌÉØ Ï¥àÍ∏∞Ìôî Ìï®Ïàò*********************/
 void BossInit()
 {
 	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
+	boss.speed = 0.2;
 	int length = boss.hpString[boss.curPhase].length();
-	hpCurPos.X = BOSS_ORIGIN_X - length / 2 + BOSS_SIZE_X;
-	hpCurPos.Y = BOSS_ORIGIN_Y - 1;
 	curState = BossState::Idle;
 	boss.isAttack = false;
 }
-/****************∫∏Ω∫ ∏µ®¿ª ∂ÁøÏ¥¬ «‘ºˆ*********************/
+/****************Î≥¥Ïä§ Î™®Îç∏ÏùÑ ÎùÑÏö∞Îäî Ìï®Ïàò*********************/
 void ShowBossModel()
 {
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
@@ -175,19 +253,19 @@ void ShowBossModel()
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
 			if (bossModel[boss.curPhase][y][x] == 1)
 			{
-				printf("°·");
+				printf("‚ñ†");
 				gameBoardInfo[arrY + y][arrX + x] = BOSS;
 			}
 			else if (bossModel[boss.curPhase][y][x] == 2)
 			{
-				printf("°‹");
+				printf("‚óè");
 				gameBoardInfo[arrY + y][arrX + x] = BOSS;
 			}
 		}
 	}
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
-/****************∫∏Ω∫ ∏µ®¿ª ªË¡¶«œ¥¬ «‘ºˆ*********************/
+/****************Î≥¥Ïä§ Î™®Îç∏ÏùÑ ÏÇ≠Ï†úÌïòÎäî Ìï®Ïàò*********************/
 void DeleteBossModel()
 {
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
@@ -209,19 +287,28 @@ void DeleteBossModel()
 
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
-/****************∫∏Ω∫ HP UI∏¶ ∂ÁøÏ¥¬ «‘ºˆ*********************/
+/****************Î≥¥Ïä§ HP UIÎ•º ÎùÑÏö∞Îäî Ìï®Ïàò*********************/
 void ShowBossHpUI()
 {
-	//∫∏Ω∫¿« ø¯∑° ¿ßƒ°∫∏¥Ÿ «—ƒ≠ ¿ßø° «•Ω√
+	//Î≥¥Ïä§Ïùò ÏõêÎûò ÏúÑÏπòÎ≥¥Îã§ ÌïúÏπ∏ ÏúÑÏóê ÌëúÏãú
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
 	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++)
 		std::cout << boss.hpString[boss.curPhase][i];
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
-/****************∫∏Ω∫ √º∑¬ «—ƒ≠ ¡Ÿ¿Ã¥¬ «‘ºˆ*********************/
+void ChangePhase()
+{
+	DeleteBossModel();
+	BossInit();
+	boss.curPhase += 1;
+	ShowBossModel();
+}
+/****************Î≥¥Ïä§ Ï≤¥Î†• ÌïúÏπ∏ Ï§ÑÏù¥Îäî Ìï®Ïàò*********************/
 void BossLifeDecrease()
 {
-	// «ˆ¿Á √º∑¬ «—ƒ≠ ¡Ÿ¿Ã∞Ì ¥ŸΩ√ UIø° «•Ω√
+	// ÌòÑÏû¨ Ï≤¥Î†• ÌïúÏπ∏ Ï§ÑÏù¥Í≥† Îã§Ïãú UIÏóê ÌëúÏãú
 	for (int i = 0; i < boss.hpString[boss.curPhase].length(); i++)
 	{
 		SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
@@ -229,162 +316,320 @@ void BossLifeDecrease()
 	}
 	boss.curBossHp--;
 	if (boss.curBossHp == 0)
-		boss.curPhase += 1;
+		ChangePhase();
 	ShowBossHpUI();
 }
-/****************∫∏Ω∫∏¶ øﬁ¬ ¿∏∑Œ ¿Ãµø«œ¥¬ «‘ºˆ*********************/
-void BossShiftLeft()
-{
-	if (!BossDetectedCollision(boss.curPos.X - 1, boss.curPos.Y))
-		return;
-	DeleteBossModel();
-	boss.curPos.X -= 2;
-	ShowBossModel();
-}
-/****************∫∏Ω∫∏¶ ø¿∏•¬ ¿∏∑Œ ¿Ãµø«œ¥¬ «‘ºˆ*********************/
-void BossShiftRight()
-{
-	if (!BossDetectedCollision(boss.curPos.X + 1, boss.curPos.Y))
-		return;
-	DeleteBossModel();
-	boss.curPos.X += 2;
-	ShowBossModel();
-}
-/****************∫∏Ω∫¿« ¿¸√º¿˚¿Œ øÚ¡˜¿”*********************/
-void BossRandomMove()
-{
-	srand(time(NULL));
-	int direction = rand() % 2;	// πÊ«‚ ¡§«œ±‚ 0 : ø¿∏•¬ , 1 : øﬁ¬ 
-	if (direction == 0)
-		BossShiftRight();
-	else
-		BossShiftLeft();
-	//int minDistance = 3;	// √÷º“ ¿Ãµø∞≈∏Æ
-	//int range = 10;	// ¿Ãµø π¸¿ß
-	//static int right = rand() % range + minDistance;
-	//static int left = rand() % range + minDistance;
-	//static int curSpeed = boss.speed;
-	//if (direction == 0)
-	//{
-	//	for (int i = 0; i < right; i++)
-	//		BossShiftRight();
-	//	if(right == 0)
-	//		BossShiftLeft();
-	//}
-	//else
-	//{
-	//	for (int i = 0; i < left; i++)
-	//	{
-	//		BossShiftLeft();
-	//		Sleep(boss.speed);
-	//	}
-	//	for (int i = 0; i < right; i++)
-	//	{
-	//		BossShiftRight();
-	//		Sleep(boss.speed);
-	//	}
-	//}
-}
-/****************∫∏Ω∫ √Êµπ «‘ºˆ*********************/
-int BossDetectedCollision(int posX, int posY)
+/****************Î≥¥Ïä§ Ï∂©Îèå Ìï®Ïàò*********************/
+int BossCullingCollision(int posX, int posY)
 {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 
+	int length = boss.hpString[boss.curPhase].length();
+	for (int y = 0; y < BOSS_SIZE_Y; y++)
+	{
+		for (int x = 0; x < BOSS_SIZE_X; x++)
+		{
+			if (bossModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS)
+			{
+				if (gameBoardInfo[arrY + y][arrX + x] != 0)
+				{
+					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY)
+					{
+						SetCurrentCursorPos(posX + x * 2, posY + y);
+						printf("  ");
+						gameBoardInfo[arrY + y][arrX + x] = 0;
+					}
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+int BossDetectionCollision(int posX, int posY)
+{
+	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
+	int arrY = posY - GBOARD_ORIGIN_Y;
+
+	int length = boss.hpString[boss.curPhase].length();
 	for (int y = 0; y < BOSS_SIZE_Y; y++)
 	{
 		for (int x = 0; x < BOSS_SIZE_X; x++)
 		{
 			if (bossModel[y][x] != 0)
 			{
-				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][boss.curBossHp - 1]))
+				if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
+					gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
 					return 1;
-				else if (gameBoardInfo[arrY + y][arrX + x] != 0)
-					return 2;
 			}
 		}
 	}
-
 	return 0;
 }
-
-// 4√ µøæ» √—±∏ µπ∏Æ∞Ì 3√ µøæ» ∏ÿ√‚ ∂ß √—æÀ ΩÓ±‚
-// isAttack = 1 -> √—±∏ ∫∏¿Ã±‚, isAttack = 2 -> √—æÀ ΩÓ±‚
-void BossPattern1()
+/****************Î≥¥Ïä§Î•º ÏôºÏ™ΩÏúºÎ°ú Ïù¥ÎèôÌïòÎäî Ìï®Ïàò*********************/
+void BossShiftLeft()
 {
-	static double showMuzzleTime = 4;
-	static double fireBulletTime = 3;
-
-	showMuzzleTime -= Time.deltaTime;
-	if (showMuzzleTime < 0 && boss.isAttack == 0)
-	{
-		boss.isAttack = 1;
-		ShowMuzzle();
-	}
-	else if (boss.isAttack == 1) {
-		FireBullet();
-		fireBulletTime -= Time.deltaTime;
-		if (fireBulletTime < 0)
-		{
-			boss.isAttack = 0;
-			showMuzzleTime = 4;
-			fireBulletTime = 3;
-		}
-	}
-}
-
-void BossPattern2()
-{
-
-}
-
-void BossPattern3()
-{
-
-}
-
-// 6 ~ 7√ µøæ» idle
-// 10~11√  µøæ» pattern
-
-double idleTime = rand() % 2 + 6;
-double patternOneTime = rand() % 2 + 10;
-
-void BossUpdate()
-{
-	if (BossDetectedCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
-		BossLifeDecrease();
-
-	if (idleTime > 0 && curState == BossState::Idle)
-		idleTime -= Time.deltaTime;
-	else if (idleTime < 0) {
-		curState = BossState::Pattern1;
-		idleTime = rand() % 2 + 6;
-	}
-
-	if (curState == BossState::Pattern1 && patternOneTime > 0)
-		patternOneTime -= Time.deltaTime;
-	else if (patternOneTime < 0) {
-		curState = BossState::Idle;
-		patternOneTime = rand() % 2 + 10;
-		DeleteMuzzle();
-	}
-
+	if (BossCullingCollision(boss.curPos.X - 2, boss.curPos.Y))
+		return;
+	DeleteBossModel();
+	boss.curPos.X -= 2;
 	ShowBossModel();
+}
+/****************Î≥¥Ïä§Î•º Ïò§Î•∏Ï™ΩÏúºÎ°ú Ïù¥ÎèôÌïòÎäî Ìï®Ïàò*********************/
+void BossShiftRight()
+{
+	if (BossCullingCollision(boss.curPos.X + 2, boss.curPos.Y))
+		return;
+	DeleteBossModel();
+	boss.curPos.X += 2;
+	ShowBossModel();
+}
+
+double curSpeed = boss.speed;
+
+/****************Î≥¥Ïä§Ïùò Ï†ÑÏ≤¥Ï†ÅÏù∏ ÏõÄÏßÅÏûÑ*********************/
+void BossRandomMove()
+{
+	srand(time(NULL));
+	int direction = rand() % 2;	// Î∞©Ìñ• Ï†ïÌïòÍ∏∞ 0 : Ïò§Î•∏Ï™Ω, 1 : ÏôºÏ™Ω
+	curSpeed -= Time.deltaTime;
+	if (curSpeed < 0)
+	{
+		if (direction == 0)
+			BossShiftRight();
+		else
+			BossShiftLeft();
+		curSpeed = boss.speed;
+	}
+}
+
+void SummonNormalMob()
+{
+	int count = rand() % 4 + 1;
+	for (int i = 0; i < count; i++)
+		CreateNormalMob();
+}
+
+/****************Î≥¥Ïä§Ïùò Ìå®ÌÑ¥*********************/
+void ChangeState(BossState next);
+// Î≥¥Ïä§Í∞Ä Îã®ÏàúÌûà ÏõÄÏßÅÏù¥Îäî ÏÉÅÌÉú
+void StartIdleState();
+void UpdateIdleState();
+// Î≥¥Ïä§Í∞Ä ÌÉÑÎßâÏùÑ ÏèòÎäî ÏÉÅÌÉú
+void StartHellBulletState();
+void UpdateHellBulletState();
+// Î≥¥Ïä§Í∞Ä Î∏îÎü¨CCÍ∏∞Î•º ÏÇ¨Ïö©ÌïòÎäî ÏÉÅÌÉú
+void StartBlurState();
+void UpdateBlurState();
+// Î≥¥Ïä§Í∞Ä ÏùºÎ∞ò Î™¨Ïä§ÌÑ∞Î•º ÏÜåÌôòÌïòÎäî ÏÉÅÌÉú
+void StartSummonState();
+void UpdateSummonState();
+
+
+void StartGoToDown();															//ImAdded
+void StartGoToLeft();															//ImAdded
+void StartGoToRight();															//ImAdded
+void UpdateGoTo();
+
+void UpdateBoss();
+
+void ChangeState(BossState next)
+{
+	curState = next;
+
 	switch (curState)
 	{
-	case Idle:
-		BossRandomMove();
+	case BossState::Idle:
+		StartIdleState();
 		break;
-	case Pattern1:
-		BossPattern1();
+	case BossState::HellBullet:
+		StartHellBulletState();
 		break;
-	case Pattern2:
-		BossPattern2();
+	case BossState::Blur:
+		StartBlurState();
 		break;
-	case Pattern3:
-		BossPattern3();
+	case BossState::Summon:
+		StartSummonState();
+		break;
+	case BossState::GoToDown:													//ImAdded				
+		StartGoToDown();
+		break;
+	case BossState::GoToLeft:													//ImAdded				
+		StartGoToLeft();
+		break;
+	case BossState::GoToRight:													//ImAdded				
+		StartGoToLeft();
 		break;
 	default:
 		break;
 	}
+}
+void UpdateBoss() 
+{
+	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
+		BossLifeDecrease();
+	switch (curState)
+	{
+	case Idle:
+		UpdateIdleState();
+		break;
+	case HellBullet:
+		UpdateHellBulletState();
+		break;
+	case Blur:
+		UpdateBlurState();
+		break;
+	case Summon:
+		UpdateSummonState();
+		break;	
+	case GoToDown:
+		UpdateGoTo();
+		break;
+	case GoToLeft:
+		UpdateGoTo();
+		break;
+	case GoToRight:
+		UpdateGoTo();
+		break;
+	default:
+		break;
+	}
+}
+
+void StartIdleState()
+{
+	curState = BossState::Idle;
+}
+void UpdateIdleState()
+{
+	static double idleTime = rand() % 2 + 6;
+
+	if (idleTime < 0)
+	{
+		idleTime = rand() % 2 + 6;
+		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount- 1) + 1);
+		ChangeState(nextState);
+	}
+	else
+	{
+		BossRandomMove();
+		idleTime -= Time.deltaTime;
+	}
+}
+
+double showMuzzleTime = 4;
+double fireBulletTime = 3;
+double fireCycleTime = 0.5;
+
+void StartHellBulletState()
+{
+		curState = BossState::HellBullet;
+		showMuzzleTime = 4;
+		fireBulletTime = 3;
+		fireCycleTime = 0.2;
+}
+void UpdateHellBulletState()
+{
+	if (showMuzzleTime > 0)
+	{
+		showMuzzleTime -= Time.deltaTime;
+		ShowMuzzle();
+	}
+	else if (showMuzzleTime < 0) {
+		fireCycleTime -= Time.deltaTime;
+		if (fireCycleTime < 0)
+		{
+			FireBullet();
+			fireCycleTime = 0.2;
+		}
+		fireBulletTime -= Time.deltaTime;
+		if (fireBulletTime < 0)
+		{
+			showMuzzleTime = 4;
+			fireBulletTime = 3;
+			fireCycleTime = 0.2;
+			DeleteMuzzle();
+			ChangeState(BossState::Idle);
+		}
+	}
+}
+
+void StartBlurState()
+{
+	curState = BossState::Blur;
+}
+void UpdateBlurState()
+{
+	ChangeState(BossState::Idle);
+}
+void StartSummonState()
+{
+	curState = BossState::Summon;
+	SummonNormalMob();
+}
+void UpdateSummonState()
+{
+	if(EmptyNormalMob())
+		ChangeState(BossState::Idle);
+	BossRandomMove();
+}
+
+//MyBossFunction
+void StartGoToDown() {
+	ShowFinger(0);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToDown;
+	ShowFinger(2);
+	while(1) {
+		if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1)) {
+			//Î≤ΩÏóê Ï∂©ÎèåÌïú Ìö®Í≥ºÏùå Ï∂îÍ∞Ä
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftDown();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void StartGoToLeft() {
+	ShowFinger(1);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToLeft;
+	ShowFinger(3);
+	while (1) {
+		if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y)) {
+			//Î≤ΩÏóê Ï∂©ÎèåÌïú Ìö®Í≥ºÏùå Ï∂îÍ∞Ä
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftLeft();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void StartGoToRight() {
+	ShowFinger(3);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToRight;
+	ShowFinger(1);
+	while (1) {
+		if (!PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y + 1)) {
+			//Î≤ΩÏóê Ï∂©ÎèåÌïú Ìö®Í≥ºÏùå Ï∂îÍ∞Ä
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftRight();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void UpdateGoTo() {
+	ChangeState(BossState::Idle);
 }
