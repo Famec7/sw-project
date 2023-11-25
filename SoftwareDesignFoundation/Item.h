@@ -29,3 +29,5 @@ int CreateItemRandom();
 int ItemIdRandom();
 void PrintItemHp(ITEM* item);
 void DecreseItemHp(ITEM* item);
+void InsertGameBoardInfo(ITEM item);
+void DeleteGameBoardInfo(ITEM item);
