@@ -53,6 +53,13 @@ void UpdateItem() {
         else {
             itemList[i].time -= Time.deltaTime;
         }
+        if (itemList[i].time == 0) {
+            itemList[i].itemHp = 0;
+            DecreseItemHp(&itemList[i]);
+        }
+        if (itemList[i].time > 0) {
+            itemList[i].time -= Time.deltaTime;
+        }
     }
 }
 
