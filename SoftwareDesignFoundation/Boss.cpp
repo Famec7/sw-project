@@ -433,13 +433,13 @@ void UpdateIdleState()
 
 double showMuzzleTime = 4;
 double fireBulletTime = 3;
-double fireCycleTime = 0.1;
+double fireCycleTime = 0.5;
 void StartHellBulletState()
 {
 		curState = BossState::HellBullet;
 		showMuzzleTime = 4;
 		fireBulletTime = 3;
-		fireCycleTime = 0.1;
+		fireCycleTime = 0.2;
 }
 void UpdateHellBulletState()
 {
@@ -453,14 +453,14 @@ void UpdateHellBulletState()
 		if (fireCycleTime < 0)
 		{
 			FireBullet();
-			fireCycleTime = 0.1;
+			fireCycleTime = 0.2;
 		}
 		fireBulletTime -= Time.deltaTime;
 		if (fireBulletTime < 0)
 		{
 			showMuzzleTime = 4;
 			fireBulletTime = 3;
-			fireCycleTime = 0.1;
+			fireCycleTime = 0.2;
 			DeleteMuzzle();
 			ChangeState(BossState::Idle);
 		}
