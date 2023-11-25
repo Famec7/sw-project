@@ -222,6 +222,7 @@ void DeleteBossModel()
 
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
+int isBlur = 1;
 /****************보스 HP UI를 띄우는 함수*********************/
 void ShowBossHpUI()
 {
@@ -230,7 +231,18 @@ void ShowBossHpUI()
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
 	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++)
-		std::cout << boss.hpString[boss.curPhase][i];
+	{
+		if (isBlur)
+		{
+			int randNum = rand() % 10;
+			if (randNum < 3)
+				std::cout << "■";
+			else
+				std::cout << boss.hpString[boss.curPhase][i];
+		}
+		else
+			std::cout << boss.hpString[boss.curPhase][i];
+	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 void ChangePhase()
@@ -467,13 +479,24 @@ void UpdateHellBulletState()
 	}
 }
 
+double blurTime = 3;
 void StartBlurState()
 {
 	curState = BossState::Blur;
+	blurTime = 3;
+	isBlur = 1;
 }
 void UpdateBlurState()
 {
-	ChangeState(BossState::Idle);
+	if (blurTime)
+	{
+		blurTime -= Time.deltaTime;
+	}
+	else
+	{
+		isBlur = 0;
+		ChangeState(BossState::Idle);
+	}
 }
 void StartSummonState()
 {
