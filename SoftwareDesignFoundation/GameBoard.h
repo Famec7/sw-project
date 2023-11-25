@@ -2,5 +2,5 @@
 #include "gameInfo.h"
 
 void PrintGameBoard();
-void AddGameBoard(COORD pos, int element); // °ÔÀÓº¸µå¿¡ ¿ä¼Ò Ãß°¡
-void SetGameBoard(); // °ÔÀÓº¸µå¿¡ °ÔÀÓÆÇÀ» ±×¸²
+void AddGameBoard(COORD pos, int element); // ê²Œì„ë³´ë“œì— ìš”ì†Œ ì¶”ê°€
+void SetGameBoard(); // ê²Œì„ë³´ë“œì— ê²Œì„íŒì„ ê·¸ë¦¼
