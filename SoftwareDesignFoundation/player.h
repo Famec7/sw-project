@@ -30,3 +30,7 @@ void ManageGameboard();
 void PlayerUpdate();
 
 int IsGameOver();
+
+COORD GetPlayerPos();
+void AttackedPlayerProcessing(int n); // 플레이어 피격처리 n은 감소 수치
+

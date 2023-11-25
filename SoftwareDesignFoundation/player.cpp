@@ -359,3 +359,14 @@ int IsGameOver() {
 	else
 		return 0;
 }
+
+COORD GetPlayerPos() {
+	return playerCurPos;
+}
+
+void AttackedPlayerProcessing(int n) {
+	HP -= n;
+	imHit = 1;
+	PlayerDeleteModel();
+	PlayerShowModel();
+}
