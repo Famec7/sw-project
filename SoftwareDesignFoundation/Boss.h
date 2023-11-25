@@ -1,5 +1,6 @@
 #pragma once
 #include "gameInfo.h"
+#include "player.h"
 #include <string>
 #include <iostream>
 
@@ -12,9 +13,9 @@
 typedef struct _BossInfo
 {
 	COORD curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
-	int curPhase = 0;	// 0ÀÌ 1¹øÂ° ÆäÀÌÁî
-	int speed = 200;
-	std::string hpString[3] = { "012345","asdadafaf", "dsklanfklanfslkgns" };
+	int curPhase = 0;	// 0ì´ 1ë²ˆì§¸ í˜ì´ì¦ˆ
+	double speed = 0.2;
+	std::string hpString[3] = { "CodeIsCompileTimeError","NullReferenceException", "dsklzanfklanfslkgns" };
 	int curBossHp = hpString[curPhase].length();
 	int isAttack = false;
 } BossInfo;
@@ -22,33 +23,20 @@ typedef struct _BossInfo
 enum BossState
 {
 	Idle,
-	Pattern1,
-	Pattern2,
-	Pattern3
+	HellBullet,
+	Blur,
+	Summon,
+	GoToDown,																	//MyAdded
+	GoToLeft,
+	GoToRight,
+	StateCount
 };
 
 extern BossInfo boss;
 
-/*º¸½º ¾÷µ¥ÀÌÆ® ÇÔ¼ö*/
-void BossUpdate();
-
-/****************º¸½º ½ºÅÈ ÃÊ±âÈ­ ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ìŠ¤íƒ¯ ì´ˆê¸°í™” í•¨ìˆ˜*********************/
 void BossInit();
-/****************º¸½º ¸ğµ¨À» ¶ç¿ì´Â ÇÔ¼ö*********************/
-void ShowBossModel();
-/****************º¸½º ¸ğµ¨À» »èÁ¦ÇÏ´Â ÇÔ¼ö*********************/
-void DeleteBossModel();
-/****************º¸½º HP UI¸¦ ¶ç¿ì´Â ÇÔ¼ö*********************/
-void ShowBossHpUI();
-/****************º¸½º Ã¼·Â ÇÑÄ­ ÁÙÀÌ´Â ÇÔ¼ö*********************/
-void BossLifeDecrease();
-/****************º¸½º¸¦ ¿ŞÂÊÀ¸·Î ÀÌµ¿ÇÏ´Â ÇÔ¼ö*********************/
-void BossShiftLeft();
-/****************º¸½º¸¦ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÏ´Â ÇÔ¼ö*********************/
-void BossShiftRight();
-/****************º¸½ºÀÇ ÀüÃ¼ÀûÀÎ ¿òÁ÷ÀÓ*********************/
-void BossRandomMove();
-/****************º¸½º Ãæµ¹ ÇÔ¼ö*********************/
-int BossDetectedCollision(int posX, int posY);
+/*ë³´ìŠ¤ ì—…ë°ì´íŠ¸ í•¨ìˆ˜*/
+void UpdateBoss();
 
-void BossPattern1();
+void ShowBossHpUI();
