@@ -7,6 +7,8 @@ clock_t clock_tick;
 
 TimeStruct Time;
 
+#define DELTA_TIME_MAX (0.05)
+
 void InitTime()
 {
 	clock_tick = clock();
@@ -22,7 +24,7 @@ void UpdateTime()
 	double deltaTime = (double)delta / CLOCKS_PER_SEC;
 
 	Time.time += deltaTime;
-	Time.deltaTime = deltaTime;
+	Time.deltaTime = deltaTime < DELTA_TIME_MAX ? deltaTime : DELTA_TIME_MAX;
 }
 
 void DrawGameBoard(void)
@@ -32,16 +34,16 @@ void DrawGameBoard(void)
         SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y + y);
         if (y == GBOARD_HEIGHT)
         {
-            printf("¦¦");
+            printf("â””");
             gameBoardInfo[GBOARD_HEIGHT][0] = MAP_BOUNDARY;
         }
         else if (y == 0) {
-            printf("¦£");
+            printf("â”Œ");
             gameBoardInfo[0][0] = MAP_BOUNDARY;
         }
         else
         {
-            printf("¦¢");
+            printf("â”‚");
             gameBoardInfo[y][0] = MAP_BOUNDARY;
         }
     }
@@ -50,29 +52,29 @@ void DrawGameBoard(void)
         SetCurrentCursorPos(GBOARD_ORIGIN_X + (GBOARD_WIDTH + 1) * 2, GBOARD_ORIGIN_Y + y);
         if (y == GBOARD_HEIGHT)
         {
-            printf(" ¦¥ ");
+            printf(" â”˜ ");
             gameBoardInfo[GBOARD_HEIGHT][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
         else if (y == 0) {
-            printf(" ¦¤");
+            printf(" â”");
             gameBoardInfo[0][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
         else
         {
-            printf(" ¦¢");
+            printf(" â”‚");
             gameBoardInfo[y][GBOARD_WIDTH + 1] = MAP_BOUNDARY;
         }
     }
     for (int x = 1; x <= GBOARD_WIDTH + 1; x++)
     {
         SetCurrentCursorPos(GBOARD_ORIGIN_X + x * 2, GBOARD_ORIGIN_Y + GBOARD_HEIGHT);
-        printf("¦¡");
+        printf("â”€");
         gameBoardInfo[GBOARD_HEIGHT][x] = MAP_BOUNDARY;
     }
     for (int x = 1; x <= GBOARD_WIDTH + 1; x++)
     {
         SetCurrentCursorPos(GBOARD_ORIGIN_X + x * 2, GBOARD_ORIGIN_Y);
-        printf("¦¡");
+        printf("â”€");
         gameBoardInfo[0][x] = MAP_BOUNDARY;
     }
 
