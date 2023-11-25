@@ -1,9 +1,15 @@
 #include "Boss.h"
 #include "Bullet.h"
+#include "Item.h"
+#include "NormalMob.h"
+#include "Render.h"
 #include "player.h"
 
-int main()
-{
+int main() {
+	srand(time(NULL));
+	int key;
+	COORD pos;
+	ItemInit();
 	RemoveCursor();
 	SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y);
 	system("mode con:cols=100 lines=50");
@@ -13,11 +19,16 @@ int main()
 	playerInit();
 	PlayerShowModel();
 	DrawGameBoard();
+	ScreenInit();
 	while (1) {
+		Render();
 		ProcessKeyInput();
 		UpdateTime();
 		UpdateBullet();
-		BossUpdate();
+		UpdateItem();
+		NormalMobUpdate();
+		UpdateBoss();
+		UpdateItem();
 		PlayerUpdate();
 		PlayerStatOutput();
 		ManageShield();
@@ -27,7 +38,6 @@ int main()
 			printf("GAME OVER!!");
 			return 0;
 		}
-		Sleep(100);
 	}
 	getchar();
 
