@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Cursor.h"
 #include <conio.h>
 #include <stdio.h>

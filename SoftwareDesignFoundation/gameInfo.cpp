@@ -1,4 +1,4 @@
-#include "gameInfo.h"
+﻿#include "gameInfo.h"
 #include <iostream>
 
 int gameBoardInfo[GBOARD_HEIGHT + 1][GBOARD_WIDTH + 2] = {0, };
