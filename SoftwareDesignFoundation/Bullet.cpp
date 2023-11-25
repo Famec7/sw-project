@@ -6,14 +6,14 @@ std::list<Bullet> bullets;
 void PrintBullet(int info)
 {
 	if (info == BULLET)
-		printf("¤ý");
+		printf("â–¼");
 	else
-		std::cout << (char)info;
+		printf("%c ", (char)info);
 }
 
 void MakeBullet(int posX, int posY, int info, double speed)
 {
-	/*ÃÑ¾Ë Á¤º¸¸¦ ¸®½ºÆ®¿¡ Ãß°¡*/
+	/*ì´ì•Œ ì •ë³´ë¥¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€*/
 	Bullet newBulelt;
 	newBulelt.curPos.X = posX;
 	newBulelt.curPos.Y = posY;
@@ -23,11 +23,11 @@ void MakeBullet(int posX, int posY, int info, double speed)
 
 	bullets.push_back(newBulelt);
 
-	/*È­¸é¿¡ Ãâ·Â*/
+	/*í™”ë©´ì— ì¶œë ¥*/
 	SetCurrentCursorPos(posX, posY);
 	PrintBullet(info);
 
-	/*°ÔÀÓ º¸µåÆÇ¿¡ ¾÷µ¥ÀÌÆ®*/
+	/*ê²Œìž„ ë³´ë“œíŒì— ì—…ë°ì´íŠ¸*/
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 	gameBoardInfo[arrY][arrX] = info;
@@ -43,6 +43,23 @@ int BulletDetectedCollision(int posX, int posY, int info) {
 	return 1;
 }
 
+void DeleteBullet(int arrX, int arrY)
+{
+	for (auto itr = bullets.begin(); itr != bullets.end(); itr++)
+	{
+		int arrX2 = ((*itr).curPos.X - GBOARD_ORIGIN_X) / 2;
+		int arrY2 = (*itr).curPos.Y - GBOARD_ORIGIN_Y;
+		if (arrX == arrX2 && arrY == arrY2)
+		{
+			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
+			printf("  ");
+			gameBoardInfo[arrY][arrX] = 0;
+			itr = bullets.erase(itr);
+			break;
+		}
+	}
+}
+
 void UpdateBullet()
 {
 	auto itr = bullets.begin();
@@ -56,17 +73,21 @@ void UpdateBullet()
 			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			printf("  ");
 			gameBoardInfo[arrY][arrX] = 0;
-			(*itr).curPos.Y += 1;
 			if ((*itr).info == BULLET)
 				(*itr).curPos.Y += 1;
 			else
 				(*itr).curPos.Y -= 1;
-			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
+
 			if (!BulletDetectedCollision((*itr).curPos.X, (*itr).curPos.Y, (*itr).info)) {
 				itr = bullets.erase(itr);
 				continue;
 			}
-			gameBoardInfo[arrY][arrX] = (*itr).info;
+			if ((*itr).info == BULLET)
+				gameBoardInfo[arrY + 1][arrX] = (*itr).info;
+			else
+				gameBoardInfo[arrY - 1][arrX] = (*itr).info;
+
+			SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
 			PrintBullet((*itr).info);
 			(*itr).time = (*itr).speed;
 		}
