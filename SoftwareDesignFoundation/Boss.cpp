@@ -348,14 +348,19 @@ void SummonNormalMob()
 
 /****************보스의 패턴*********************/
 void ChangeState(BossState next);
+// 보스가 단순히 움직이는 상태
 void StartIdleState();
 void UpdateIdleState();
+// 보스가 탄막을 쏘는 상태
 void StartHellBulletState();
 void UpdateHellBulletState();
+// 보스가 블러CC기를 사용하는 상태
 void StartBlurState();
 void UpdateBlurState();
+// 보스가 일반 몬스터를 소환하는 상태
 void StartSummonState();
 void UpdateSummonState();
+
 void UpdateBoss();
 
 void ChangeState(BossState next)
@@ -426,16 +431,18 @@ void UpdateIdleState()
 	}
 }
 
+double showMuzzleTime = 4;
+double fireBulletTime = 3;
+double fireCycleTime = 0.1;
 void StartHellBulletState()
 {
 		curState = BossState::HellBullet;
+		showMuzzleTime = 4;
+		fireBulletTime = 3;
+		fireCycleTime = 0.1;
 }
 void UpdateHellBulletState()
 {
-	static double showMuzzleTime = 4;
-	static double fireBulletTime = 3;
-	static double fireCycleTime = 0.1;
-
 	if (showMuzzleTime > 0)
 	{
 		showMuzzleTime -= Time.deltaTime;
