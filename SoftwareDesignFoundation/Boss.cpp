@@ -4,6 +4,7 @@
 #include "NormalMob.h"
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+LAZERBLOCK lazerBlock[LAZER_NUM];
 
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
 
@@ -381,6 +382,9 @@ void ChangeState(BossState next)
 	case BossState::Summon:
 		StartSummonState();
 		break;
+	case BossState::Lazer:
+		StartLazerState();
+		break;
 	default:
 		break;
 	}
@@ -405,6 +409,9 @@ void UpdateBoss()
 	case Summon:
 		UpdateSummonState();
 		break;
+	case Lazer:
+		UpdateLazerState();
+		break;
 	default:
 		break;
 	}
@@ -420,9 +427,9 @@ void UpdateIdleState()
 
 	if (idleTime < 0)
 	{
-		idleTime = rand() % 2 + 6;
+		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount- 1) + 1);
-		ChangeState(nextState);
+		ChangeState(Lazer);
 	}
 	else
 	{
@@ -485,4 +492,116 @@ void UpdateSummonState()
 	if(EmptyNormalMob())
 		ChangeState(BossState::Idle);
 	BossRandomMove();
+}
+
+
+// lazer패턴 구현
+
+void StartLazerState() {
+	PrintLazerWall();
+	PrintLazerBlock();
+}
+
+void UpdateLazerState() {
+	ShootLazer();
+	StopLazer();
+	DeleteLazerBlock();
+	DeleteLazerWall();
+}
+
+void PrintLazerWall() {
+	int x;
+	for (x = GBOARD_ORIGIN_X + 2; x <= GBOARD_ORIGIN_X + GBOARD_WIDTH * 2 + 1; x += 2) {
+		SetCurrentCursorPos(x, 19);
+		printf("□");
+		gameBoardInfo[19 - GBOARD_ORIGIN_Y][(x-GBOARD_ORIGIN_X) / 2] = 1;
+	}
+}
+
+void DeleteLazerWall() {
+	int x;
+	for (x = GBOARD_ORIGIN_X + 2; x <= GBOARD_ORIGIN_X + GBOARD_WIDTH * 2 + 1; x += 2) {
+		SetCurrentCursorPos(x, 19);
+		printf("  ");
+		gameBoardInfo[19 - GBOARD_ORIGIN_Y][(x - GBOARD_ORIGIN_X) / 2] = 0;
+	}
+}
+
+
+void PrintLazerBlock() {
+	int i, j, k=0, x, y;
+	for (i = 0; i < LAZER_NUM; i++) {
+		while (1) {
+			k = 0;
+			lazerBlock[i].pos.X = (rand() % (GBOARD_WIDTH * 2 - 2) + GBOARD_ORIGIN_X + 2) / 2;
+			lazerBlock[i].pos.X *= 2;
+			lazerBlock[i].pos.Y = rand() % (GBOARD_HEIGHT - 19) + GBOARD_ORIGIN_Y + 19;
+			for (j = 0; j < i; j++) {
+				if (lazerBlock[i].pos.X - lazerBlock[j].pos.X >= -1 && lazerBlock[i].pos.X - lazerBlock[j].pos.X <= 1) {
+					k = 1;
+					continue;
+				}
+				if (lazerBlock[i].pos.Y == lazerBlock[j].pos.Y) {
+					k = 1;
+					continue;
+				}
+			}
+			if (k == 0) break;
+		}
+		SetCurrentCursorPos(lazerBlock[i].pos.X+1, lazerBlock[i].pos.Y);
+		printf("□");
+		gameBoardInfo[lazerBlock[i].pos.Y - GBOARD_ORIGIN_Y][(lazerBlock[i].pos.X - GBOARD_ORIGIN_X) / 2] = 1;
+	}
+}
+
+void ShootLazer() {
+	int i, x, y, j;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
+	for (i = 0; i < LAZER_NUM; i++) {
+		for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X; x++) {
+			SetCurrentCursorPos(x, lazerBlock[i].pos.Y);
+			if (!(x - lazerBlock[i].pos.X <= 1 && x - lazerBlock[i].pos.X > 0)) {
+				printf(" ");
+				gameBoardInfo[lazerBlock[i].pos.Y - GBOARD_ORIGIN_Y][(x-GBOARD_ORIGIN_X) / 2] = LAZER;
+			}
+		}
+		for (y = 20; y < GBOARD_HEIGHT + GBOARD_ORIGIN_Y; y++) {
+			SetCurrentCursorPos(lazerBlock[i].pos.X+1, y);
+			if (y != lazerBlock[i].pos.Y) {
+				printf("  ");
+				gameBoardInfo[y-GBOARD_ORIGIN_Y][(lazerBlock[i].pos.X-GBOARD_ORIGIN_X + 1) / 2] = LAZER;
+			}
+		}
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0007);
+}
+
+void StopLazer() {
+	int i, x, y, j;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0007);
+	for (i = 0; i < LAZER_NUM; i++) {
+		for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X; x++) {
+			SetCurrentCursorPos(x, lazerBlock[i].pos.Y);
+			if (!(x - lazerBlock[i].pos.X <= 1 && x - lazerBlock[i].pos.X > 0)) {
+				printf(" ");
+				gameBoardInfo[lazerBlock[i].pos.Y - GBOARD_ORIGIN_Y][(x - GBOARD_ORIGIN_X) / 2] = 0;
+			}
+		}
+		for (y = 20; y < GBOARD_HEIGHT + GBOARD_ORIGIN_Y; y++) {
+			SetCurrentCursorPos(lazerBlock[i].pos.X + 1, y);
+			if (y != lazerBlock[i].pos.Y) {
+				printf("  ");
+				gameBoardInfo[y - GBOARD_ORIGIN_Y][(lazerBlock[i].pos.X - GBOARD_ORIGIN_X + 1) / 2] = 0;
+			}
+		}
+	}
+}
+
+void DeleteLazerBlock() {
+	int i, j;
+	for (i = 0; i < LAZER_NUM; i++) {
+		SetCurrentCursorPos(lazerBlock[i].pos.X + 1, lazerBlock[i].pos.Y);
+		printf("  ");
+		gameBoardInfo[lazerBlock[i].pos.Y - GBOARD_ORIGIN_Y][(lazerBlock[i].pos.X - GBOARD_ORIGIN_X) / 2] = 0;
+	}
 }
