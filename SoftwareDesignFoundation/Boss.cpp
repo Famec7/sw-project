@@ -222,7 +222,7 @@ void DeleteBossModel()
 
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
-int isBlur = 1;
+int isBlur = 0;
 /****************보스 HP UI를 띄우는 함수*********************/
 void ShowBossHpUI()
 {
