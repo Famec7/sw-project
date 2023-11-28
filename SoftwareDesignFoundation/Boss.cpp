@@ -476,7 +476,7 @@ void ChangeState(BossState next)
 		StartGoToLeft();
 		break;
 	case BossState::GoToRight:													//ImAdded				
-		StartGoToLeft();
+		StartGoToRight();
 		break;
 	case BossState::Lazer:
 		StartLazerState();
@@ -528,13 +528,13 @@ void StartIdleState()
 }
 void UpdateIdleState()
 {
-	static double idleTime = rand() % 2 + 6;
+	static double idleTime = rand() % 2 + 2;
 
 	if (idleTime < 0)
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(BossState::GoToDown);
+		ChangeState(nextState);
 	}
 	else
 	{
@@ -667,7 +667,7 @@ void StartGoToRight() {
 }
 void UpdateGoTo() {
 	BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
-	ChangeState(BossState::Lazer);
+	ChangeState(BossState::Idle);
 }
 
 // lazer패턴 구현
@@ -715,7 +715,8 @@ void PrintLazerBlock() {
 			k = 0;
 			lazerBlock[i].pos.X = (rand() % (GBOARD_WIDTH * 2 - 2) + GBOARD_ORIGIN_X + 2) / 2;
 			lazerBlock[i].pos.X *= 2;
-			lazerBlock[i].pos.Y = rand() % (GBOARD_HEIGHT - 19) + GBOARD_ORIGIN_Y + 19;
+			lazerBlock[i].pos.Y = rand() % (GBOARD_HEIGHT - 19) + GBOARD_ORIGIN_Y + 18;
+			if (i == 0)lazerBlock[i].pos.Y = GBOARD_ORIGIN_Y + 18;
 			for (j = 0; j < i; j++) {
 				if (lazerBlock[i].pos.X - lazerBlock[j].pos.X >= -1 && lazerBlock[i].pos.X - lazerBlock[j].pos.X <= 1) {
 					k = 1;
