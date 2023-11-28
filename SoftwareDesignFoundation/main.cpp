@@ -21,24 +21,14 @@ int main() {
 	PlayerShowModel();
 	DrawGameBoard();
 	ScreenInit();
-	StartLazerState();
 	while (1) {
-		if(t<0 && k==0) ShootLazer();
-		if(k==0)t -= Time.deltaTime;
-		if (HP < 5) {
-			k = 1;
-			HP = 10;
-			StopLazer();
-			DeleteLazerBlock();
-			DeleteLazerWall();
-		}
 		Render();
 		ProcessKeyInput();
 		UpdateTime();
 		UpdateBullet();
 		UpdateItem();
 		NormalMobUpdate();
-		//UpdateBoss();
+		UpdateBoss();
 		UpdateItem();
 		PlayerUpdate();
 		PlayerStatOutput();
