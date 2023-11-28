@@ -1,15 +1,13 @@
 #include "Boss.h"
 #include "Bullet.h"
-#include "Item.h"
+//#include "Item.h"
 #include "NormalMob.h"
 #include "Render.h"
 #include "player.h"
 
 int main() {
 	srand(time(NULL));
-	int key;
-	COORD pos;
-	ItemInit();
+	/*ItemInit();*/
 	RemoveCursor();
 	SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y);
 	system("mode con:cols=100 lines=50");
@@ -25,10 +23,9 @@ int main() {
 		ProcessKeyInput();
 		UpdateTime();
 		UpdateBullet();
-		UpdateItem();
+		/*UpdateItem();*/
 		NormalMobUpdate();
 		UpdateBoss();
-		UpdateItem();
 		PlayerUpdate();
 		PlayerStatOutput();
 		ManageShield();

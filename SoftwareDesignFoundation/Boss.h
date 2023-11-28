@@ -1,6 +1,5 @@
-#pragma once
+﻿#pragma once
 #include "gameInfo.h"
-#include "player.h"
 #include <string>
 #include <iostream>
 

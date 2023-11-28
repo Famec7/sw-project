@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "gameInfo.h"
 #include "NormalMob.h"
+#include "player.h"
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
