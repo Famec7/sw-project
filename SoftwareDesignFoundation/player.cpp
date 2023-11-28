@@ -1,5 +1,6 @@
 #include "player.h"
 #include "Bullet.h"
+#include "gameInfo.h"
 
 double imHit = 0;
 int HP = MAX_HP;					//HP 초기화
@@ -73,6 +74,13 @@ int PlayerDetectedCollision(int x, int y) {
 		for (int x = 0; x < 5; x++) {
 			if (isShield_Flag == 0) {
 				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
+					HP--;
+					imHit = 1;
+					PlayerDeleteModel();
+					PlayerShowModel();
+					return 1;	//총알 충돌
+				}
+				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 20) {
 					HP--;
 					imHit = 1;
 					PlayerDeleteModel();
