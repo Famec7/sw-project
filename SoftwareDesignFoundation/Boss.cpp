@@ -5,7 +5,76 @@
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 
+int fingerUpModel[5][5] = {
+	{0, 2, 0, 0, 0},
+	{0, 2, 0, 0, 0},
+	{0, 2, 2, 2, 0},
+	{2, 2, 2, 2, 0},
+	{0, 2, 2, 0, 0}
+};
+int fingerRightModel[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 2, 0, 0, 0},
+	{2, 2, 2, 2, 2},
+	{2, 2, 2, 0, 0},
+	{0, 2, 2, 0, 0}
+};
+int fingerDownModel[5][5] = {
+	{0, 2, 2, 0, 0},
+	{2, 2, 2, 2, 0},
+	{0, 2, 2, 2, 0},
+	{0, 2, 0, 0, 0},
+	{0, 2, 0, 0, 0}
+};
+int fingerLeftModel[5][5] = {
+	{0, 0, 0, 0, 0},
+	{0, 0, 0, 2, 0},
+	{2, 2, 2, 2, 2},
+	{0, 0, 2, 2, 2},
+	{0, 0, 2, 2, 0}
+};
+
+void ShowFinger(int num) {
+	for (int y = 0; y < 5; y++) {
+		for (int x = 0; x < 5; x++) {
+			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2), boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+			if (num == 0) {			//up
+				if (fingerUpModel[y][x] == 2) {
+					printf("■");
+				}
+			}
+			else if (num == 1) {			//right
+				if (fingerRightModel[y][x] == 2) {
+					printf("■");
+				}
+			}
+			else if (num == 2) {					//down
+				if (fingerDownModel[y][x] == 2) {
+					printf("■");
+				}
+			}
+			else if (num == 3) {			//left
+				if (fingerLeftModel[y][x] == 2) {
+					printf("■");
+				}
+			}
+
+		}
+	}
+}
+void DeleteFinger() {
+	for (int y = 0; y < 5; y++) {
+		for (int x = 0; x < 5; x++) {
+			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2), boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+			printf("  ");
+		}
+	}
+}
+
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
+
+
+
 
 void ShowMuzzle() {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
@@ -361,6 +430,11 @@ void UpdateBlurState();
 void StartSummonState();
 void UpdateSummonState();
 
+void StartGoToDown();															//ImAdded
+void StartGoToLeft();															//ImAdded
+void StartGoToRight();															//ImAdded
+void UpdateGoTo();
+
 void UpdateBoss();
 
 void ChangeState(BossState next)
@@ -380,6 +454,15 @@ void ChangeState(BossState next)
 		break;
 	case BossState::Summon:
 		StartSummonState();
+		break;
+	case BossState::GoToDown:													//ImAdded				
+		StartGoToDown();
+		break;
+	case BossState::GoToLeft:													//ImAdded				
+		StartGoToLeft();
+		break;
+	case BossState::GoToRight:													//ImAdded				
+		StartGoToLeft();
 		break;
 	default:
 		break;
@@ -404,6 +487,15 @@ void UpdateBoss()
 		break;
 	case Summon:
 		UpdateSummonState();
+		break;
+	case GoToDown:
+		UpdateGoTo();
+		break;
+	case GoToLeft:
+		UpdateGoTo();
+		break;
+	case GoToRight:
+		UpdateGoTo();
 		break;
 	default:
 		break;
@@ -485,4 +577,62 @@ void UpdateSummonState()
 	if(EmptyNormalMob())
 		ChangeState(BossState::Idle);
 	BossRandomMove();
+}
+//MyBossFunction
+void StartGoToDown() {
+	ShowFinger(0);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToDown;
+	ShowFinger(2);
+	while (1) {
+		if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1)) {
+			//벽에 충돌한 효과음 추가
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftDown();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void StartGoToLeft() {
+	ShowFinger(1);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToLeft;
+	ShowFinger(3);
+	while (1) {
+		if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y)) {
+			//벽에 충돌한 효과음 추가
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftLeft();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void StartGoToRight() {
+	ShowFinger(3);
+	Sleep(100);
+	DeleteFinger();
+	CantControl = 1;
+	curState = BossState::GoToRight;
+	ShowFinger(1);
+	while (1) {
+		if (!PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y + 1)) {
+			//벽에 충돌한 효과음 추가
+			DeleteFinger();
+			break;
+		}
+		PlayerShiftRight();
+		Sleep(25);
+	}
+	CantControl = 0;
+}
+void UpdateGoTo() {
+	ChangeState(BossState::Idle);
 }

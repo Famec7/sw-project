@@ -1,5 +1,6 @@
 #pragma once
 #include "gameInfo.h"
+#include "player.h"
 #include <string>
 #include <iostream>
 
@@ -25,7 +26,9 @@ enum BossState
 	HellBullet,
 	Blur,
 	Summon,
-
+	GoToDown,																	//MyAdded
+	GoToLeft,
+	GoToRight,
 	StateCount
 };
 
