@@ -4,6 +4,7 @@
 #include "NormalMob.h"
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+double lazerTime;
 LAZERBLOCK lazerBlock[LAZER_NUM];
 
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
@@ -498,15 +499,19 @@ void UpdateSummonState()
 // lazer패턴 구현
 
 void StartLazerState() {
+	lazerTime = 8;
 	PrintLazerWall();
 	PrintLazerBlock();
 }
 
 void UpdateLazerState() {
-	ShootLazer();
-	StopLazer();
-	DeleteLazerBlock();
-	DeleteLazerWall();
+	if(lazerTime < 5) ShootLazer();
+	else if (lazerTime < 0) {
+		StopLazer();
+		DeleteLazerBlock();
+		DeleteLazerWall();
+	}
+	lazerTime -= Time.deltaTime;
 }
 
 void PrintLazerWall() {
