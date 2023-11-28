@@ -222,7 +222,7 @@ void DeleteBossModel()
 
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
-int isBlur = 0;
+int isBlur = 1;
 /****************보스 HP UI를 띄우는 함수*********************/
 void ShowBossHpUI()
 {
@@ -235,7 +235,7 @@ void ShowBossHpUI()
 		if (isBlur)
 		{
 			int randNum = rand() % 10;
-			if (randNum < 3)
+			if (randNum < 2)
 				std::cout << "■";
 			else
 				std::cout << boss.hpString[boss.curPhase][i];
@@ -491,6 +491,7 @@ void UpdateBlurState()
 	if (blurTime)
 	{
 		blurTime -= Time.deltaTime;
+		BossRandomMove();
 	}
 	else
 	{
