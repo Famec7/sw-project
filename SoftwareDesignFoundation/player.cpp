@@ -65,36 +65,48 @@ void PlayerDeleteModel() {
     }
   }
 }
+int PlayerDetectedLazer(int x, int y) {
+    int arrX = (x - GBOARD_ORIGIN_X) / 2;
+    int arrY = y - GBOARD_ORIGIN_Y;
+    for (int y = 0; y < PLAYER_HEIGHT; y++) {
+        for (int x = 0; x < PLAYER_WIDTH; x++) {
+            if (isShield_Flag == 0) {
+                if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == LAZER) {
+                    HP--;
+                    imHit = 1;
+                    PlayerDeleteModel();
+                    PlayerShowModel();
+                    return 1; // 총알 충돌
+                }
+            }
+        }
+    }
+    return 1;
+}
 int PlayerDetectedCollision(int x, int y) {
   int arrX = (x - GBOARD_ORIGIN_X) / 2;
   int arrY = y - GBOARD_ORIGIN_Y;
   for (int y = 0; y < PLAYER_HEIGHT; y++) {
     for (int x = 0; x < PLAYER_WIDTH; x++) {
       if (isShield_Flag == 0) {
-        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
+        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
           HP--;
           imHit = 1;
           PlayerDeleteModel();
           PlayerShowModel();
-          return 1; // 총알 충돌
-        }
-        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 20) {
-          HP--;
-          imHit = 1;
-          PlayerDeleteModel();
-          PlayerShowModel();
+          DeleteBullet(arrX + x, arrY + y);
           return 1; // 총알 충돌
         }
       }
-      if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 1)
+      if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == MAP_BOUNDARY)
         return 0; // 벽 충돌
-      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 3)
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == ENEMY)
         return 0; // 적 충돌
-      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 5)
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == HP_ITEM)
         return 0; // 아이템 충돌
-      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 6)
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == UPGRADE_ITEM)
         return 0; // 아이템 충돌
-      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 7)
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BOSS)
         return 0; // 보스 충돌
     }
   }
@@ -234,6 +246,7 @@ void ManageShield() {
 }
 void PlayerUpdate() {
   PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1);
+  PlayerDetectedLazer(playerCurPos.X, playerCurPos.Y);
   PlayerDeleteModel();
   PlayerShowModel();
   if (imHit <= 0) {
@@ -245,7 +258,7 @@ void PlayerUpdate() {
       playerColor = 9;
     }
   } else {
-    imHit -= Time.deltaTime;
+    imHit -= Time.deltaTime * 1.2;
   }
 }
 int IsGameOver() {
