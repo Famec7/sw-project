@@ -535,7 +535,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(BossState::Summon);
+		ChangeState(nextState);
 	}
 	else
 	{
@@ -544,33 +544,49 @@ void UpdateIdleState()
 	}
 }
 
-double showMuzzleTime = 4;
-double fireBulletTime = 1;
-double fireCycleTime = 0.5;
+double showMuzzleTime;
+double fireBulletTime;
+double fireCycleTime;
 void StartHellBulletState()
 {
 	curState = BossState::HellBullet;
-	showMuzzleTime = 4;
+	showMuzzleTime = 1;
 	fireBulletTime = 1;
 	fireCycleTime = 0.2;
 	ShowMuzzle();
 }
 void UpdateHellBulletState()
 {
-	fireCycleTime -= Time.deltaTime;
-	if (fireCycleTime < 0)
+	static int count = 0;
+
+	if (showMuzzleTime > 0)
 	{
-		FireBullet();
-		fireCycleTime = 0.2;
+		showMuzzleTime -= Time.deltaTime;
 	}
-	fireBulletTime -= Time.deltaTime;
-	if (fireBulletTime < 0)
+	else
 	{
-		showMuzzleTime = 4;
-		fireBulletTime = 3;
-		fireCycleTime = 0.2;
-		ShowMuzzle();
-		// 중간에 비어놓기
+		fireCycleTime -= Time.deltaTime;
+		if (fireCycleTime < 0)
+		{
+			FireBullet();
+			fireCycleTime = 0.2;
+		}
+		fireBulletTime -= Time.deltaTime;
+		if (fireBulletTime < 0)
+		{
+			showMuzzleTime = 1;
+			fireBulletTime = 1;
+			fireCycleTime = 0.2;
+			ShowMuzzle();
+			count++;
+		}
+	}
+
+	if (count == 3)
+	{
+		DeleteMuzzle();
+		count = 0;
+		ChangeState(BossState::Idle);
 	}
 }
 
