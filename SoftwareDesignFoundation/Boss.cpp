@@ -585,6 +585,7 @@ void StartBlurState()
 	curState = BossState::Blur;
 	blurTime = 3;
 	isBlur = 1;
+	ShowBossHpUI();
 }
 void UpdateBlurState()
 {
@@ -596,6 +597,7 @@ void UpdateBlurState()
 	else
 	{
 		isBlur = 0;
+		ShowBossHpUI();
 		ChangeState(BossState::Idle);
 	}
 }
@@ -667,7 +669,7 @@ void StartGoToRight() {
 }
 void UpdateGoTo() {
 	BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
-	ChangeState(BossState::Idle);
+	ChangeState(nextState);
 }
 
 // lazer패턴 구현
