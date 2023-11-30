@@ -535,7 +535,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(BossState::Summon);
+		ChangeState(nextState);
 	}
 	else
 	{
