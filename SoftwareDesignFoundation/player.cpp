@@ -71,11 +71,12 @@ int PlayerDetectedCollision(int x, int y) {
   for (int y = 0; y < PLAYER_HEIGHT; y++) {
     for (int x = 0; x < PLAYER_WIDTH; x++) {
       if (isShield_Flag == 0) {
-        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 4) {
+        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
           HP--;
           imHit = 1;
           PlayerDeleteModel();
           PlayerShowModel();
+          DeleteBullet(arrX + x, arrY + y);
           return 1; // ÃÑ¾Ë Ãæµ¹
         }
         if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 20) {

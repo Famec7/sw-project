@@ -34,7 +34,7 @@ void CreateNormalMob() {
 	normalMob->isExplosion = 0;
 	normalMob->explosionTime = 0.15;
 	//normalMob->type = _type;
-	normalMob->type = 2;
+	normalMob->type = 1;
 	if (normalMob->type == 2) normalMob->state = 4;
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;

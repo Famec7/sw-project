@@ -321,6 +321,7 @@ void ChangePhase()
 	DeleteBossModel();
 	BossInit();
 	boss.curPhase += 1;
+	//난이도 변수
 	ShowBossModel();
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
@@ -534,7 +535,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(nextState);
+		ChangeState(BossState::Summon);
 	}
 	else
 	{
@@ -544,38 +545,32 @@ void UpdateIdleState()
 }
 
 double showMuzzleTime = 4;
-double fireBulletTime = 3;
+double fireBulletTime = 1;
 double fireCycleTime = 0.5;
 void StartHellBulletState()
 {
 	curState = BossState::HellBullet;
 	showMuzzleTime = 4;
-	fireBulletTime = 3;
+	fireBulletTime = 1;
 	fireCycleTime = 0.2;
+	ShowMuzzle();
 }
 void UpdateHellBulletState()
 {
-	if (showMuzzleTime > 0)
+	fireCycleTime -= Time.deltaTime;
+	if (fireCycleTime < 0)
 	{
-		showMuzzleTime -= Time.deltaTime;
-		ShowMuzzle();
+		FireBullet();
+		fireCycleTime = 0.2;
 	}
-	else if (showMuzzleTime < 0) {
-		fireCycleTime -= Time.deltaTime;
-		if (fireCycleTime < 0)
-		{
-			FireBullet();
-			fireCycleTime = 0.2;
-		}
-		fireBulletTime -= Time.deltaTime;
-		if (fireBulletTime < 0)
-		{
-			showMuzzleTime = 4;
-			fireBulletTime = 3;
-			fireCycleTime = 0.2;
-			DeleteMuzzle();
-			ChangeState(BossState::Idle);
-		}
+	fireBulletTime -= Time.deltaTime;
+	if (fireBulletTime < 0)
+	{
+		showMuzzleTime = 4;
+		fireBulletTime = 3;
+		fireCycleTime = 0.2;
+		ShowMuzzle();
+		// 중간에 비어놓기
 	}
 }
 
@@ -589,14 +584,19 @@ void StartBlurState()
 }
 void UpdateBlurState()
 {
-	if (blurTime)
+	if (blurTime > 0 && isBlur)
 	{
 		blurTime -= Time.deltaTime;
 		BossRandomMove();
 	}
-	else
+	else if (blurTime < 0 && isBlur)
 	{
 		isBlur = 0;
+		for (int i = 0; i < boss.hpString[boss.curPhase].length() * 2; i++)
+		{
+			SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
+			printf("  ");
+		}
 		ShowBossHpUI();
 		ChangeState(BossState::Idle);
 	}
