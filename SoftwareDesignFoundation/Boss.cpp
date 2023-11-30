@@ -327,10 +327,10 @@ void ChangePhase()
 void BossLifeDecrease()
 {
 	// 현재 체력 한칸 줄이고 다시 UI에 표시
-	for (int i = 0; i < boss.hpString[boss.curPhase].length(); i++)
+	for (int i = 0; i < boss.hpString[boss.curPhase].length() * 2; i++)
 	{
 		SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
-		printf(" ");
+		printf("  ");
 	}
 	boss.curBossHp--;
 	if (boss.curBossHp == 0)
@@ -448,6 +448,8 @@ void StartGoToDown();															//ImAdded
 void StartGoToLeft();															//ImAdded
 void StartGoToRight();															//ImAdded
 void UpdateGoTo();
+void StartLazerState();
+void UpdateLazerState();
 
 void UpdateBoss();
 
@@ -491,6 +493,7 @@ void UpdateBoss()
 	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
+	UpdateBlurState();
 	switch (curState)
 	{
 	case Idle:
@@ -498,9 +501,6 @@ void UpdateBoss()
 		break;
 	case HellBullet:
 		UpdateHellBulletState();
-		break;
-	case Blur:
-		UpdateBlurState();
 		break;
 	case Summon:
 		UpdateSummonState();
