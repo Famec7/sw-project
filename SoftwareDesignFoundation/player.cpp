@@ -14,6 +14,7 @@ int countTime1, countTime2;
 int bulletNum = 1; // 초알의 개수
 int isShield_Flag = 0;
 int playerColor = 7;
+double playerSpeed = 0;
 
 int playerModel[PLAYER_HEIGHT][PLAYER_WIDTH] = { {2}, {2} };
 
@@ -66,41 +67,52 @@ void PlayerDeleteModel() {
 		}
 	}
 }
+int PlayerDetectedLazer(int x, int y) {
+    int arrX = (x - GBOARD_ORIGIN_X) / 2;
+    int arrY = y - GBOARD_ORIGIN_Y;
+    for (int y = 0; y < PLAYER_HEIGHT; y++) {
+        for (int x = 0; x < PLAYER_WIDTH; x++) {
+            if (isShield_Flag == 0) {
+                if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == LAZER) {
+                    HP--;
+                    imHit = 1;
+                    PlayerDeleteModel();
+                    PlayerShowModel();
+                    return 1; // 총알 충돌
+                }
+            }
+        }
+    }
+    return 1;
+}
 int PlayerDetectedCollision(int x, int y) {
-	int arrX = (x - GBOARD_ORIGIN_X) / 2;
-	int arrY = y - GBOARD_ORIGIN_Y;
-	for (int y = 0; y < PLAYER_HEIGHT; y++) {
-		for (int x = 0; x < PLAYER_WIDTH; x++) {
-			if (isShield_Flag == 0) {
-				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
-					HP--;
-					imHit = 1;
-					PlayerDeleteModel();
-					PlayerShowModel();
-					DeleteBullet(arrX + x, arrY + y);
-					return 1; // 총알 충돌
-				}
-				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 20) {
-					HP--;
-					imHit = 1;
-					PlayerDeleteModel();
-					PlayerShowModel();
-					return 1; // 총알 충돌
-				}
-			}
-			if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 1)
-				return 0; // 벽 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 3)
-				return 0; // 적 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 5)
-				return 0; // 아이템 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 6)
-				return 0; // 아이템 충돌
-			else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == 7)
-				return 0; // 보스 충돌
-		}
-	}
-	return 1;
+  int arrX = (x - GBOARD_ORIGIN_X) / 2;
+  int arrY = y - GBOARD_ORIGIN_Y;
+  for (int y = 0; y < PLAYER_HEIGHT; y++) {
+    for (int x = 0; x < PLAYER_WIDTH; x++) {
+      if (isShield_Flag == 0) {
+        if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
+          HP--;
+          imHit = 1;
+          PlayerDeleteModel();
+          PlayerShowModel();
+          DeleteBullet(arrX + x, arrY + y);
+          return 1; // 총알 충돌
+        }
+      }
+      if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == MAP_BOUNDARY)
+        return 0; // 벽 충돌
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == ENEMY)
+        return 0; // 적 충돌
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == HP_ITEM)
+        return 0; // 아이템 충돌
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == UPGRADE_ITEM)
+        return 0; // 아이템 충돌
+      else if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BOSS)
+        return 0; // 보스 충돌
+    }
+  }
+  return 1;
 }
 int PlayerShiftLeft() {
 	if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y))
@@ -161,58 +173,57 @@ void PlayerStatOutput() {
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
-void ProcessKeyInput() { // GetAsyncKeyState
-	// if (playerSpeed > 0)return;
-	if (CantControl == 1)
-		return;
-	if (_kbhit() == 0)
-		return;
-	if (GetAsyncKeyState(VK_LEFT)) {
-		PlayerShiftLeft();
-	}
-	if (GetAsyncKeyState(VK_RIGHT)) {
-		PlayerShiftRight();
-	}
-	if (GetAsyncKeyState(VK_DOWN)) {
-		PlayerShiftDown();
-	}
-	if (GetAsyncKeyState(VK_UP)) {
-		PlayerShiftUp();
-	}
-	if (GetAsyncKeyState(VK_RETURN))
-		UseShield();
 
-	for (int i = 0; i <= 'z' - 'a'; i++) {
-		if (GetAsyncKeyState(0x41 + i)) {
-			if (bulletNum == 1) {
-				MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
-			}
-			else if (bulletNum == 2) {
-				MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-			}
-			else if (bulletNum == 3) {
-				MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-			}
-			else if (bulletNum == 4) {
-				MakeBullet(playerCurPos.X + 3, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 3, playerCurPos.Y - 2, 'a' + i, 0.01f);
-			}
-			else if (bulletNum == 5) {
-				MakeBullet(playerCurPos.X + 4, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-				MakeBullet(playerCurPos.X - 4, playerCurPos.Y - 2, 'a' + i, 0.01f);
-			}
-		}
-	}
-	// playerSpeed += 0.5;
-	Sleep(50);
+double bulletSpeed = 0.06;
+void ProcessKeyInput() { // GetAsyncKeyState
+  // if (playerSpeed > 0)return;
+  if (CantControl == 1)
+    return;
+  if (_kbhit() == 0)
+    return;
+  if (playerSpeed >= 0)return;
+  if (GetAsyncKeyState(VK_LEFT)) {
+    PlayerShiftLeft();
+  }
+  if (GetAsyncKeyState(VK_RIGHT)) {
+    PlayerShiftRight();
+  }
+  if (GetAsyncKeyState(VK_DOWN)) {
+    PlayerShiftDown();
+  }
+  if (GetAsyncKeyState(VK_UP)) {
+    PlayerShiftUp();
+  }
+  if (GetAsyncKeyState(VK_RETURN))
+    UseShield();
+
+  for (int i = 0; i <= 'z' - 'a'; i++) {
+    if (GetAsyncKeyState(0x41 + i)) {
+      if (bulletNum == 1) {
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+      } else if (bulletNum == 2) {
+        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+      } else if (bulletNum == 3) {
+        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+      } else if (bulletNum == 4) {
+        MakeBullet(playerCurPos.X + 3, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 3, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+      } else if (bulletNum == 5) {
+        MakeBullet(playerCurPos.X + 4, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 4, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+      }
+    }
+  }
+  playerSpeed = 0.1;
+  //Sleep(50);
 }
 void UseShield() {
 	if (shield >= 6.0f) {
@@ -240,21 +251,22 @@ void ManageShield() {
 	}
 }
 void PlayerUpdate() {
-	PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1);
-	PlayerDeleteModel();
-	PlayerShowModel();
-	if (imHit <= 0) {
-		imHit = 0;
-		if (isShield_Flag == 0) {
-			playerColor = 7;
-		}
-		if (isShield_Flag == 1) {
-			playerColor = 9;
-		}
-	}
-	else {
-		imHit -= Time.deltaTime;
-	}
+  PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1);
+  PlayerDetectedLazer(playerCurPos.X, playerCurPos.Y);
+  PlayerDeleteModel();
+  PlayerShowModel();
+  if (imHit <= 0) {
+    imHit = 0;
+    if (isShield_Flag == 0) {
+      playerColor = 7;
+    }
+    if (isShield_Flag == 1) {
+      playerColor = 9;
+    }
+  } else {
+    imHit -= Time.deltaTime * 1.2;
+  }
+  playerSpeed -= Time.deltaTime;
 }
 int IsGameOver() {
 	if (HP <= 0)
