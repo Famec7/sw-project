@@ -14,6 +14,7 @@ int countTime1, countTime2;
 int bulletNum = 1; // 초알의 개수
 int isShield_Flag = 0;
 int playerColor = 7;
+double playerSpeed = 0;
 
 int playerModel[PLAYER_HEIGHT][PLAYER_WIDTH] = {{2}, {2}};
 
@@ -177,6 +178,7 @@ void ProcessKeyInput() { // GetAsyncKeyState
     return;
   if (_kbhit() == 0)
     return;
+  if (playerSpeed >= 0)return;
   if (GetAsyncKeyState(VK_LEFT)) {
     PlayerShiftLeft();
   }
@@ -217,8 +219,8 @@ void ProcessKeyInput() { // GetAsyncKeyState
       }
     }
   }
-  // playerSpeed += 0.5;
-  Sleep(50);
+  playerSpeed += 0.1;
+  //Sleep(50);
 }
 void UseShield() {
   if (shield >= 6.0f) {
@@ -260,6 +262,7 @@ void PlayerUpdate() {
   } else {
     imHit -= Time.deltaTime * 1.2;
   }
+  playerSpeed -= Time.deltaTime;
 }
 int IsGameOver() {
   if (HP <= 0)
