@@ -535,7 +535,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(nextState);
+		ChangeState(BossState::HellBullet);
 	}
 	else
 	{
@@ -547,12 +547,16 @@ void UpdateIdleState()
 double showMuzzleTime;
 double fireBulletTime;
 double fireCycleTime;
+void InitHellBulletState()
+{
+	showMuzzleTime = 0.8;
+	fireBulletTime = 1;
+	fireCycleTime = 0.2;
+}
 void StartHellBulletState()
 {
 	curState = BossState::HellBullet;
-	showMuzzleTime = 1;
-	fireBulletTime = 1;
-	fireCycleTime = 0.2;
+	InitHellBulletState();
 	ShowMuzzle();
 }
 void UpdateHellBulletState()
@@ -574,9 +578,7 @@ void UpdateHellBulletState()
 		fireBulletTime -= Time.deltaTime;
 		if (fireBulletTime < 0)
 		{
-			showMuzzleTime = 1;
-			fireBulletTime = 1;
-			fireCycleTime = 0.2;
+			InitHellBulletState();
 			ShowMuzzle();
 			count++;
 		}
