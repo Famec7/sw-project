@@ -172,6 +172,8 @@ void PlayerStatOutput() {
   }
   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
+
+double bulletSpeed = 0.06;
 void ProcessKeyInput() { // GetAsyncKeyState
   // if (playerSpeed > 0)return;
   if (CantControl == 1)
@@ -197,25 +199,25 @@ void ProcessKeyInput() { // GetAsyncKeyState
   for (int i = 0; i <= 'z' - 'a'; i++) {
     if (GetAsyncKeyState(0x41 + i)) {
       if (bulletNum == 1) {
-        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
       } else if (bulletNum == 2) {
-        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
+        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
       } else if (bulletNum == 3) {
-        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
+        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
       } else if (bulletNum == 4) {
-        MakeBullet(playerCurPos.X + 3, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 3, playerCurPos.Y - 2, 'a' + i, 0.01f);
+        MakeBullet(playerCurPos.X + 3, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X + 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 1, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 3, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
       } else if (bulletNum == 5) {
-        MakeBullet(playerCurPos.X + 4, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, 0.01f);
-        MakeBullet(playerCurPos.X - 4, playerCurPos.Y - 2, 'a' + i, 0.01f);
+        MakeBullet(playerCurPos.X + 4, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X + 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 2, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
+        MakeBullet(playerCurPos.X - 4, playerCurPos.Y - 2, 'a' + i, bulletSpeed);
       }
     }
   }
