@@ -219,7 +219,7 @@ void ProcessKeyInput() { // GetAsyncKeyState
       }
     }
   }
-  playerSpeed += 0.1;
+  playerSpeed = 0.1;
   //Sleep(50);
 }
 void UseShield() {
