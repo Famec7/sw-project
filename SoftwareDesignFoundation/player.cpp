@@ -7,6 +7,7 @@ int CantControl = 0;
 
 int HP = MAX_HP;            // HP 초기화
 double shield = MAX_SHIELD; // 실드 초기화
+double pre_shield = MAX_SHIELD;
 // double playerSpeed = 0.5;
 
 COORD playerCurPos;
@@ -25,6 +26,7 @@ char shieldText[] = {'s', 'h', 'i', 'e', 'l', 'd'};
 void playerInit() {
   playerCurPos.X = 45;
   playerCurPos.Y = 35;
+  PlayerStatOutput();
 }
 void PlayerShowModel() {
   SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
@@ -75,6 +77,7 @@ int PlayerDetectedLazer(int x, int y) {
                 if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == LAZER) {
                     HP--;
                     imHit = 1;
+                    PlayerStatOutput();
                     PlayerDeleteModel();
                     PlayerShowModel();
                     return 1; // 총알 충돌
@@ -93,6 +96,7 @@ int PlayerDetectedCollision(int x, int y) {
         if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
           HP--;
           imHit = 1;
+          PlayerStatOutput();
           PlayerDeleteModel();
           PlayerShowModel();
           DeleteBullet(arrX + x, arrY + y);
@@ -175,7 +179,6 @@ void PlayerStatOutput() {
 
 double bulletSpeed = 0.06;
 void ProcessKeyInput() { // GetAsyncKeyState
-  // if (playerSpeed > 0)return;
   if (CantControl == 1)
     return;
   if (_kbhit() == 0)
@@ -191,7 +194,9 @@ void ProcessKeyInput() { // GetAsyncKeyState
     PlayerShiftDown();
   }
   if (GetAsyncKeyState(VK_UP)) {
-    PlayerShiftUp();
+      if (playerCurPos.Y > 17 + GBOARD_ORIGIN_Y) {      //17
+          PlayerShiftUp();
+      }
   }
   if (GetAsyncKeyState(VK_RETURN))
     UseShield();
@@ -223,6 +228,7 @@ void ProcessKeyInput() { // GetAsyncKeyState
   }
   playerSpeed = 0.1;
   //Sleep(50);
+  
 }
 void UseShield() {
   if (shield >= 6.0f) {
@@ -234,6 +240,7 @@ void UseShield() {
 }
 void ManageShield() {
   if (isShield_Flag == 1) {
+      pre_shield = shield;
     shield -= Time.deltaTime;
     if (shield <= 0) {
       isShield_Flag = 0;
@@ -243,16 +250,20 @@ void ManageShield() {
   } else {
     if (shield >= MAX_SHIELD)
       return;
+    pre_shield = shield;
     shield += Time.deltaTime;
     if (shield >= MAX_SHIELD)
       shield = MAX_SHIELD;
+  }
+  if ((int)pre_shield != (int)shield) {
+      PlayerStatOutput();
   }
 }
 void PlayerUpdate() {
   PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1);
   PlayerDetectedLazer(playerCurPos.X, playerCurPos.Y);
-  PlayerDeleteModel();
-  PlayerShowModel();
+  //PlayerDeleteModel();
+  //PlayerShowModel();
   if (imHit <= 0) {
     imHit = 0;
     if (isShield_Flag == 0) {
@@ -278,6 +289,7 @@ COORD GetPlayerPos() { return playerCurPos; }
 void AttackedPlayerProcessing(int n) {
   HP -= n;
   imHit = 1;
+  PlayerStatOutput();
   PlayerDeleteModel();
   PlayerShowModel();
 }

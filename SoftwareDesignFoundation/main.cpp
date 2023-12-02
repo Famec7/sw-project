@@ -31,7 +31,7 @@ int main() {
 		UpdateBoss();
 		UpdateItem();
 		PlayerUpdate();
-		PlayerStatOutput();
+		//PlayerStatOutput();
 		ManageShield();
 
 		if (IsGameOver()) {
