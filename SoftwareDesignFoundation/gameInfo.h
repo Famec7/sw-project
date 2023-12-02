@@ -16,7 +16,7 @@
 #define NORMAL_MOB_1 9
 #define NORMAL_MOB_1 10
 #define NORMAL_MOB_1 11
-#define LAZER 20;
+#define LAZER 20
 
 // ¸Ê Å©±â
 #define GBOARD_HEIGHT 40
