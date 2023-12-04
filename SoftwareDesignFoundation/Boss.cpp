@@ -76,27 +76,12 @@ void DeleteFinger() {
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
 
 
-
-
+int start;
+int end;
 void ShowMuzzle() {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
 	int arrX = (muzzleCurPos.X - GBOARD_ORIGIN_X) / 2;
 	int arrY = muzzleCurPos.Y - GBOARD_ORIGIN_Y;
-	int num = rand() % 40;
-
-	int start = num - 3;
-	int end = num + 2;
-
-	if (start < 0)
-	{
-		start = 0;
-		end = start + 5;
-	}
-	if (end > 40)
-	{
-		end = 40;
-		start = end - 5;
-	}
 	for (int i = 0; i < 40; i++)
 	{
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
@@ -113,22 +98,6 @@ void ShowMuzzle() {
 			printf("¢Ã");
 		}
 	}
-
-	/*for (int i = 0; i < 40; i++)
-	{
-		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y);
-		gameBoardInfo[arrY][arrX + i] = 1;
-		if (hellBulletModel[i] == 1)
-		{
-			printf("¡á");
-			hellBulletModel[i] += 1;
-		}
-		else if (hellBulletModel[i] == 2)
-		{
-			printf("¢Ã");
-			hellBulletModel[i] -= 1;
-		}
-	}*/
 }
 
 void DeleteMuzzle() {
@@ -547,16 +516,41 @@ void UpdateIdleState()
 double showMuzzleTime;
 double fireBulletTime;
 double fireCycleTime;
+
+void SetMuzzleState(int s, int e)
+{
+	start = s;
+	end = e;
+	if (start < 1)
+	{
+		start = 1;
+		end = start + 5;
+	}
+	if (end > 39)
+	{
+		end = 39;
+		start = end - 5;
+	}
+}
+
 void InitHellBulletState()
 {
-	showMuzzleTime = 0.8;
 	fireBulletTime = 1;
-	fireCycleTime = 0.2;
+	fireCycleTime = 0.5;
+
+	int num = rand() % 2;
+	if (num == 0)
+		SetMuzzleState(start - 5, end - 5);
+	else
+		SetMuzzleState(start + 5, end + 5);
 }
 void StartHellBulletState()
 {
 	curState = BossState::HellBullet;
 	InitHellBulletState();
+	showMuzzleTime = 0.8;
+	int num = rand() % 40;
+	SetMuzzleState(num - 3, num + 2);
 	ShowMuzzle();
 }
 void UpdateHellBulletState()
