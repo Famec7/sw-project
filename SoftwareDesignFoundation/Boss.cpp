@@ -496,7 +496,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(nextState);
+		ChangeState(BossState::Summon);
 	}
 	else {
 		BossRandomMove();
@@ -582,6 +582,7 @@ void StartBlurState() {
 		InitBlur();
 	isBlur = 1;
 	ShowBossHpUI();
+	ChangeState(BossState::Idle);
 }
 void UpdateBlurState() {
 	/*if (blurTime > 0 && isBlur)
@@ -600,7 +601,6 @@ void UpdateBlurState() {
 			ShowBossHpUI();
 			ChangeState(BossState::Idle);
 	}*/
-	ChangeState(BossState::Idle);
 }
 void StartSummonState() {
 	curState = BossState::Summon;
@@ -689,6 +689,7 @@ void StartLazerState() {
 	}
 	PrintLazerWall();
 	// PrintLazerBlock();
+	curState = BossState::Lazer;
 }
 
 void UpdateLazerState() {

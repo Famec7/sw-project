@@ -23,11 +23,11 @@ typedef struct NormalMobInfo {
 	int numberingMob; //몹의 충돌에서 몹을 구분하기 위함
 	int type; //type == 1 일반 몹, type == 2 폭탄
 	int isExplosion = 0; // 이동x 폭파 직전 상태
-	double explosionTime = 0.15; // 시간 이후 폭파
+	double explosionTime = 0.2; // 시간 이후 폭파
 	double mobIdleTime = 2;
 	double moveTime = 1;
-	double attackTime = 0.15;
-	double tempIdleTime = 0.2; // 이동, 공격 사이의 딜레이시간
+	double attackTime = 0.2;
+	double tempIdleTime = 0.25; // 이동, 공격 사이의 딜레이시간
 	//double delayAfterExplosionTime = 0.1;
 	int state; // move == 0, attack == 1, idle == 2, tempIdle == 3, explosion == 4
 	NormalMobInfo* next; // 연결리스트로 구현하기 위함
