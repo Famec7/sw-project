@@ -509,7 +509,6 @@ void UpdateBoss()
 	if (BossDetectionCollision(boss.curPos.X, boss.curPos.Y + 1) == 1)
 		BossLifeDecrease();
 
-	UpdateBlurState();
 	switch (curState)
 	{
 	case Idle:
@@ -550,7 +549,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(nextState);
+		ChangeState(BossState::Blur);
 	}
 	else
 	{
@@ -581,6 +580,7 @@ void SetMuzzleState(int s, int e)
 
 void InitHellBulletState()
 {
+	showMuzzleTime = 0.5;
 	fireBulletTime = 1;
 	fireCycleTime = 0.5;
 
@@ -600,7 +600,6 @@ void StartHellBulletState()
 	StartGoToDown();
 	curState = BossState::HellBullet;
 	InitHellBulletState();
-	showMuzzleTime = 0.8;
 	int num = rand() % 40;
 	SetMuzzleState(num - 3, num + 2);
 	ShowMuzzle();
@@ -642,6 +641,11 @@ double blurTime = 3;
 
 void StartBlurState()
 {
+	if (boss.curPhase == 0)
+	{
+		ChangeState(BossState::Idle);
+		return;
+	}
 	curState = BossState::Blur;
 	blurTime = 3;
 	if (isBlur)
@@ -650,6 +654,7 @@ void StartBlurState()
 		InitBlur();
 	isBlur = 1;
 	ShowBossHpUI();
+	ChangeState(BossState::Idle);
 }
 void UpdateBlurState()
 {
