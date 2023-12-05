@@ -130,12 +130,15 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="gameInfo.cpp" />
+    <ClCompile Include="Init.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NormalMob.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
@@ -143,10 +146,13 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="gameInfo.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Init.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="NormalMob.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="Update.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

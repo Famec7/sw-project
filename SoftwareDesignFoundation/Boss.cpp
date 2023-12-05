@@ -215,16 +215,23 @@ BossInfo boss;
 COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 + BOSS_SIZE_X, BOSS_ORIGIN_Y - 2 };
 RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2, boss.curPos.Y + BOSS_SIZE_Y };
 
+int isCleared = 0;
+int IsBossCleared()
+{
+	return isCleared;
+}
+
 /****************보스 스탯 초기화 함수*********************/
 void BossInit()
 {
-	boss.curPhase = 2;
+	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	boss.speed = 0.2;
 	int length = boss.hpString[boss.curPhase].length();
 	curState = BossState::Idle;
 	boss.isAttack = false;
+	ShowBossHpUI();
 }
 /****************보스 모델을 띄우는 함수*********************/
 void ShowBossModel()
@@ -307,6 +314,10 @@ void ChangePhase()
 	DeleteBossModel();
 	BossInit();
 	boss.curPhase += 1;
+	if (boss.curPhase == 3)
+	{
+		isCleared = 1;
+	}
 	//난이도 변수
 	ShowBossModel();
 }

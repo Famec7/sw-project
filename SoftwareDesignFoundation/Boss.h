@@ -44,8 +44,8 @@ extern BossInfo boss;
 void BossInit();
 /*보스 업데이트 함수*/
 void UpdateBoss();
-
 void ShowBossHpUI();
+int IsBossCleared();
 
 // lazer 패턴
 void PrintLazerBlock();
