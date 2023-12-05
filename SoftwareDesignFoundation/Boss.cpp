@@ -70,65 +70,6 @@ void DeleteFinger() {
 	}
 }
 
-int fingerUpModel[5][5] = { {0, 2, 0, 0, 0},
-						   {0, 2, 0, 0, 0},
-						   {0, 2, 2, 2, 0},
-						   {2, 2, 2, 2, 0},
-						   {0, 2, 2, 0, 0} };
-int fingerRightModel[5][5] = { {0, 0, 0, 0, 0},
-							  {0, 2, 0, 0, 0},
-							  {2, 2, 2, 2, 2},
-							  {2, 2, 2, 0, 0},
-							  {0, 2, 2, 0, 0} };
-int fingerDownModel[5][5] = { {0, 2, 2, 0, 0},
-							 {2, 2, 2, 2, 0},
-							 {0, 2, 2, 2, 0},
-							 {0, 2, 0, 0, 0},
-							 {0, 2, 0, 0, 0} };
-int fingerLeftModel[5][5] = { {0, 0, 0, 0, 0},
-							 {0, 0, 0, 2, 0},
-							 {2, 2, 2, 2, 2},
-							 {0, 0, 2, 2, 2},
-							 {0, 0, 2, 2, 0} };
-
-void ShowFinger(int num) {
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
-				boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
-			if (num == 0) { // up
-				if (fingerUpModel[y][x] == 2) {
-					printf("бс");
-				}
-			}
-			else if (num == 1) { // right
-				if (fingerRightModel[y][x] == 2) {
-					printf("бс");
-				}
-			}
-			else if (num == 2) { // down
-				if (fingerDownModel[y][x] == 2) {
-					printf("бс");
-				}
-			}
-			else if (num == 3) { // left
-				if (fingerLeftModel[y][x] == 2) {
-					printf("бс");
-				}
-			}
-		}
-	}
-}
-void DeleteFinger() {
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
-				boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
-			printf("  ");
-		}
-	}
-}
-
 COORD muzzleCurPos = { GBOARD_ORIGIN_X + 2, BOSS_ORIGIN_Y + BOSS_SIZE_Y + 5 };
 
 int start;
