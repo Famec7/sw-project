@@ -130,6 +130,7 @@ void FireBullet() {
 
 int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	{
+		// 1 : ■	2 : ●	 3 : ▣
 		/*첫번째 패턴 모델*/
 	/*
 	■■■■■■■■■■
@@ -167,7 +168,6 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 
 
 	*/
-	/*두번째 패턴 모델*/ // 1 : ■	2 : ●
 	{
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -181,17 +181,29 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	},
 	/*세번째 패턴 모델*/
+	/*
+
+
+		
+		
+		
+		    ■▣
+		    ▣■
+
+
+
+	*/
 	{
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 1, 0, 0, 1, 0, 0, 1},
-	{1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 1, 1, 1, 1, 0, 0, 1},
-	{1, 0, 0, 1, 0, 0, 1, 0, 0, 1},
-	{1, 0, 0, 1, 1, 1, 1, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 1, 3, 0, 0, 0, 0},
+	{0, 0, 0, 0, 3, 1, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 };
 
@@ -206,7 +218,7 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 /****************보스 스탯 초기화 함수*********************/
 void BossInit()
 {
-	boss.curPhase = 0;
+	boss.curPhase = 2;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	boss.speed = 0.2;
@@ -234,6 +246,11 @@ void ShowBossModel()
 			else if (bossModel[boss.curPhase][y][x] == 2)
 			{
 				printf("●");
+				gameBoardInfo[arrY + y][arrX + x] = BOSS;
+			}
+			else if (bossModel[boss.curPhase][y][x] == 3)
+			{
+				printf("▣");
 				gameBoardInfo[arrY + y][arrX + x] = BOSS;
 			}
 		}
@@ -504,7 +521,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(BossState::HellBullet);
+		ChangeState(nextState);
 	}
 	else
 	{
@@ -539,6 +556,11 @@ void InitHellBulletState()
 	fireCycleTime = 0.5;
 
 	int num = rand() % 2;
+	if (start < 6)
+		num = 1;
+	else if (end > 34)
+		num = 0;
+
 	if (num == 0)
 		SetMuzzleState(start - 5, end - 5);
 	else
@@ -546,6 +568,7 @@ void InitHellBulletState()
 }
 void StartHellBulletState()
 {
+	StartGoToDown();
 	curState = BossState::HellBullet;
 	InitHellBulletState();
 	showMuzzleTime = 0.8;

@@ -18,6 +18,7 @@ int main() {
 	ShowBossHpUI();
 	InitTime();
 	playerInit();
+	BossInit();
 	PlayerShowModel();
 	DrawGameBoard();
 	ScreenInit();
