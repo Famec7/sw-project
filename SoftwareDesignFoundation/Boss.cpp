@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "gameInfo.h"
 #include "NormalMob.h"
+#include <vector>
 
 int hellBulletModel[40] = { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 double lazerTime;
@@ -184,11 +185,11 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	/*
 
 
-		
-		
-		
-		    ■▣
-		    ▣■
+
+
+
+			■▣
+			▣■
 
 
 
@@ -221,18 +222,6 @@ int IsBossCleared()
 	return isCleared;
 }
 
-/****************보스 스탯 초기화 함수*********************/
-void BossInit()
-{
-	boss.curPhase = 0;
-	boss.curBossHp = boss.hpString[boss.curPhase].length();
-	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
-	boss.speed = 0.2;
-	int length = boss.hpString[boss.curPhase].length();
-	curState = BossState::Idle;
-	boss.isAttack = false;
-	ShowBossHpUI();
-}
 /****************보스 모델을 띄우는 함수*********************/
 void ShowBossModel()
 {
@@ -287,6 +276,22 @@ void DeleteBossModel()
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
 int isBlur = 0;
+std::vector<int> blurPos;
+void InitBlur()
+{
+	isBlur = 0;
+	blurPos.clear();
+	blurPos.push_back(rand() % 2);
+	for (int i = 0; i < boss.hpString[boss.curPhase].length(); i++)
+	{
+		if (i > 0)
+			if (blurPos[i - 1] == 1)
+				blurPos.push_back(0);
+			else
+				blurPos.push_back(rand() % 2);
+	}
+}
+
 /****************보스 HP UI를 띄우는 함수*********************/
 void ShowBossHpUI()
 {
@@ -298,8 +303,7 @@ void ShowBossHpUI()
 	{
 		if (isBlur)
 		{
-			int randNum = rand() % 10;
-			if (randNum < 2)
+			if (blurPos[i] == 1)
 				std::cout << "■";
 			else
 				std::cout << boss.hpString[boss.curPhase][i];
@@ -425,6 +429,20 @@ void SummonNormalMob()
 	int count = rand() % 4 + 1;
 	for (int i = 0; i < count; i++)
 		CreateNormalMob();
+}
+
+/****************보스 스탯 초기화 함수*********************/
+void BossInit()
+{
+	boss.curPhase = 0;
+	boss.curBossHp = boss.hpString[boss.curPhase].length();
+	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
+	boss.speed = 0.2;
+	int length = boss.hpString[boss.curPhase].length();
+	curState = BossState::Idle;
+	boss.isAttack = false;
+	ShowBossHpUI();
+	InitBlur();
 }
 
 /****************보스의 패턴*********************/
@@ -621,16 +639,21 @@ void UpdateHellBulletState()
 }
 
 double blurTime = 3;
+
 void StartBlurState()
 {
 	curState = BossState::Blur;
 	blurTime = 3;
+	if (isBlur)
+		ChangeState(BossState::Idle);
+	else
+		InitBlur();
 	isBlur = 1;
 	ShowBossHpUI();
 }
 void UpdateBlurState()
 {
-	if (blurTime > 0 && isBlur)
+	/*if (blurTime > 0 && isBlur)
 	{
 		blurTime -= Time.deltaTime;
 		BossRandomMove();
@@ -645,7 +668,8 @@ void UpdateBlurState()
 		}
 		ShowBossHpUI();
 		ChangeState(BossState::Idle);
-	}
+	}*/
+	ChangeState(BossState::Idle);
 }
 void StartSummonState()
 {
