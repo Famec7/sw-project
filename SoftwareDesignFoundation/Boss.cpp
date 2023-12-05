@@ -381,9 +381,70 @@ void BossRandomMove() {
 }
 
 void SummonNormalMob() {
-	int count = rand() % 4 + 1;
-	for (int i = 0; i < count; i++)
-		CreateNormalMob();
+	if (boss.curPhase == 0) {
+		
+		int cnt = rand() % 3 + 2; // 2 ~ 4
+		for (int i = 0; i < cnt; i++) {
+			short x = 13 + 20 * (i + 1);
+			CreateNormalMob(1, { x , 17 });
+		}
+		
+
+	}
+	else if (boss.curPhase == 1) {
+		int random = rand() % 2;
+		if (random == 0) {
+			int cnt = rand() % 3 + 2; // 2 ~ 4
+			int type = rand() % 2 + 1; // 1, 2
+			for (int i = 0; i < cnt; i++) {
+				short x = 13 + 20 * (i + 1);
+				CreateNormalMob(type, { x , 17 });
+			}
+		}
+		else {
+			CreateNormalMob(2, { 13, 17 });
+			CreateNormalMob(2, { 73, 17 });
+			CreateNormalMob(2, { 13, 37 });
+			CreateNormalMob(2, { 73, 37 });
+		}
+	}
+	else {
+		int random = rand() % 3;
+		if (random == 0) {
+			CreateNormalMob(2, { 13, 17 });
+			CreateNormalMob(2, { 13, 22 });
+			CreateNormalMob(2, { 13, 27 });
+			CreateNormalMob(2, { 13, 32 });
+			CreateNormalMob(2, { 13, 37 });
+			CreateNormalMob(2, { 33, 17 });
+			CreateNormalMob(2, { 33, 37 });
+			CreateNormalMob(2, { 53, 17 });
+			CreateNormalMob(2, { 53, 37 });
+			CreateNormalMob(2, { 73, 17 });
+			CreateNormalMob(2, { 73, 22 });
+			CreateNormalMob(2, { 73, 27 });
+			CreateNormalMob(2, { 73, 32 });
+			CreateNormalMob(2, { 73, 37 });
+		}
+		else if (random == 1) {
+			int cnt = rand() % 3 + 2; // 2 ~ 4
+			int type = rand() % 2 + 1; // 1, 2
+			for (int i = 0; i < cnt; i++) {
+				short x = 13 + 20 * (i + 1);
+				CreateNormalMob(type, { x , 17 });
+			}
+		}
+		else {
+			for (int i = 0; i < 4; i++) {
+				short x = 13 + 20 * (i + 1);
+				CreateNormalMob(1, { x , 17 });
+			}
+			CreateNormalMob(2, { 13, 37 });
+			CreateNormalMob(2, { 33, 37 });
+			CreateNormalMob(2, { 53, 37 });
+			CreateNormalMob(2, { 73, 37 });
+		}
+	}
 }
 
 /****************보스 스탯 초기화 함수*********************/

@@ -16,24 +16,28 @@ char NORMAL_MOB_HP_DATASET[3][10] = {
 	{"include"}
 };
 
-void CreateNormalMob() {
+void CreateNormalMob(int _type, COORD pos) {
+	/*
 	if (mobCount > 2)
 		return;
+	*/
 	NormalMobInfo* normalMob = (NormalMobInfo*)malloc(sizeof(NormalMobInfo));
 	strcpy(normalMob->hp, NORMAL_MOB_HP_DATASET[rand() % 3]);
 
 	int cnt = 1;
-	int _type = 1;
-	if (rand() % 3 == 0) _type = 2; //33ÆÛ¼¾Æ® È®·ü·Î ÆøÅº ¸÷ »ý¼º
 
-	normalMob->pos = MakeNormalMobPos();
+	normalMob->pos = pos;
 	normalMob->mobHp = strlen(normalMob->hp);
-	normalMob->state = rand() % 3;
+	normalMob->state = rand() % 2;
 	normalMob->next = NULL;
 	normalMob->isExplosion = 0;
-	normalMob->explosionTime = 0.15;
 	normalMob->type = _type;
-	if (normalMob->type == 2) normalMob->state = 4;
+	normalMob->explosionTime = 1; //½Ã°£ ÀÌÈÄ ÆøÆÄ
+	normalMob->mobIdleTime = 0.2;
+	normalMob->attackMobIdleTime = 0.4;
+	normalMob->moveTime = 2;
+	normalMob->attackTime = 0.2;
+	if (normalMob->type == 2) normalMob->state = 0;
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;
 		normalMobListHead = normalMob;
@@ -163,8 +167,8 @@ int EXPLOSION_HIT = 0;
 void PrintingExplosion(NormalMobInfo* normalMob) {
 	int normalMobPosX = normalMob->pos.X;
 	int normalMobPosY = normalMob->pos.Y;
-	for (int i = -4; i < 10; i += 2) {
-		for (int j = -2; j < 4; j++) {
+	for (int i = -4; i < 12; i += 2) {
+		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
 			int board_y = normalMobPosY + j - GBOARD_ORIGIN_Y;
 			if (gameBoardInfo[board_y][board_x] == MAP_BOUNDARY)
@@ -180,8 +184,8 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 	
 	Sleep(50);
 	
-	for (int i = -4; i < 10; i += 2) {
-		for (int j = -2; j < 4; j++) {
+	for (int i = -4; i < 12; i += 2) {
+		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
 			int board_y = normalMobPosY + j - GBOARD_ORIGIN_Y;
 			if (gameBoardInfo[board_y][board_x] == MAP_BOUNDARY)
@@ -198,61 +202,67 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 }
 void MoveNormalMob(NormalMobInfo* normalMob) { // ·£´ýÇÏ°Ô ÁÂ, ¿ì·Î ¿òÁ÷ÀÌ´Â ÇÔ¼ö
 	
-	
-	if (normalMob->type == 1) { //ÀÏ¹Ý ¸÷
-		int num = rand() % 2;
-		switch (num) {
-		case 0:
-			ShiftLeft(normalMob);
-			break;
-		case 1:
-			ShiftRight(normalMob);
-			break;
+	normalMob->mobIdleTime -= Time.deltaTime;
+	if (normalMob->isExplosion == 1) {
+		normalMob->explosionTime -= Time.deltaTime;
+		if (normalMob->explosionTime < 0) {
+			DeleteOneNormalMob(normalMob);
+			mobCount--;
+
+			PrintingExplosion(normalMob);
+			RemoveNormalMob(normalMob);
+
 		}
 	}
-	else if (normalMob->type == 2) {// ÆøÅº ¸÷
-		COORD playerPos = GetPlayerPos();
-		int playerPosX = playerPos.X;
-		int playerPosY = playerPos.Y;
-		int normalMobPosX = normalMob->pos.X;
-		int normalMobPosY = normalMob->pos.Y;
-		double dif_x = (double)playerPosX - normalMobPosX;
-		double dif_y = (double)playerPosY - normalMobPosY;
-
-		int direction = rand() % 2; // 0 == ¼¼·Î ÀÌµ¿,1 == °¡·Î ÀÌµ¿
-
-		if (sqrt(dif_x * dif_x + dif_y * dif_y) > 8 && normalMob->isExplosion == 0) {
-			if (playerPosX == normalMobPosX) direction = 0;
-			else if (playerPosY == normalMobPosY) direction = 1;
-
-			if (direction == 0) {
-				if (playerPosY - normalMobPosY < 0) ShiftUp(normalMob);
-				else ShiftDown(normalMob);
+	if (normalMob->mobIdleTime < 0) {
+		normalMob->mobIdleTime = 0.2;
+		if (normalMob->type == 1) { //ÀÏ¹Ý ¸÷
+			int num = rand() % 2;
+			switch (num) {
+			case 0:
+				ShiftLeft(normalMob);
+				break;
+			case 1:
+				ShiftRight(normalMob);
+				break;
 			}
-			else if (direction == 1) {
-				if (playerPosX - normalMobPosX < 0) ShiftLeft(normalMob);
-				else ShiftRight(normalMob);
+		}
+		else if (normalMob->type == 2) {// ÆøÅº ¸÷
+			COORD playerPos = GetPlayerPos();
+			int playerPosX = playerPos.X;
+			int playerPosY = playerPos.Y;
+			int normalMobPosX = normalMob->pos.X + 4;
+			int normalMobPosY = normalMob->pos.Y + 1;
+			double dif_x = (double)playerPosX - normalMobPosX;
+			double dif_y = (double)playerPosY - normalMobPosY;
+
+			int direction = rand() % 2; // 0 == ¼¼·Î ÀÌµ¿,1 == °¡·Î ÀÌµ¿
+
+			if (sqrt(dif_x * dif_x + dif_y * dif_y) > 5 && normalMob->isExplosion == 0) {
+				if (playerPosX == normalMobPosX) direction = 0;
+				else if (playerPosY == normalMobPosY) direction = 1;
+
+				if (direction == 0) {
+					if (playerPosY - normalMobPosY < 0) ShiftUp(normalMob);
+					else ShiftDown(normalMob);
+				}
+				else if (direction == 1) {
+					if (playerPosX - normalMobPosX < 0) ShiftLeft(normalMob);
+					else ShiftRight(normalMob);
+				}
+
 			}
+			else {
+				if (normalMob->isExplosion == 0)
+					normalMob->isExplosion = 1;
+				
+			
+
+
+			}
+
 
 		}
-		else {
-			if(normalMob->isExplosion == 0)
-				normalMob->isExplosion = 1;
-			if(normalMob->explosionTime > 0)
-				normalMob->explosionTime -= Time.deltaTime;
-			else if (normalMob->explosionTime < 0) {
-				DeleteOneNormalMob(normalMob);
-				mobCount--;
-
-				PrintingExplosion(normalMob);
-				RemoveNormalMob(normalMob);
-
-			}
-
-
-		}
-
-
 	}
 		
 }
@@ -271,13 +281,17 @@ void ShiftUp(NormalMobInfo* normalMob) {
 	ShowOneNormalMob(normalMob);
 }
 void NormalMobShoot(NormalMobInfo* normalMob) {
-	srand(time(NULL));
+	
+	normalMob->attackMobIdleTime -= Time.deltaTime;
+	if (normalMob->attackMobIdleTime < 0) {
+		SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
 
+		//double speed = 0.5 + ((double)rand() / RAND_MAX) * 0.05;
+		MakeBullet(normalMob->pos.X + 5, normalMob->pos.Y + 2, 4, 0.05f);
 
-	SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
-
-	//double speed = 0.5 + ((double)rand() / RAND_MAX) * 0.05;
-	MakeBullet(normalMob->pos.X + 5, normalMob->pos.Y + 2, 4, 0.1f);
+		normalMob->attackMobIdleTime = 0.4;
+	}
+	
 
 
 
@@ -340,8 +354,29 @@ COORD MakeNormalMobPos() {
 	COORD pos = { 13 + 20 * cnt, 17 };
 	return pos;
 }
+void UpdateIdleNormalMob(NormalMobInfo* normalMob) {
+	
 
-int tempState = 0;
+	if (normalMob->moveTime < 0) {
+		normalMob->moveTime = 2 + rand() % 2;
+		if (normalMob->type == 1)
+			normalMob->state = 1;
+	}
+	else {
+		MoveNormalMob(normalMob);
+		normalMob->moveTime -= Time.deltaTime;
+	}
+}
+void UpdateAttackNormalMob(NormalMobInfo* normalMob) {
+	if (normalMob->attackTime < 0) {
+		normalMob->attackTime = 2 + rand() % 2;
+		normalMob->state = 0;
+	}
+	else {
+		NormalMobShoot(normalMob);
+		normalMob->attackTime -= Time.deltaTime;
+	}
+}
 
 void NormalMobUpdate() {
 	NormalMobInfo* normalMob = normalMobListHead;
@@ -355,66 +390,27 @@ void NormalMobUpdate() {
 		}
 		// ÆøÅº ¸÷ÀÇ °æ¿ì MoveNormalMob¿¡¼­ ¸÷À» »èÁ¦ÇÏ±â ¶§¹®¿¡
 		// »èÁ¦ ÀüÀÇ next¸¦ ÀúÀåÇØ³õ¾Æ¾ß ÇÔ
+		
 		NormalMobInfo* temp = normalMob->next;
 
-		normalMob->tempIdleTime -= Time.deltaTime;
 
-		if (normalMob->tempIdleTime < 0) {
-			
-			if (normalMob->type == 1) { //ÀÏ¹Ý ¸÷
-				if (normalMob->moveTime > 0 && normalMob->state == 0)
-					normalMob->moveTime -= Time.deltaTime;
-				else if (normalMob->moveTime < 0) {
-					normalMob->state = rand() % 2 + 1;
-					normalMob->moveTime = 1;
-				}
-
-				if (normalMob->state == 1 && normalMob->attackTime > 0)
-					normalMob->attackTime -= Time.deltaTime;
-				else if (normalMob->attackTime < 0) {
-					normalMob->state = (rand() % 2) * 2;
-					normalMob->attackTime = 0.2;
-				}
-
-				if (normalMob->state == 2 && normalMob->mobIdleTime > 0)
-					normalMob->mobIdleTime -= Time.deltaTime;
-				else if (normalMob->mobIdleTime < 0) {
-					normalMob->state = rand() % 2;
-					normalMob->mobIdleTime = 2;
-				}
-
-				/*if (normalMob->state == 3 && normalMob->tempIdleTime > 0)
-					normalMob->tempIdleTime -= Time.deltaTime;
-				else if (normalMob->tempIdleTime < 0) {
-					normalMob->state = tempState;
-					normalMob->tempIdleTime = 0.2;
-					normalMob = normalMob->next;
-					continue;
-				}*/
-			}
-			switch (normalMob->state) {
-			case 0:
-				MoveNormalMob(normalMob);
-				/*tempState = normalMob->state;
-				normalMob->state = 3;*/
-				break;
-			case 1:
-				NormalMobShoot(normalMob);
-				/*tempState = normalMob->state;
-				normalMob->state = 3;*/
-				break;
-			case 4:
-				MoveNormalMob(normalMob);
-				break;
-			default:
-				break;
-			}
-			normalMob->tempIdleTime = 0.2;
+		switch (normalMob->state) {
+		case 0:
+			UpdateIdleNormalMob(normalMob);
+			break;
+		case 1:
+			UpdateAttackNormalMob(normalMob);
+			break;
 		}
+		
+		
+		
+			
 		normalMob = temp;
 
 	}
-
+	
+	
 
 
 }
