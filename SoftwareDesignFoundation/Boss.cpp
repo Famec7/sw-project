@@ -187,10 +187,10 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 
 
 
-
-			¡á¢Ã
-			¢Ã¡á
-
+	        ¡ã¡ã
+		  ¢¸¡á¢Ã¢º
+		  ¢¸¢Ã¡á¢º
+			¡å¡å
 
 
 	*/
@@ -198,10 +198,10 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 1, 3, 0, 0, 0, 0},
-	{0, 0, 0, 0, 3, 1, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 4, 4, 0, 0, 0, 0},
+	{0, 0, 0, 7, 1, 3, 5, 0, 0, 0},
+	{0, 0, 0, 7, 3, 1, 5, 0, 0, 0},
+	{0, 0, 0, 0, 6, 6, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -234,19 +234,22 @@ void ShowBossModel()
 		for (int x = 0; x < BOSS_SIZE_X; x++)
 		{
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
-			if (bossModel[boss.curPhase][y][x] == 1)
+			if (bossModel[boss.curPhase][y][x] != 0)
 			{
-				printf("¡á");
-				gameBoardInfo[arrY + y][arrX + x] = BOSS;
-			}
-			else if (bossModel[boss.curPhase][y][x] == 2)
-			{
-				printf("¡Ü");
-				gameBoardInfo[arrY + y][arrX + x] = BOSS;
-			}
-			else if (bossModel[boss.curPhase][y][x] == 3)
-			{
-				printf("¢Ã");
+				if (bossModel[boss.curPhase][y][x] == 1)
+					printf("¡á");
+				else if (bossModel[boss.curPhase][y][x] == 2)
+					printf("¡Ü");
+				else if (bossModel[boss.curPhase][y][x] == 3)
+					printf("¢Ã");
+				else if(bossModel[boss.curPhase][y][x] == 4)
+					printf("¡ã");
+				else if (bossModel[boss.curPhase][y][x] == 5)
+					printf("¢º");
+				else if (bossModel[boss.curPhase][y][x] == 6)
+					printf("¡å");
+				else if (bossModel[boss.curPhase][y][x] == 7)
+					printf("¢¸");
 				gameBoardInfo[arrY + y][arrX + x] = BOSS;
 			}
 		}
@@ -550,7 +553,7 @@ void UpdateIdleState()
 	{
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(nextState);
+		ChangeState(BossState::GoToDown);
 	}
 	else
 	{
