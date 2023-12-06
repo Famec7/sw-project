@@ -488,13 +488,13 @@ void ChangeState(BossState next)
 	case BossState::Summon:
 		StartSummonState();
 		break;
-	case BossState::GoToDown:													//ImAdded				
+	case BossState::GoToDown:				
 		StartGoToDown();
 		break;
-	case BossState::GoToLeft:													//ImAdded				
+	case BossState::GoToLeft:			
 		StartGoToLeft();
 		break;
-	case BossState::GoToRight:													//ImAdded				
+	case BossState::GoToRight:			
 		StartGoToRight();
 		break;
 	case BossState::Lazer:
@@ -549,8 +549,8 @@ void UpdateIdleState()
 	if (idleTime < 0)
 	{
 		idleTime = rand() % 2 + 2;
-		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 1) + 1);
-		ChangeState(BossState::Blur);
+		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
+		ChangeState(nextState);
 	}
 	else
 	{
@@ -613,7 +613,6 @@ void InitHellBulletState()
 }
 void StartHellBulletState()
 {
-	StartGoToDown();
 	curState = BossState::HellBullet;
 	InitHellBulletState();
 	int num = rand() % 40;
@@ -703,64 +702,75 @@ void UpdateSummonState()
 		ChangeState(BossState::Idle);
 	BossRandomMove();
 }
-//MyBossFunction
+
+int dx = 0, dy = 0;
 void StartGoToDown() {
 	ShowFinger(0);
 	Sleep(100);
 	DeleteFinger();
 	CantControl = 1;
-	curState = BossState::GoToDown;
 	ShowFinger(2);
-	while (1) {
-		if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1)) {
-			//벽에 충돌한 효과음 추가
-			DeleteFinger();
-			break;
-		}
-		PlayerShiftDown();
-		Sleep(25);
-	}
-	CantControl = 0;
+	curState = BossState::GoToDown;
+	dx = 0, dy = 1;
 }
 void StartGoToLeft() {
 	ShowFinger(1);
 	Sleep(100);
 	DeleteFinger();
 	CantControl = 1;
-	curState = BossState::GoToLeft;
 	ShowFinger(3);
-	while (1) {
-		if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y)) {
-			//벽에 충돌한 효과음 추가
-			DeleteFinger();
-			break;
-		}
-		PlayerShiftLeft();
-		Sleep(25);
-	}
-	CantControl = 0;
+	curState = BossState::GoToLeft;
+	dx = -2, dy = 0;
 }
 void StartGoToRight() {
 	ShowFinger(3);
 	Sleep(100);
 	DeleteFinger();
 	CantControl = 1;
-	curState = BossState::GoToRight;
 	ShowFinger(1);
-	while (1) {
-		if (!PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y + 1)) {
-			//벽에 충돌한 효과음 추가
-			DeleteFinger();
-			break;
-		}
-		PlayerShiftRight();
-		Sleep(25);
-	}
-	CantControl = 0;
+	curState = BossState::GoToRight;
+	dx = 2, dy = 1;
 }
 void UpdateGoTo() {
-	BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
-	ChangeState(nextState);
+	static double time = 0.25;
+
+	if (!PlayerDetectedCollision(playerCurPos.X + dx, playerCurPos.Y + dy)) {
+		//벽에 충돌한 효과음 추가
+		DeleteFinger();
+		CantControl = 0;
+		time = 0.025;
+		BossState nextState = (enum BossState)((int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
+		if (curState == BossState::GoToDown)
+		{
+			int random = rand() % 2;
+			if (random == 0)
+				nextState = BossState::Lazer;
+			else
+				nextState = BossState::HellBullet;
+		}
+		ChangeState(nextState);
+	}
+	else if (time > 0) {
+		time -= Time.deltaTime;
+	}
+	else
+	{
+		switch (curState)
+		{
+		case BossState::GoToDown:
+			PlayerShiftDown();
+			break;
+		case BossState::GoToLeft:
+			PlayerShiftLeft();
+			break;
+		case BossState::GoToRight:
+			PlayerShiftRight();
+			break;
+		default:
+			break;
+		}
+		time = 0.025;
+	}
 }
 
 // lazer패턴 구현
