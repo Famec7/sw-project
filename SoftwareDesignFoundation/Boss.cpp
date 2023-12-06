@@ -280,15 +280,16 @@ std::vector<int> blurPos;
 void InitBlur()
 {
 	isBlur = 0;
+	int phase = 4 - boss.curPhase;
 	blurPos.clear();
-	blurPos.push_back(rand() % 2);
+	blurPos.push_back(rand() % phase);
 	for (int i = 0; i < boss.hpString[boss.curPhase].length(); i++)
 	{
 		if (i > 0)
 			if (blurPos[i - 1] == 1)
 				blurPos.push_back(0);
 			else
-				blurPos.push_back(rand() % 2);
+				blurPos.push_back(rand() % phase);
 	}
 }
 
@@ -580,9 +581,24 @@ void SetMuzzleState(int s, int e)
 
 void InitHellBulletState()
 {
-	showMuzzleTime = 0.5;
-	fireBulletTime = 1;
-	fireCycleTime = 0.5;
+	if (boss.curPhase == 0)
+	{
+		showMuzzleTime = 0.5;
+		fireBulletTime = 1;
+		fireCycleTime = 0.5;
+	}
+	else if (boss.curPhase == 1)
+	{
+		showMuzzleTime = 0.3;
+		fireBulletTime = 1;
+		fireCycleTime = 0.5;
+	}
+	else if (boss.curPhase == 2)
+	{
+		showMuzzleTime = 0.1;
+		fireBulletTime = 1;
+		fireCycleTime = 0.5;
+	}
 
 	int num = rand() % 2;
 	if (start < 6)
@@ -629,7 +645,7 @@ void UpdateHellBulletState()
 		}
 	}
 
-	if (count == 3)
+	if (count == 3 + boss.curPhase)
 	{
 		DeleteMuzzle();
 		count = 0;
