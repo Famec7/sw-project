@@ -10,7 +10,7 @@
 #define BOSS_ORIGIN_X 40
 #define BOSS_ORIGIN_Y 4
 
-#define LAZER_NUM 5
+#define MAX_LAZER_NUM 20
 
 typedef struct _BossInfo {
   COORD curPos = {BOSS_ORIGIN_X, BOSS_ORIGIN_Y};
@@ -23,7 +23,9 @@ typedef struct _BossInfo {
 } BossInfo;
 
 typedef struct LAZERBLOCK {
-  COORD pos;
+    int hp;
+    double lazerTime;
+    COORD pos;
 } LAZERBLOCK;
 
 enum BossState {
@@ -48,11 +50,12 @@ void ShowBossHpUI();
 int IsBossCleared();
 
 // lazer ∆–≈œ
-void PrintLazerBlock();
+void PrintLazerBlock(int idx);
 void PrintLazerWall();
-void ShootLazer();
-void StopLazer();
+void ShootLazer(int idx);
+void StopLazer(int idx);
 void StartLazerState();
 void UpdateLazerState();
-void DeleteLazerBlock();
+void DeleteLazerBlock(int idx);
 void DeleteLazerWall();
+void InitLazer();

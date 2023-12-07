@@ -23,18 +23,16 @@ void CreateNormalMob() {
 	strcpy(normalMob->hp, NORMAL_MOB_HP_DATASET[rand() % 3]);
 
 	int cnt = 1;
-	//int _type = 1;
-	//if (rand() % 3 == 0) _type = 2; //33ÆÛ¼¾Æ® È®·ü·Î ÆøÅº ¸÷ »ý¼º
+	int _type = 1;
+	if (rand() % 3 == 0) _type = 2; //33ÆÛ¼¾Æ® È®·ü·Î ÆøÅº ¸÷ »ý¼º
 
 	normalMob->pos = MakeNormalMobPos();
 	normalMob->mobHp = strlen(normalMob->hp);
-	//normalMob->state = rand() % 3;
-	normalMob->state = 4;
+	normalMob->state = rand() % 3;
 	normalMob->next = NULL;
 	normalMob->isExplosion = 0;
 	normalMob->explosionTime = 0.15;
-	//normalMob->type = _type;
-	normalMob->type = 1;
+	normalMob->type = _type;
 	if (normalMob->type == 2) normalMob->state = 4;
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;

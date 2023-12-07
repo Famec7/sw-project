@@ -125,7 +125,7 @@ void ShowItem(ITEM item) {
 int CreateItemRandom() {
 	int createItem;
 	createItem = rand() % 100;
-	if (createItem < 100 && (HP < MAX_HP || bulletNum < MAX_BULLET))
+	if (createItem < 30 && (HP < MAX_HP || bulletNum < MAX_BULLET))
 		return 1;
 	else
 		return 0;
