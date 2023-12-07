@@ -24,10 +24,10 @@ char hpText[] = { 'P', 'l', 'a', 'y', 'e', 'r', 'h',
 char shieldText[] = { 's', 'h', 'i', 'e', 'l', 'd' };
 
 void playerInit() {
+	HP = MAX_HP;
 	playerCurPos.X = 45;
 	playerCurPos.Y = 35;
 	PlayerStatOutput();
-	PlaySound(TEXT("c:\\temp\\truehero.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 void PlayerShowModel() {
 	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
@@ -295,8 +295,6 @@ int IsGameOver() {
 COORD GetPlayerPos() { return playerCurPos; }
 
 void AttackedPlayerProcessing(int n) {
-	if(isShield_Flag)
-		return;
 	HP -= n;
 	imHit = 1;
 	PlayerStatOutput();
