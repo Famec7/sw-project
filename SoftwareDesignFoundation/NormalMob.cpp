@@ -180,7 +180,10 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("＠");
 		}
 	}
-
+	if (EXPLOSION_HIT == 1) {
+		AttackedPlayerProcessing(3);
+		EXPLOSION_HIT = 0;
+	}
 
 	Sleep(50);
 
@@ -194,10 +197,6 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			SetCurrentCursorPos(normalMobPosX + i, normalMobPosY + j);
 			printf("  ");
 		}
-	}
-	if (EXPLOSION_HIT == 1) {
-		AttackedPlayerProcessing(3);
-		EXPLOSION_HIT = 0;
 	}
 }
 void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함수
