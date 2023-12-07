@@ -13,3 +13,4 @@ typedef struct BulletInfo
 void MakeBullet(int posX, int posY, int info, double speed);
 void UpdateBullet();
 void DeleteBullet(int arrX, int arrY);
+void InitBullet();

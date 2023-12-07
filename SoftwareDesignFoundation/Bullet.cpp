@@ -11,6 +11,11 @@ void PrintBullet(int info)
 		printf("%c ", (char)info);
 }
 
+void InitBullet()
+{
+	bullets.clear();
+}
+
 void MakeBullet(int posX, int posY, int info, double speed)
 {
 	/*총알 정보를 리스트에 추가*/

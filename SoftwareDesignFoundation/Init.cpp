@@ -8,5 +8,7 @@ void Init()
 	playerInit();
 	BossInit();
 	ItemInit();
+	InitBullet();
+	InitNormalMob();
 	PlayerShowModel();
 }

@@ -414,21 +414,21 @@ void SummonNormalMob() {
 		}
 	}
 	else {
-		int random = 0;
+		int random = rand() % 3;
 		if (random == 0) {
 			/*CreateNormalMob(2, { 13, 17 });*/
 			CreateNormalMob(2, { 13, 22 });
 			CreateNormalMob(2, { 13, 27 });
-			CreateNormalMob(2, { 13, 32 });
+			//CreateNormalMob(2, { 13, 32 });
 			//CreateNormalMob(2, { 13, 37 });
 			CreateNormalMob(2, { 33, 17 });
 			CreateNormalMob(2, { 33, 37 });
 			CreateNormalMob(2, { 53, 17 });
-			CreateNormalMob(2, { 53, 37 });
+			//CreateNormalMob(2, { 53, 37 });
 			//CreateNormalMob(2, { 73, 17 });
 			CreateNormalMob(2, { 73, 22 });
 			CreateNormalMob(2, { 73, 27 });
-			CreateNormalMob(2, { 73, 32 });
+			//CreateNormalMob(2, { 73, 32 });
 			//CreateNormalMob(2, { 73, 37 });
 		}
 		else if (random == 1) {
@@ -454,7 +454,7 @@ void SummonNormalMob() {
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit() {
-	boss.curPhase = 2;
+	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	boss.speed = 0.2;

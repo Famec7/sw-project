@@ -39,3 +39,4 @@ extern TimeStruct Time;
 void InitTime();
 void UpdateTime();
 void DrawGameBoard(void);
+void InitBoard();

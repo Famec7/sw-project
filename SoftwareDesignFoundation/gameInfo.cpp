@@ -81,3 +81,16 @@ void DrawGameBoard(void)
 
     SetCurrentCursorPos(GBOARD_ORIGIN_X + GBOARD_WIDTH, 0);
 }
+
+void InitBoard()
+{
+    int arrX = (GBOARD_WIDTH - GBOARD_ORIGIN_X) / 2;
+    int arrY = GBOARD_HEIGHT - GBOARD_ORIGIN_Y;
+    for (int y = 0; y < GBOARD_HEIGHT; y++)
+    {
+        for (int x = 0; x < GBOARD_WIDTH; x++)
+        {
+            gameBoardInfo[arrY + y][arrX + x] = 0;
+        }
+    }
+}

@@ -62,3 +62,4 @@ void UpdateAttackNormalMob(NormalMobInfo* normalMob);
 
 int GetNormalMobCount();
 int EmptyNormalMob();
+void InitNormalMob();

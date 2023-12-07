@@ -165,6 +165,7 @@ void ShiftRight(NormalMobInfo* normalMob) {
 
 void InitNormalMob() {
 	mobCount = 0;
+	DeleteNormalMob();
 	NormalMobInfo* normalMob = normalMobListHead;
 	while (normalMob != nullptr) {
 		normalMob = RemoveNormalMob(normalMob);
