@@ -2,15 +2,17 @@
 #include "Update.h"
 
 void Update() {
-	UpdateTime();
-	UpdateBullet();
-	UpdateItem();
-	NormalMobUpdate();
-	UpdateBoss();
-	UpdateItem();
-	ProcessKeyInput();
-	PlayerUpdate();
-	ManageShield();
+	if (Gamestate == Game) {
+		UpdateTime();
+		UpdateBullet();
+		UpdateItem();
+		NormalMobUpdate();
+		UpdateBoss();
+		UpdateItem();
+		ProcessKeyInput();
+		PlayerUpdate();
+		ManageShield();
+	}
 
 	if (IsGameOver()) {
 		SetCurrentCursorPos(25, 25);
@@ -27,6 +29,7 @@ void Update() {
 
 	if (Gamestate == Menu)
 	{
+		Gamestate = Game;
 		// UpdateMenu();
 	}
 }
