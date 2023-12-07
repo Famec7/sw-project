@@ -27,6 +27,7 @@ void playerInit() {
 	playerCurPos.X = 45;
 	playerCurPos.Y = 35;
 	PlayerStatOutput();
+	PlaySound(TEXT("c:\\temp\\truehero.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 void PlayerShowModel() {
 	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
