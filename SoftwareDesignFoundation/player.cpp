@@ -294,6 +294,8 @@ int IsGameOver() {
 COORD GetPlayerPos() { return playerCurPos; }
 
 void AttackedPlayerProcessing(int n) {
+	if(isShield_Flag)
+		return;
 	HP -= n;
 	imHit = 1;
 	PlayerStatOutput();

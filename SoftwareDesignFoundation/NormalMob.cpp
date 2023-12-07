@@ -163,8 +163,11 @@ void ShiftRight(NormalMobInfo* normalMob) {
 }
 
 void InitNormalMob() {
-	normalMobListHead = NULL;
 	mobCount = 0;
+	NormalMobInfo* normalMob = normalMobListHead;
+	while (normalMob != nullptr) {
+		normalMob = RemoveNormalMob(normalMob);
+	}
 }
 
 void PrintingExplosion(NormalMobInfo* normalMob) {
@@ -218,6 +221,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 
 			PrintingExplosion(normalMob);
 			RemoveNormalMob(normalMob);
+			return;
 
 		}
 	}
