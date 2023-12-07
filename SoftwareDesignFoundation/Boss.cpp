@@ -147,12 +147,12 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
 	/*
 
 
-			■■■■■■
-			■        ■
-			■●    ●■
-			■        ■
-			■  ■■  ■
-			■■■■■■
+					■■■■■■
+					■        ■
+					■●    ●■
+					■        ■
+					■  ■■  ■
+					■■■■■■
 
 
 	*/
@@ -560,7 +560,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(BossState::GoToDown);
+		ChangeState(BossState::Lazer);
 	}
 	else {
 		BossRandomMove();
@@ -667,19 +667,20 @@ void StartBlurState() {
 void UpdateBlurState() {
 	/*if (blurTime > 0 && isBlur)
 	{
-			blurTime -= Time.deltaTime;
-			BossRandomMove();
+					blurTime -= Time.deltaTime;
+					BossRandomMove();
 	}
 	else if (blurTime < 0 && isBlur)
 	{
-			isBlur = 0;
-			for (int i = 0; i < boss.hpString[boss.curPhase].length() * 2; i++)
-			{
-					SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
-					printf("  ");
-			}
-			ShowBossHpUI();
-			ChangeState(BossState::Idle);
+					isBlur = 0;
+					for (int i = 0; i < boss.hpString[boss.curPhase].length() * 2;
+	i++)
+					{
+									SetCurrentCursorPos(hpCurPos.X + i,
+	hpCurPos.Y); printf("  ");
+					}
+					ShowBossHpUI();
+					ChangeState(BossState::Idle);
 	}*/
 	ChangeState(BossState::Idle);
 }
@@ -770,11 +771,53 @@ void StartLazerState() {
 }
 
 void UpdateLazerState() {
-	if (lazerTime < 0) {
-		StopLazer();
-		DeleteLazerBlock();
+	if (totalLazerTime > lazerIdx && lazerNum > lazerIdx) {
+		PrintLazerBlock(lazerIdx);
+		lazerIdx++;
+	}
+	for (int i = 0; i < lazerIdx; i++) {
+		if (lazerBlock[i].lazerTime < 4 && lazerBlock[i].lazerTime > 0) {
+			ShootLazer(i);
+		}
+		if (lazerBlock[i].lazerTime >= 0) {
+			lazerBlock[i].lazerTime -= Time.deltaTime;
+		}
+	}
+	// 레이저 생성후 사라짐
+	for (int i = 0; i < lazerIdx; i++) {
+		if (lazerBlock[i].hp == 1 && lazerBlock[i].lazerTime < 0) {
+			StopLazer(i);
+			DeleteLazerBlock(i);
+			lazerBlock[i].hp = 0;
+		}
+	}
+	if (totalLazerTime > lazerNum + 2) {
+		for (int i = 0; i < lazerIdx; i++) {
+			StopLazer(i);
+			DeleteLazerBlock(i);
+		}
 		DeleteLazerWall();
 		ChangeState(BossState::Idle);
+	}
+
+	// 레이저 생성후 안사라짐
+	/*if (totalLazerTime > lazerNum+2) {
+					for (int i = 0; i < lazerIdx; i++) {
+									StopLazer(i);
+									DeleteLazerBlock(i);
+					}
+					DeleteLazerWall();
+					ChangeState(BossState::Idle);
+	}*/
+	totalLazerTime += Time.deltaTime;
+}
+
+void InitLazer() {
+	int i;
+	lazerIdx = 0;
+	for (i = 0; i < MAX_LAZER_NUM; i++) {
+		lazerBlock[i].lazerTime = 5;
+		lazerBlock[i].hp = 1;
 	}
 	else if (lazerTime < 5)
 		ShootLazer();
