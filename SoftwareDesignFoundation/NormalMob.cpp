@@ -5,7 +5,7 @@
 NormalMobInfo* normalMobListHead = NULL;
 int mobCount = 0;
 
-char NORMAL_MOB_MODEL[2][5] = { 
+char NORMAL_MOB_MODEL[2][5] = {
 	{1,0,0,0,1},
 	{1,1,1,1,1}
 };
@@ -77,7 +77,7 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 	int normalMob_y = printingNormalMob->pos.Y;
 	int arrX = (normalMob_x - GBOARD_ORIGIN_X) / 2;
 	int arrY = normalMob_y - GBOARD_ORIGIN_Y;
-	
+
 	ShowNormalMobHp(printingNormalMob);
 
 	for (int y = 0; y < 2; y++) {
@@ -85,9 +85,9 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 
 			if (NORMAL_MOB_MODEL[y][x] == 1) {
 				SetCurrentCursorPos(normalMob_x + (x * 2), normalMob_y + y);
-				if(printingNormalMob->type == 2 && printingNormalMob->isExplosion == 0)
+				if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 0)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-				else if(printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1)
+				else if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 				printf("◆");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -180,10 +180,10 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("＠");
 		}
 	}
-	
-	
+
+
 	Sleep(50);
-	
+
 	for (int i = -4; i < 12; i += 2) {
 		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
@@ -201,7 +201,7 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 	}
 }
 void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함수
-	
+
 	normalMob->mobIdleTime -= Time.deltaTime;
 	if (normalMob->isExplosion == 1) {
 		normalMob->explosionTime -= Time.deltaTime;
@@ -255,8 +255,8 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함�
 			else {
 				if (normalMob->isExplosion == 0)
 					normalMob->isExplosion = 1;
-				
-			
+
+
 
 
 			}
@@ -264,7 +264,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함�
 
 		}
 	}
-		
+
 }
 void ShiftDown(NormalMobInfo* normalMob) {
 	if (NormalMobDetectedCollision(normalMob->pos.X, normalMob->pos.Y + 1, normalMob->numberingMob) == 1)
@@ -281,7 +281,7 @@ void ShiftUp(NormalMobInfo* normalMob) {
 	ShowOneNormalMob(normalMob);
 }
 void NormalMobShoot(NormalMobInfo* normalMob) {
-	
+
 	normalMob->attackMobIdleTime -= Time.deltaTime;
 	if (normalMob->attackMobIdleTime < 0) {
 		SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
@@ -291,7 +291,7 @@ void NormalMobShoot(NormalMobInfo* normalMob) {
 
 		normalMob->attackMobIdleTime = 0.4;
 	}
-	
+
 
 
 
@@ -355,7 +355,7 @@ COORD MakeNormalMobPos() {
 	return pos;
 }
 void UpdateIdleNormalMob(NormalMobInfo* normalMob) {
-	
+
 
 	if (normalMob->moveTime < 0) {
 		normalMob->moveTime = 2 + rand() % 2;
@@ -390,7 +390,7 @@ void NormalMobUpdate() {
 		}
 		// 폭탄 몹의 경우 MoveNormalMob에서 몹을 삭제하기 때문에
 		// 삭제 전의 next를 저장해놓아야 함
-		
+
 		NormalMobInfo* temp = normalMob->next;
 
 
@@ -402,15 +402,15 @@ void NormalMobUpdate() {
 			UpdateAttackNormalMob(normalMob);
 			break;
 		}
-		
-		
-		
-			
+
+
+
+
 		normalMob = temp;
 
 	}
-	
-	
+
+
 
 
 }
