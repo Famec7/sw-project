@@ -37,6 +37,7 @@ void CreateNormalMob(int _type, COORD pos) {
 	normalMob->attackMobIdleTime = 0.4;
 	normalMob->moveTime = 2;
 	normalMob->attackTime = 0.2;
+	normalMob->delayExplosion = 0.05;
 	if (normalMob->type == 2) normalMob->state = 0;
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;
@@ -169,7 +170,6 @@ void InitNormalMob() {
 		normalMob = RemoveNormalMob(normalMob);
 	}
 }
-
 void PrintingExplosion(NormalMobInfo* normalMob) {
 	int normalMobPosX = normalMob->pos.X;
 	int normalMobPosY = normalMob->pos.Y;
@@ -188,13 +188,16 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("＠");
 		}
 	}
-
 	if (EXPLOSION_HIT == 1) {
 		AttackedPlayerProcessing(3);
-		EXPLOSION_HIT = 0;
 	}
 
-	Sleep(50);
+
+
+}
+void AfterExplosion(NormalMobInfo* normalMob) {
+	int normalMobPosX = normalMob->pos.X;
+	int normalMobPosY = normalMob->pos.Y;
 
 	for (int i = -4; i < 12; i += 2) {
 		for (int j = -2; j < 6; j++) {
@@ -207,8 +210,10 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("  ");
 		}
 	}
-
 }
+
+
+
 
 void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함수
 
@@ -220,11 +225,18 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 			mobCount--;
 
 			PrintingExplosion(normalMob);
-			RemoveNormalMob(normalMob);
-			return;
+			normalMob->delayExplosion -= Time.deltaTime;
+			if (normalMob->delayExplosion < 0) {
+				AfterExplosion(normalMob);
+				RemoveNormalMob(normalMob);
+				return;
+			}
+
+
 
 		}
 	}
+
 	if (normalMob->mobIdleTime < 0) {
 		normalMob->mobIdleTime = 0.2;
 		if (normalMob->type == 1) { //일반 몹

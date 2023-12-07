@@ -28,6 +28,7 @@ typedef struct NormalMobInfo {
 	double attackMobIdleTime;
 	double moveTime;
 	double attackTime;
+	double delayExplosion;
 	//double delayAfterExplosionTime = 0.1;
 	int state; // move == 0, attack == 1, idle == 2
 	NormalMobInfo* next; // 연결리스트로 구현하기 위함
@@ -35,6 +36,7 @@ typedef struct NormalMobInfo {
 
 
 void CreateNormalMob(int _type, COORD pos);
+void AfterExplosion(NormalMobInfo* normalMob);
 NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob);
 void PrintNormalMob(NormalMobInfo* printingNormalMob);
 void DeletePrintedNormalMob(NormalMobInfo* normalMob);
