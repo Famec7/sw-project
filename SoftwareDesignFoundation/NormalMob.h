@@ -7,6 +7,9 @@
 #include "Cursor.h"
 #include "Bullet.h"
 #include "player.h"
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
+
 #define BULLET 4	// 적 총알
 // 맵 크기
 
@@ -23,6 +26,7 @@ typedef struct NormalMobInfo {
 	int numberingMob; //몹의 충돌에서 몹을 구분하기 위함
 	int type; //type == 1 일반 몹, type == 2 폭탄
 	int isExplosion; // 이동x 폭파 직전 상태
+	int onceExplosion;
 	double explosionTime; // 시간 이후 폭파
 	double mobIdleTime;
 	double attackMobIdleTime;

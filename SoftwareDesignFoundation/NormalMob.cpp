@@ -29,6 +29,7 @@ void CreateNormalMob(int _type, COORD pos) {
 	normalMob->isExplosion = 0;
 	normalMob->type = _type;
 	normalMob->isExpired = 0;
+	normalMob->onceExplosion = 0;
 	normalMob->explosionTime = 1; //시간 이후 폭파
 	normalMob->mobIdleTime = 0.2;
 	normalMob->attackMobIdleTime = 0.4;
@@ -199,7 +200,7 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 	if (EXPLOSION_HIT == 1) {
 		AttackedPlayerProcessing(3);
 	}
-
+	//mciSendString(TEXT("C:\MP_Balloon Popping(online - audio - converter.com).wav"), NULL, 0, NULL);
 
 
 }
@@ -229,9 +230,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 	if (normalMob->isExplosion == 1) {
 		normalMob->explosionTime -= Time.deltaTime;
 		if (normalMob->explosionTime < 0) {
-			DeleteOneNormalMob(normalMob);
-
-			PrintingExplosion(normalMob);
+			
 
 			normalMob->delayExplosion -= Time.deltaTime;
 
@@ -239,6 +238,11 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 				AfterExplosion(normalMob);
 				RemoveNormalMob(normalMob);
 				return;
+			}
+			if (normalMob->onceExplosion == 0) {
+				DeleteOneNormalMob(normalMob);
+				PrintingExplosion(normalMob);
+				normalMob->onceExplosion = 1;
 			}
 
 
