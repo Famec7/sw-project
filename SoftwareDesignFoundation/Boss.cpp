@@ -1,4 +1,4 @@
-#include "Boss.h"
+ï»¿#include "Boss.h"
 #include "Bullet.h"
 #include "NormalMob.h"
 #include "gameInfo.h"
@@ -39,22 +39,22 @@ void ShowFinger(int num) {
 				boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
 			if (num == 0) { // up
 				if (fingerUpModel[y][x] == 2) {
-					printf("¡á");
+					printf("â– ");
 				}
 			}
 			else if (num == 1) { // right
 				if (fingerRightModel[y][x] == 2) {
-					printf("¡á");
+					printf("â– ");
 				}
 			}
 			else if (num == 2) { // down
 				if (fingerDownModel[y][x] == 2) {
-					printf("¡á");
+					printf("â– ");
 				}
 			}
 			else if (num == 3) { // left
 				if (fingerLeftModel[y][x] == 2) {
-					printf("¡á");
+					printf("â– ");
 				}
 			}
 		}
@@ -84,11 +84,11 @@ void ShowMuzzle() {
 
 		if (i >= start && i <= end) {
 			hellBulletModel[i] = 1;
-			printf("¡á");
+			printf("â– ");
 		}
 		else {
 			hellBulletModel[i] = 2;
-			printf("¢Ã");
+			printf("â–£");
 		}
 	}
 }
@@ -119,19 +119,19 @@ void FireBullet() {
 }
 
 int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
-		// 1 : ¡á	2 : ¡Ü	 3 : ¢Ã
-		/*Ã¹¹øÂ° ÆÐÅÏ ¸ðµ¨*/
+		// 1 : â– 	2 : â—	 3 : â–£
+		/*ì²«ë²ˆì§¸ íŒ¨í„´ ëª¨ë¸*/
 		/*
-		¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
-		¡á                ¡á
-		¡á                ¡á
-		¡á   ¡á      ¡á   ¡á
-		¡á ¡á  ¡á  ¡á  ¡á ¡á
-		¡á                ¡á
-		¡á                ¡á
-		¡á    ¡á¡á¡á¡á    ¡á
-		¡á                ¡á
-		¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
+		â– â– â– â– â– â– â– â– â– â– 
+		â–                 â– 
+		â–                 â– 
+		â–    â–       â–    â– 
+		â–  â–   â–   â–   â–  â– 
+		â–                 â– 
+		â–                 â– 
+		â–     â– â– â– â–     â– 
+		â–                 â– 
+		â– â– â– â– â– â– â– â– â– â– 
 		*/
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -144,16 +144,16 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	},
-	/*µÎ¹øÂ° ÆÐÅÏ ¸ðµ¨*/
+	/*ë‘ë²ˆì§¸ íŒ¨í„´ ëª¨ë¸*/
 	/*
 
 
-					¡á¡á¡á¡á¡á¡á
-					¡á        ¡á
-					¡á¡Ü    ¡Ü¡á
-					¡á        ¡á
-					¡á  ¡á¡á  ¡á
-					¡á¡á¡á¡á¡á¡á
+					â– â– â– â– â– â– 
+					â–         â– 
+					â– â—    â—â– 
+					â–         â– 
+					â–   â– â–   â– 
+					â– â– â– â– â– â– 
 
 
 	*/
@@ -169,16 +169,16 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	},
-	/*¼¼¹øÂ° ÆÐÅÏ ¸ðµ¨*/
+	/*ì„¸ë²ˆì§¸ íŒ¨í„´ ëª¨ë¸*/
 	/*
 
 
 
 
-			¡ã¡ã
-			  ¢¸¡á¢Ã¢º
-			  ¢¸¢Ã¡á¢º
-					¡å¡å
+			â–²â–²
+			  â—€â– â–£â–¶
+			  â—€â–£â– â–¶
+					â–¼â–¼
 
 
 	*/
@@ -195,11 +195,11 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	} };
 
-// º¸½ºÀÇ ÇöÀç »óÅÂ
+// ë³´ìŠ¤ì˜ í˜„ìž¬ ìƒíƒœ
 BossState curState = BossState::Idle;
-// º¸½º Á¤º¸
+// ë³´ìŠ¤ ì •ë³´
 BossInfo boss;
-// º¸½ºÀÇ hp¸¦ ¶ç¿ï À§Ä¡
+// ë³´ìŠ¤ì˜ hpë¥¼ ë„ìš¸ ìœ„ì¹˜
 COORD hpCurPos = { BOSS_ORIGIN_X - boss.hpString[boss.curPhase].length() / 2 +
 					  BOSS_SIZE_X,
 				  BOSS_ORIGIN_Y - 2 };
@@ -209,7 +209,7 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 int isCleared = 0;
 int IsBossCleared() { return isCleared; }
 
-/****************º¸½º ¸ðµ¨À» ¶ç¿ì´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ëª¨ë¸ì„ ë„ìš°ëŠ” í•¨ìˆ˜*********************/
 void ShowBossModel() {
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 	int arrX = (boss.curPos.X - GBOARD_ORIGIN_X) / 2;
@@ -220,26 +220,26 @@ void ShowBossModel() {
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
 			if (bossModel[boss.curPhase][y][x] != 0) {
 				if (bossModel[boss.curPhase][y][x] == 1)
-					printf("¡á");
+					printf("â– ");
 				else if (bossModel[boss.curPhase][y][x] == 2)
-					printf("¡Ü");
+					printf("â—");
 				else if (bossModel[boss.curPhase][y][x] == 3)
-					printf("¢Ã");
+					printf("â–£");
 				else if (bossModel[boss.curPhase][y][x] == 4)
-					printf("¡ã");
+					printf("â–²");
 				else if (bossModel[boss.curPhase][y][x] == 5)
-					printf("¢º");
+					printf("â–¶");
 				else if (bossModel[boss.curPhase][y][x] == 6)
-					printf("¡å");
+					printf("â–¼");
 				else if (bossModel[boss.curPhase][y][x] == 7)
-					printf("¢¸");
+					printf("â—€");
 				gameBoardInfo[arrY + y][arrX + x] = BOSS;
 			}
 		}
 	}
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 }
-/****************º¸½º ¸ðµ¨À» »èÁ¦ÇÏ´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ëª¨ë¸ì„ ì‚­ì œí•˜ëŠ” í•¨ìˆ˜*********************/
 void DeleteBossModel() {
 	SetCurrentCursorPos(boss.curPos.X, boss.curPos.Y);
 	int arrX = (boss.curPos.X - GBOARD_ORIGIN_X) / 2;
@@ -273,16 +273,16 @@ void InitBlur() {
 	}
 }
 
-/****************º¸½º HP UI¸¦ ¶ç¿ì´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ HP UIë¥¼ ë„ìš°ëŠ” í•¨ìˆ˜*********************/
 void ShowBossHpUI() {
-	// º¸½ºÀÇ ¿ø·¡ À§Ä¡º¸´Ù ÇÑÄ­ À§¿¡ Ç¥½Ã
+	// ë³´ìŠ¤ì˜ ì›ëž˜ ìœ„ì¹˜ë³´ë‹¤ í•œì¹¸ ìœ„ì— í‘œì‹œ
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	SetCurrentCursorPos(hpCurPos.X, hpCurPos.Y);
 	int start = boss.hpString[boss.curPhase].length() - boss.curBossHp;
 	for (int i = start; i < boss.hpString[boss.curPhase].length(); i++) {
 		if (isBlur) {
 			if (blurPos[i] == 1)
-				std::cout << "¡á";
+				std::cout << "â– ";
 			else
 				std::cout << boss.hpString[boss.curPhase][i];
 		}
@@ -298,12 +298,12 @@ void ChangePhase() {
 	if (boss.curPhase == 3) {
 		isCleared = 1;
 	}
-	// ³­ÀÌµµ º¯¼ö
+	// ë‚œì´ë„ ë³€ìˆ˜
 	ShowBossModel();
 }
-/****************º¸½º Ã¼·Â ÇÑÄ­ ÁÙÀÌ´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ì²´ë ¥ í•œì¹¸ ì¤„ì´ëŠ” í•¨ìˆ˜*********************/
 void BossLifeDecrease() {
-	// ÇöÀç Ã¼·Â ÇÑÄ­ ÁÙÀÌ°í ´Ù½Ã UI¿¡ Ç¥½Ã
+	// í˜„ìž¬ ì²´ë ¥ í•œì¹¸ ì¤„ì´ê³  ë‹¤ì‹œ UIì— í‘œì‹œ
 	for (int i = 0; i < boss.hpString[boss.curPhase].length() * 2; i++) {
 		SetCurrentCursorPos(hpCurPos.X + i, hpCurPos.Y);
 		printf("  ");
@@ -313,7 +313,7 @@ void BossLifeDecrease() {
 		ChangePhase();
 	ShowBossHpUI();
 }
-/****************º¸½º Ãæµ¹ ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ì¶©ëŒ í•¨ìˆ˜*********************/
 int BossCullingCollision(int posX, int posY) {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
@@ -353,7 +353,7 @@ int BossDetectionCollision(int posX, int posY) {
 	}
 	return 0;
 }
-/****************º¸½º¸¦ ¿ÞÂÊÀ¸·Î ÀÌµ¿ÇÏ´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ë¥¼ ì™¼ìª½ìœ¼ë¡œ ì´ë™í•˜ëŠ” í•¨ìˆ˜*********************/
 void BossShiftLeft() {
 	if (BossCullingCollision(boss.curPos.X - 2, boss.curPos.Y))
 		return;
@@ -361,7 +361,7 @@ void BossShiftLeft() {
 	boss.curPos.X -= 2;
 	ShowBossModel();
 }
-/****************º¸½º¸¦ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÏ´Â ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ë¥¼ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™í•˜ëŠ” í•¨ìˆ˜*********************/
 void BossShiftRight() {
 	if (BossCullingCollision(boss.curPos.X + 2, boss.curPos.Y))
 		return;
@@ -372,10 +372,10 @@ void BossShiftRight() {
 
 double curSpeed = boss.speed;
 
-/****************º¸½ºÀÇ ÀüÃ¼ÀûÀÎ ¿òÁ÷ÀÓ*********************/
+/****************ë³´ìŠ¤ì˜ ì „ì²´ì ì¸ ì›€ì§ìž„*********************/
 void BossRandomMove() {
 	srand(time(NULL));
-	int direction = rand() % 2; // ¹æÇâ Á¤ÇÏ±â 0 : ¿À¸¥ÂÊ, 1 : ¿ÞÂÊ
+	int direction = rand() % 2; // ë°©í–¥ ì •í•˜ê¸° 0 : ì˜¤ë¥¸ìª½, 1 : ì™¼ìª½
 	curSpeed -= Time.deltaTime;
 	if (curSpeed < 0) {
 		if (direction == 0)
@@ -452,7 +452,7 @@ void SummonNormalMob() {
 	}
 }
 
-/****************º¸½º ½ºÅÈ ÃÊ±âÈ­ ÇÔ¼ö*********************/
+/****************ë³´ìŠ¤ ìŠ¤íƒ¯ ì´ˆê¸°í™” í•¨ìˆ˜*********************/
 void BossInit() {
 	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
@@ -465,18 +465,18 @@ void BossInit() {
 	InitBlur();
 }
 
-/****************º¸½ºÀÇ ÆÐÅÏ*********************/
+/****************ë³´ìŠ¤ì˜ íŒ¨í„´*********************/
 void ChangeState(BossState next);
-// º¸½º°¡ ´Ü¼øÈ÷ ¿òÁ÷ÀÌ´Â »óÅÂ
+// ë³´ìŠ¤ê°€ ë‹¨ìˆœížˆ ì›€ì§ì´ëŠ” ìƒíƒœ
 void StartIdleState();
 void UpdateIdleState();
-// º¸½º°¡ Åº¸·À» ½î´Â »óÅÂ
+// ë³´ìŠ¤ê°€ íƒ„ë§‰ì„ ì˜ëŠ” ìƒíƒœ
 void StartHellBulletState();
 void UpdateHellBulletState();
-// º¸½º°¡ ºí·¯CC±â¸¦ »ç¿ëÇÏ´Â »óÅÂ
+// ë³´ìŠ¤ê°€ ë¸”ëŸ¬CCê¸°ë¥¼ ì‚¬ìš©í•˜ëŠ” ìƒíƒœ
 void StartBlurState();
 void UpdateBlurState();
-// º¸½º°¡ ÀÏ¹Ý ¸ó½ºÅÍ¸¦ ¼ÒÈ¯ÇÏ´Â »óÅÂ
+// ë³´ìŠ¤ê°€ ì¼ë°˜ ëª¬ìŠ¤í„°ë¥¼ ì†Œí™˜í•˜ëŠ” ìƒíƒœ
 void StartSummonState();
 void UpdateSummonState();
 
@@ -561,7 +561,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(BossState::Lazer);
+		ChangeState(BossState::Summon);
 	}
 	else {
 		BossRandomMove();
@@ -727,7 +727,7 @@ void UpdateGoTo() {
 	static double time = 0.25;
 
 	if (!PlayerDetectedCollision(playerCurPos.X + dx, playerCurPos.Y + dy)) {
-		// º®¿¡ Ãæµ¹ÇÑ È¿°úÀ½ Ãß°¡
+		// ë²½ì— ì¶©ëŒí•œ íš¨ê³¼ìŒ ì¶”ê°€
 		DeleteFinger();
 		CantControl = 0;
 		time = 0.025;
@@ -763,7 +763,7 @@ void UpdateGoTo() {
 	}
 }
 
-// lazerÆÐÅÏ ±¸Çö
+// lazeríŒ¨í„´ êµ¬í˜„
 
 void StartLazerState() {
 	int i;
@@ -796,7 +796,7 @@ void UpdateLazerState() {
 			lazerBlock[i].lazerTime -= Time.deltaTime;
 		}
 	}
-	// ·¹ÀÌÀú »ý¼ºÈÄ »ç¶óÁü
+	// ë ˆì´ì € ìƒì„±í›„ ì‚¬ë¼ì§
 	for (int i = 0; i < lazerIdx; i++) {
 		if (lazerBlock[i].hp == 1 && lazerBlock[i].lazerTime < 0) {
 			StopLazer(i);
@@ -813,7 +813,7 @@ void UpdateLazerState() {
 		ChangeState(BossState::Idle);
 	}
 
-	// ·¹ÀÌÀú »ý¼ºÈÄ ¾È»ç¶óÁü
+	// ë ˆì´ì € ìƒì„±í›„ ì•ˆì‚¬ë¼ì§
 	/*if (totalLazerTime > lazerNum+2) {
 			for (int i = 0; i < lazerIdx; i++) {
 					StopLazer(i);
@@ -839,7 +839,7 @@ void PrintLazerWall() {
 	for (x = GBOARD_ORIGIN_X + 2; x <= GBOARD_ORIGIN_X + GBOARD_WIDTH * 2 + 1;
 		x += 2) {
 		SetCurrentCursorPos(x, 19);
-		printf("¡à");
+		printf("â–¡");
 		gameBoardInfo[19 - GBOARD_ORIGIN_Y][(x - GBOARD_ORIGIN_X) / 2] = 1;
 	}
 }
@@ -880,7 +880,7 @@ void PrintLazerBlock(int idx) {
 			break;
 	}
 	SetCurrentCursorPos(lazerBlock[idx].pos.X + 1, lazerBlock[idx].pos.Y);
-	printf("¡à");
+	printf("â–¡");
 	gameBoardInfo[lazerBlock[idx].pos.Y - GBOARD_ORIGIN_Y]
 		[(lazerBlock[idx].pos.X - GBOARD_ORIGIN_X) / 2] = 1;
 }

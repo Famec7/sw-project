@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS 
+ï»¿#define _CRT_SECURE_NO_WARNINGS 
 #include "NormalMob.h"
 #include "Item.h"
 
@@ -32,7 +32,7 @@ void CreateNormalMob(int _type, COORD pos) {
 	normalMob->next = NULL;
 	normalMob->isExplosion = 0;
 	normalMob->type = _type;
-	normalMob->explosionTime = 1; //½Ã°£ ÀÌÈÄ ÆøÆÄ
+	normalMob->explosionTime = 1; //ì‹œê°„ ì´í›„ í­íŒŒ
 	normalMob->mobIdleTime = 0.2;
 	normalMob->attackMobIdleTime = 0.4;
 	normalMob->moveTime = 2;
@@ -57,11 +57,11 @@ NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob) {
 	NormalMobInfo* normalMob = normalMobListHead;
 	NormalMobInfo* prev = NULL;
 
-	while (normalMob != deadNormalMob) { // ¼Ò¸êÇÏ´Â ³ë¸» ¸÷ Ã£±â
+	while (normalMob != deadNormalMob) { // ì†Œë©¸í•˜ëŠ” ë…¸ë§ ëª¹ ì°¾ê¸°
 		prev = normalMob;
 		normalMob = normalMob->next;
 	}
-	if (prev == NULL) { //Head¿¡ ÀÖ´Â ¸÷À» Á¦°ÅÇÏ´Â °æ¿ì, ¸÷ÀÌ 1¸¶¸®ÀÎ °æ¿ì
+	if (prev == NULL) { //Headì— ìžˆëŠ” ëª¹ì„ ì œê±°í•˜ëŠ” ê²½ìš°, ëª¹ì´ 1ë§ˆë¦¬ì¸ ê²½ìš°
 		normalMobListHead = deadNormalMob->next;
 		free(deadNormalMob);
 		return normalMobListHead;
@@ -89,7 +89,7 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 				else if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-				printf("¡ß");
+				printf("â—†");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				gameBoardInfo[arrY + y][arrX + x] = NORMAL_MOB_1 + printingNormalMob->numberingMob - 1;
 			}
@@ -173,11 +173,11 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			int board_y = normalMobPosY + j - GBOARD_ORIGIN_Y;
 			if (gameBoardInfo[board_y][board_x] == MAP_BOUNDARY)
 				continue;
-			if (EXPLOSION_HIT == 0 && gameBoardInfo[board_y][board_x] == PLAYER) { //ÇÃ·¹ÀÌ¾î ÇÇ°Ý ½Ã
+			if (EXPLOSION_HIT == 0 && gameBoardInfo[board_y][board_x] == PLAYER) { //í”Œë ˆì´ì–´ í”¼ê²© ì‹œ
 				EXPLOSION_HIT = 1;
 			}
 			SetCurrentCursorPos(normalMobPosX + i, normalMobPosY + j);
-			printf("£À");
+			printf("ï¼ ");
 		}
 	}
 
@@ -200,7 +200,7 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 		EXPLOSION_HIT = 0;
 	}
 }
-void MoveNormalMob(NormalMobInfo* normalMob) { // ·£´ýÇÏ°Ô ÁÂ, ¿ì·Î ¿òÁ÷ÀÌ´Â ÇÔ¼ö
+void MoveNormalMob(NormalMobInfo* normalMob) { // ëžœë¤í•˜ê²Œ ì¢Œ, ìš°ë¡œ ì›€ì§ì´ëŠ” í•¨ìˆ˜
 
 	normalMob->mobIdleTime -= Time.deltaTime;
 	if (normalMob->isExplosion == 1) {
@@ -216,7 +216,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // ·£´ýÇÏ°Ô ÁÂ, ¿ì·Î ¿òÁ÷ÀÌ´Â ÇÔ¼
 	}
 	if (normalMob->mobIdleTime < 0) {
 		normalMob->mobIdleTime = 0.2;
-		if (normalMob->type == 1) { //ÀÏ¹Ý ¸÷
+		if (normalMob->type == 1) { //ì¼ë°˜ ëª¹
 			int num = rand() % 2;
 			switch (num) {
 			case 0:
@@ -227,7 +227,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // ·£´ýÇÏ°Ô ÁÂ, ¿ì·Î ¿òÁ÷ÀÌ´Â ÇÔ¼
 				break;
 			}
 		}
-		else if (normalMob->type == 2) {// ÆøÅº ¸÷
+		else if (normalMob->type == 2) {// í­íƒ„ ëª¹
 			COORD playerPos = GetPlayerPos();
 			int playerPosX = playerPos.X;
 			int playerPosY = playerPos.Y;
@@ -236,7 +236,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // ·£´ýÇÏ°Ô ÁÂ, ¿ì·Î ¿òÁ÷ÀÌ´Â ÇÔ¼
 			double dif_x = (double)playerPosX - normalMobPosX;
 			double dif_y = (double)playerPosY - normalMobPosY;
 
-			int direction = rand() % 2; // 0 == ¼¼·Î ÀÌµ¿,1 == °¡·Î ÀÌµ¿
+			int direction = rand() % 2; // 0 == ì„¸ë¡œ ì´ë™,1 == ê°€ë¡œ ì´ë™
 
 			if (sqrt(dif_x * dif_x + dif_y * dif_y) > 5 && normalMob->isExplosion == 0) {
 				if (playerPosX == normalMobPosX) direction = 0;
@@ -297,7 +297,7 @@ void NormalMobShoot(NormalMobInfo* normalMob) {
 
 }
 NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
-	// ÇöÀç Ã¼·Â ÇÑÄ­ ÁÙÀÌ°í ´Ù½Ã UI¿¡ Ç¥½Ã
+	// í˜„ìž¬ ì²´ë ¥ í•œì¹¸ ì¤„ì´ê³  ë‹¤ì‹œ UIì— í‘œì‹œ
 	for (int i = 0; i < normalMob->mobHp; i++)
 	{
 		SetCurrentCursorPos(normalMob->pos.X + i, normalMob->pos.Y - 1);
@@ -388,8 +388,8 @@ void NormalMobUpdate() {
 			normalMob = DecreaseNormalMobHp(normalMob);
 			if (normalMob == NULL) break;
 		}
-		// ÆøÅº ¸÷ÀÇ °æ¿ì MoveNormalMob¿¡¼­ ¸÷À» »èÁ¦ÇÏ±â ¶§¹®¿¡
-		// »èÁ¦ ÀüÀÇ next¸¦ ÀúÀåÇØ³õ¾Æ¾ß ÇÔ
+		// í­íƒ„ ëª¹ì˜ ê²½ìš° MoveNormalMobì—ì„œ ëª¹ì„ ì‚­ì œí•˜ê¸° ë•Œë¬¸ì—
+		// ì‚­ì œ ì „ì˜ nextë¥¼ ì €ìž¥í•´ë†“ì•„ì•¼ í•¨
 
 		NormalMobInfo* temp = normalMob->next;
 
