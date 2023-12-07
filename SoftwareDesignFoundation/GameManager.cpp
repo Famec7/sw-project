@@ -1,3 +1,3 @@
 #include "GameManager.h"
 
-enum GameState Gamestate = Menu;
+enum GameState Gamestate = Game;

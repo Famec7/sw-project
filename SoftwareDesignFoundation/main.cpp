@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Init.h"
 #include "Update.h"
+#include "StartPage.h"
 
 int main() {
 	int isStartPage;

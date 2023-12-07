@@ -162,11 +162,16 @@ void ShiftRight(NormalMobInfo* normalMob) {
 
 }
 
-int EXPLOSION_HIT = 0;
+void InitNormalMob() {
+	normalMobListHead = NULL;
+	mobCount = 0;
+}
 
 void PrintingExplosion(NormalMobInfo* normalMob) {
 	int normalMobPosX = normalMob->pos.X;
 	int normalMobPosY = normalMob->pos.Y;
+
+	int EXPLOSION_HIT = 0;
 	for (int i = -4; i < 12; i += 2) {
 		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
@@ -180,6 +185,7 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("＠");
 		}
 	}
+
 	if (EXPLOSION_HIT == 1) {
 		AttackedPlayerProcessing(3);
 		EXPLOSION_HIT = 0;
@@ -198,7 +204,9 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("  ");
 		}
 	}
+
 }
+
 void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움직이는 함수
 
 	normalMob->mobIdleTime -= Time.deltaTime;
