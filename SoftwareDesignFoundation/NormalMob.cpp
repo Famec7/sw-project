@@ -17,14 +17,10 @@ char NORMAL_MOB_HP_DATASET[3][10] = {
 };
 
 void CreateNormalMob(int _type, COORD pos) {
-	/*
-	if (mobCount > 2)
-		return;
-	*/
 	NormalMobInfo* normalMob = (NormalMobInfo*)malloc(sizeof(NormalMobInfo));
 	strcpy(normalMob->hp, NORMAL_MOB_HP_DATASET[rand() % 3]);
 
-	int cnt = 1;
+	
 
 	normalMob->pos = pos;
 	normalMob->mobHp = strlen(normalMob->hp);
@@ -32,31 +28,43 @@ void CreateNormalMob(int _type, COORD pos) {
 	normalMob->next = NULL;
 	normalMob->isExplosion = 0;
 	normalMob->type = _type;
+	normalMob->isExpired = 0;
 	normalMob->explosionTime = 1; //시간 이후 폭파
 	normalMob->mobIdleTime = 0.2;
 	normalMob->attackMobIdleTime = 0.4;
 	normalMob->moveTime = 2;
 	normalMob->attackTime = 0.2;
 	normalMob->delayExplosion = 0.05;
+
+	mobCount++;
+
 	if (normalMob->type == 2) normalMob->state = 0;
+
+	int cnt = 1;
+
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;
 		normalMobListHead = normalMob;
 		return;
 	}
+
 	NormalMobInfo* lastNormalMob = normalMobListHead;
 	cnt++;
 	while (lastNormalMob->next != NULL) {
 		lastNormalMob = lastNormalMob->next;
 		cnt++;
 	}
+
 	normalMob->numberingMob = cnt;
 	lastNormalMob->next = normalMob;
-	mobCount++;
+	
 }
 NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob) {
 	NormalMobInfo* normalMob = normalMobListHead;
 	NormalMobInfo* prev = NULL;
+
+	if(mobCount > 0)
+		mobCount--;
 
 	while (normalMob != deadNormalMob) { // 소멸하는 노말 몹 찾기
 		prev = normalMob;
@@ -88,7 +96,7 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 				SetCurrentCursorPos(normalMob_x + (x * 2), normalMob_y + y);
 				if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 0)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-				else if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1)
+				else if ((printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1) || printingNormalMob->isExpired == 1)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 				printf("◆");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -164,7 +172,6 @@ void ShiftRight(NormalMobInfo* normalMob) {
 }
 
 void InitNormalMob() {
-	mobCount = 0;
 	DeleteNormalMob();
 	NormalMobInfo* normalMob = normalMobListHead;
 	while (normalMob != nullptr) {
@@ -223,10 +230,11 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 		normalMob->explosionTime -= Time.deltaTime;
 		if (normalMob->explosionTime < 0) {
 			DeleteOneNormalMob(normalMob);
-			mobCount--;
 
 			PrintingExplosion(normalMob);
+
 			normalMob->delayExplosion -= Time.deltaTime;
+
 			if (normalMob->delayExplosion < 0) {
 				AfterExplosion(normalMob);
 				RemoveNormalMob(normalMob);
@@ -280,11 +288,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 				if (normalMob->isExplosion == 0)
 					normalMob->isExplosion = 1;
 
-
-
-
 			}
-
 
 		}
 	}
@@ -330,10 +334,11 @@ NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	normalMob->mobHp--;
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
-		COORD itemPos = normalMob->pos;
-		itemPos.Y -= 1;
-		DropItem(itemPos);
-		mobCount--;
+		if (normalMob->type == 1) {
+			COORD itemPos = normalMob->pos;
+			itemPos.Y -= 1;
+			DropItem(itemPos);
+		}
 		return RemoveNormalMob(normalMob);
 	}
 	ShowNormalMobHp(normalMob);
@@ -366,17 +371,6 @@ int NormalMobDetectedCollision(int posX, int posY, int numbering) {
 		}
 	}
 	return 0;
-}
-COORD MakeNormalMobPos() {
-	NormalMobInfo* normalMob = normalMobListHead;
-	int cnt = 0;
-	while (normalMob != NULL) {
-		cnt++;
-		normalMob = normalMob->next;
-
-	}
-	COORD pos = { 13 + 20 * cnt, 17 };
-	return pos;
 }
 void UpdateIdleNormalMob(NormalMobInfo* normalMob) {
 
@@ -434,10 +428,15 @@ void NormalMobUpdate() {
 
 	}
 
-
-
-
 }
+void ChangeMobStateToExpired() {
+	NormalMobInfo* normalMob = normalMobListHead;
+	while (normalMob != NULL) {
+		normalMob->isExpired = 1;
+		normalMob = normalMob->next;
+	}
+}
+
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob) {
 	int arrX = (normalMob->pos.X - GBOARD_ORIGIN_X) / 2;
 	int arrY = normalMob->pos.Y + 1 - GBOARD_ORIGIN_Y;

@@ -27,6 +27,7 @@ typedef struct NormalMobInfo {
 	double mobIdleTime;
 	double attackMobIdleTime;
 	double moveTime;
+	double isExpired;
 	double attackTime;
 	double delayExplosion;
 	//double delayAfterExplosionTime = 0.1;
@@ -56,9 +57,9 @@ void ShowNormalMobHp(NormalMobInfo* normalMob);
 void NormalMobUpdate();
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob);
 int NormalMobDetectedCollision(int posX, int posY, int numbering);
-COORD MakeNormalMobPos();
 void UpdateIdleNormalMob(NormalMobInfo* normalMob);
 void UpdateAttackNormalMob(NormalMobInfo* normalMob);
+void ChangeMobStateToExpired();
 
 int GetNormalMobCount();
 int EmptyNormalMob();
