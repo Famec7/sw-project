@@ -200,8 +200,7 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 	if (EXPLOSION_HIT == 1) {
 		AttackedPlayerProcessing(3);
 	}
-	//mciSendString(TEXT("C:\MP_Balloon Popping(online - audio - converter.com).wav"), NULL, 0, NULL);
-
+	mciSendString(TEXT("play Sound\\mobExplosion.wav"), NULL, 0, NULL);
 
 }
 void AfterExplosion(NormalMobInfo* normalMob) {

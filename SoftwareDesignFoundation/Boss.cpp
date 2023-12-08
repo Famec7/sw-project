@@ -392,7 +392,7 @@ void SummonNormalMob() {
 		int cnt = rand() % 2 + 1; // 1 ~ 2
 		for (int i = 0; i < cnt; i++) {
 			short x = 13 + 20 * i;
-			CreateNormalMob(2, { x, 17 });
+			CreateNormalMob(1, { x, 17 });
 		}
 
 	}
@@ -414,7 +414,7 @@ void SummonNormalMob() {
 		}
 	}
 	else {
-		int random = 0;
+		int random = rand() % 3;
 		if (random == 0) {
 			CreateNormalMob(2, { 13, 17 });
 			CreateNormalMob(2, { 13, 22 });
