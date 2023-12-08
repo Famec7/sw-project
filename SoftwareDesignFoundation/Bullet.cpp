@@ -1,5 +1,7 @@
 #include "Bullet.h"
 #include <iostream>
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 
 std::list<Bullet> bullets;
 
@@ -36,6 +38,8 @@ void MakeBullet(int posX, int posY, int info, double speed)
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 	gameBoardInfo[arrY][arrX] = info;
+
+	mciSendString(TEXT("play Sound\\Shoot.wav"), NULL, 0, NULL);
 }
 
 int BulletDetectedCollision(int posX, int posY, int info) {
