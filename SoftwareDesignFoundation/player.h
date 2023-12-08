@@ -6,6 +6,11 @@
 #include <windows.h>
 #include <stdio.h>
 
+//sound
+#include<mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+//sound
+
 #define MAX_HP 14		//플레이어의 최대 채력		//player hp is full <= 14글자임
 #define MAX_SHIELD 6	//플레이어의 최대 실드 게이지 //shield <= 6글자임
 #define MAX_BULLET 5

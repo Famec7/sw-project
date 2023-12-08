@@ -24,6 +24,7 @@ char hpText[] = { 'P', 'l', 'a', 'y', 'e', 'r', 'h',
 char shieldText[] = { 's', 'h', 'i', 'e', 'l', 'd' };
 
 void playerInit() {
+	HP = MAX_HP;
 	playerCurPos.X = 45;
 	playerCurPos.Y = 35;
 	PlayerStatOutput();

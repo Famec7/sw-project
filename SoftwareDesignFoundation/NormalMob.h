@@ -7,6 +7,9 @@
 #include "Cursor.h"
 #include "Bullet.h"
 #include "player.h"
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
+
 #define BULLET 4	// 적 총알
 // 맵 크기
 
@@ -22,19 +25,23 @@ typedef struct NormalMobInfo {
 	int mobHp;
 	int numberingMob; //몹의 충돌에서 몹을 구분하기 위함
 	int type; //type == 1 일반 몹, type == 2 폭탄
-	int isExplosion = 0; // 이동x 폭파 직전 상태
-	double explosionTime = 0.2; // 시간 이후 폭파
-	double mobIdleTime = 2;
-	double moveTime = 1;
-	double attackTime = 0.2;
-	double tempIdleTime = 0.25; // 이동, 공격 사이의 딜레이시간
+	int isExplosion; // 이동x 폭파 직전 상태
+	int onceExplosion;
+	double explosionTime; // 시간 이후 폭파
+	double mobIdleTime;
+	double attackMobIdleTime;
+	double moveTime;
+	double isExpired;
+	double attackTime;
+	double delayExplosion;
 	//double delayAfterExplosionTime = 0.1;
-	int state; // move == 0, attack == 1, idle == 2, tempIdle == 3, explosion == 4
+	int state; // move == 0, attack == 1, idle == 2
 	NormalMobInfo* next; // 연결리스트로 구현하기 위함
 }NormalMobInfo;
 
 
-void CreateNormalMob();
+void CreateNormalMob(int _type, COORD pos);
+void AfterExplosion(NormalMobInfo* normalMob);
 NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob);
 void PrintNormalMob(NormalMobInfo* printingNormalMob);
 void DeletePrintedNormalMob(NormalMobInfo* normalMob);
@@ -54,7 +61,10 @@ void ShowNormalMobHp(NormalMobInfo* normalMob);
 void NormalMobUpdate();
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob);
 int NormalMobDetectedCollision(int posX, int posY, int numbering);
-COORD MakeNormalMobPos();
+void UpdateIdleNormalMob(NormalMobInfo* normalMob);
+void UpdateAttackNormalMob(NormalMobInfo* normalMob);
+void ChangeMobStateToExpired();
 
 int GetNormalMobCount();
 int EmptyNormalMob();
+void InitNormalMob();

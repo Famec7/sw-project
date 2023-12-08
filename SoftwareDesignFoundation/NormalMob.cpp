@@ -1,11 +1,11 @@
-#define _CRT_SECURE_NO_WARNINGS 
+Ôªø#define _CRT_SECURE_NO_WARNINGS 
 #include "NormalMob.h"
 #include "Item.h"
 
 NormalMobInfo* normalMobListHead = NULL;
 int mobCount = 0;
 
-char NORMAL_MOB_MODEL[2][5] = { 
+char NORMAL_MOB_MODEL[2][5] = {
 	{1,0,0,0,1},
 	{1,1,1,1,1}
 };
@@ -16,48 +16,62 @@ char NORMAL_MOB_HP_DATASET[3][10] = {
 	{"include"}
 };
 
-void CreateNormalMob() {
-	if (mobCount > 2)
-		return;
+void CreateNormalMob(int _type, COORD pos) {
 	NormalMobInfo* normalMob = (NormalMobInfo*)malloc(sizeof(NormalMobInfo));
 	strcpy(normalMob->hp, NORMAL_MOB_HP_DATASET[rand() % 3]);
 
-	int cnt = 1;
-	int _type = 1;
-	if (rand() % 3 == 0) _type = 2; //33∆€ºæ∆Æ »Æ∑¸∑Œ ∆¯≈∫ ∏˜ ª˝º∫
+	
 
-	normalMob->pos = MakeNormalMobPos();
+	normalMob->pos = pos;
 	normalMob->mobHp = strlen(normalMob->hp);
-	normalMob->state = rand() % 3;
+	normalMob->state = rand() % 2;
 	normalMob->next = NULL;
 	normalMob->isExplosion = 0;
-	normalMob->explosionTime = 0.15;
 	normalMob->type = _type;
-	if (normalMob->type == 2) normalMob->state = 4;
+	normalMob->isExpired = 0;
+	normalMob->onceExplosion = 0;
+	normalMob->explosionTime = 1; //ÏãúÍ∞Ñ Ïù¥ÌõÑ Ìè≠Ìåå
+	normalMob->mobIdleTime = 0.2;
+	normalMob->attackMobIdleTime = 0.4;
+	normalMob->moveTime = 2;
+	normalMob->attackTime = 0.2;
+	normalMob->delayExplosion = 0.05;
+
+	mobCount++;
+
+	if (normalMob->type == 2) normalMob->state = 0;
+
+	int cnt = 1;
+
 	if (normalMobListHead == NULL) {
 		normalMob->numberingMob = cnt;
 		normalMobListHead = normalMob;
 		return;
 	}
+
 	NormalMobInfo* lastNormalMob = normalMobListHead;
 	cnt++;
 	while (lastNormalMob->next != NULL) {
 		lastNormalMob = lastNormalMob->next;
 		cnt++;
 	}
+
 	normalMob->numberingMob = cnt;
 	lastNormalMob->next = normalMob;
-	mobCount++;
+	
 }
 NormalMobInfo* RemoveNormalMob(NormalMobInfo* deadNormalMob) {
 	NormalMobInfo* normalMob = normalMobListHead;
 	NormalMobInfo* prev = NULL;
 
-	while (normalMob != deadNormalMob) { // º“∏Í«œ¥¬ ≥Î∏ª ∏˜ √£±‚
+	if(mobCount > 0)
+		mobCount--;
+
+	while (normalMob != deadNormalMob) { // ÏÜåÎ©∏ÌïòÎäî ÎÖ∏Îßê Î™π Ï∞æÍ∏∞
 		prev = normalMob;
 		normalMob = normalMob->next;
 	}
-	if (prev == NULL) { //Headø° ¿÷¥¬ ∏˜¿ª ¡¶∞≈«œ¥¬ ∞ÊøÏ, ∏˜¿Ã 1∏∂∏Æ¿Œ ∞ÊøÏ
+	if (prev == NULL) { //HeadÏóê ÏûàÎäî Î™πÏùÑ Ï†úÍ±∞ÌïòÎäî Í≤ΩÏö∞, Î™πÏù¥ 1ÎßàÎ¶¨Ïù∏ Í≤ΩÏö∞
 		normalMobListHead = deadNormalMob->next;
 		free(deadNormalMob);
 		return normalMobListHead;
@@ -73,7 +87,7 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 	int normalMob_y = printingNormalMob->pos.Y;
 	int arrX = (normalMob_x - GBOARD_ORIGIN_X) / 2;
 	int arrY = normalMob_y - GBOARD_ORIGIN_Y;
-	
+
 	ShowNormalMobHp(printingNormalMob);
 
 	for (int y = 0; y < 2; y++) {
@@ -81,11 +95,11 @@ void PrintNormalMob(NormalMobInfo* printingNormalMob) {
 
 			if (NORMAL_MOB_MODEL[y][x] == 1) {
 				SetCurrentCursorPos(normalMob_x + (x * 2), normalMob_y + y);
-				if(printingNormalMob->type == 2 && printingNormalMob->isExplosion == 0)
+				if (printingNormalMob->type == 2 && printingNormalMob->isExplosion == 0)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-				else if(printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1)
+				else if ((printingNormalMob->type == 2 && printingNormalMob->isExplosion == 1) || printingNormalMob->isExpired == 1)
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-				printf("°ﬂ");
+				printf("‚óÜ");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 				gameBoardInfo[arrY + y][arrX + x] = NORMAL_MOB_1 + printingNormalMob->numberingMob - 1;
 			}
@@ -158,30 +172,43 @@ void ShiftRight(NormalMobInfo* normalMob) {
 
 }
 
-int EXPLOSION_HIT = 0;
-
+void InitNormalMob() {
+	DeleteNormalMob();
+	NormalMobInfo* normalMob = normalMobListHead;
+	while (normalMob != nullptr) {
+		normalMob = RemoveNormalMob(normalMob);
+	}
+}
 void PrintingExplosion(NormalMobInfo* normalMob) {
 	int normalMobPosX = normalMob->pos.X;
 	int normalMobPosY = normalMob->pos.Y;
-	for (int i = -4; i < 10; i += 2) {
-		for (int j = -2; j < 4; j++) {
+
+	int EXPLOSION_HIT = 0;
+	for (int i = -4; i < 12; i += 2) {
+		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
 			int board_y = normalMobPosY + j - GBOARD_ORIGIN_Y;
 			if (gameBoardInfo[board_y][board_x] == MAP_BOUNDARY)
 				continue;
-			if (EXPLOSION_HIT == 0 && gameBoardInfo[board_y][board_x] == PLAYER) { //«√∑π¿ÃæÓ ««∞› Ω√
+			if (EXPLOSION_HIT == 0 && gameBoardInfo[board_y][board_x] == PLAYER) { //ÌîåÎ†àÏù¥Ïñ¥ ÌîºÍ≤© Ïãú
 				EXPLOSION_HIT = 1;
 			}
 			SetCurrentCursorPos(normalMobPosX + i, normalMobPosY + j);
-			printf("£¿");
+			printf("Ôº†");
 		}
 	}
-	
-	
-	Sleep(50);
-	
-	for (int i = -4; i < 10; i += 2) {
-		for (int j = -2; j < 4; j++) {
+	if (EXPLOSION_HIT == 1) {
+		AttackedPlayerProcessing(3);
+	}
+	mciSendString(TEXT("play Sound\\mobExplosion.wav"), NULL, 0, NULL);
+
+}
+void AfterExplosion(NormalMobInfo* normalMob) {
+	int normalMobPosX = normalMob->pos.X;
+	int normalMobPosY = normalMob->pos.Y;
+
+	for (int i = -4; i < 12; i += 2) {
+		for (int j = -2; j < 6; j++) {
 			int board_x = (normalMobPosX + i - GBOARD_ORIGIN_X) / 2;
 			int board_y = normalMobPosY + j - GBOARD_ORIGIN_Y;
 			if (gameBoardInfo[board_y][board_x] == MAP_BOUNDARY)
@@ -191,70 +218,84 @@ void PrintingExplosion(NormalMobInfo* normalMob) {
 			printf("  ");
 		}
 	}
-	if (EXPLOSION_HIT == 1) {
-		AttackedPlayerProcessing(3);
-		EXPLOSION_HIT = 0;
-	}
 }
-void MoveNormalMob(NormalMobInfo* normalMob) { // ∑£¥˝«œ∞‘ ¡¬, øÏ∑Œ øÚ¡˜¿Ã¥¬ «‘ºˆ
-	
-	
-	if (normalMob->type == 1) { //¿œπ› ∏˜
-		int num = rand() % 2;
-		switch (num) {
-		case 0:
-			ShiftLeft(normalMob);
-			break;
-		case 1:
-			ShiftRight(normalMob);
-			break;
-		}
-	}
-	else if (normalMob->type == 2) {// ∆¯≈∫ ∏˜
-		COORD playerPos = GetPlayerPos();
-		int playerPosX = playerPos.X;
-		int playerPosY = playerPos.Y;
-		int normalMobPosX = normalMob->pos.X;
-		int normalMobPosY = normalMob->pos.Y;
-		double dif_x = (double)playerPosX - normalMobPosX;
-		double dif_y = (double)playerPosY - normalMobPosY;
 
-		int direction = rand() % 2; // 0 == ºº∑Œ ¿Ãµø,1 == ∞°∑Œ ¿Ãµø
 
-		if (sqrt(dif_x * dif_x + dif_y * dif_y) > 8 && normalMob->isExplosion == 0) {
-			if (playerPosX == normalMobPosX) direction = 0;
-			else if (playerPosY == normalMobPosY) direction = 1;
 
-			if (direction == 0) {
-				if (playerPosY - normalMobPosY < 0) ShiftUp(normalMob);
-				else ShiftDown(normalMob);
-			}
-			else if (direction == 1) {
-				if (playerPosX - normalMobPosX < 0) ShiftLeft(normalMob);
-				else ShiftRight(normalMob);
-			}
 
-		}
-		else {
-			if(normalMob->isExplosion == 0)
-				normalMob->isExplosion = 1;
-			if(normalMob->explosionTime > 0)
-				normalMob->explosionTime -= Time.deltaTime;
-			else if (normalMob->explosionTime < 0) {
-				DeleteOneNormalMob(normalMob);
-				mobCount--;
+void MoveNormalMob(NormalMobInfo* normalMob) { // ÎûúÎç§ÌïòÍ≤å Ï¢å, Ïö∞Î°ú ÏõÄÏßÅÏù¥Îäî Ìï®Ïàò
 
-				PrintingExplosion(normalMob);
+	normalMob->mobIdleTime -= Time.deltaTime;
+	if (normalMob->isExplosion == 1) {
+		normalMob->explosionTime -= Time.deltaTime;
+		if (normalMob->explosionTime < 0) {
+			
+
+			normalMob->delayExplosion -= Time.deltaTime;
+
+			if (normalMob->delayExplosion < 0) {
+				AfterExplosion(normalMob);
 				RemoveNormalMob(normalMob);
-
+				return;
+			}
+			if (normalMob->onceExplosion == 0) {
+				DeleteOneNormalMob(normalMob);
+				PrintingExplosion(normalMob);
+				normalMob->onceExplosion = 1;
 			}
 
 
+
 		}
-
-
 	}
-		
+
+	if (normalMob->mobIdleTime < 0) {
+		normalMob->mobIdleTime = 0.2;
+		if (normalMob->type == 1) { //ÏùºÎ∞ò Î™π
+			int num = rand() % 2;
+			switch (num) {
+			case 0:
+				ShiftLeft(normalMob);
+				break;
+			case 1:
+				ShiftRight(normalMob);
+				break;
+			}
+		}
+		else if (normalMob->type == 2) {// Ìè≠ÌÉÑ Î™π
+			COORD playerPos = GetPlayerPos();
+			int playerPosX = playerPos.X;
+			int playerPosY = playerPos.Y;
+			int normalMobPosX = normalMob->pos.X + 4;
+			int normalMobPosY = normalMob->pos.Y + 1;
+			double dif_x = (double)playerPosX - normalMobPosX;
+			double dif_y = (double)playerPosY - normalMobPosY;
+
+			int direction = rand() % 2; // 0 == ÏÑ∏Î°ú Ïù¥Îèô,1 == Í∞ÄÎ°ú Ïù¥Îèô
+
+			if (sqrt(dif_x * dif_x + dif_y * dif_y) > 5 && normalMob->isExplosion == 0) {
+				if (playerPosX == normalMobPosX) direction = 0;
+				else if (playerPosY == normalMobPosY) direction = 1;
+
+				if (direction == 0) {
+					if (playerPosY - normalMobPosY < 0) ShiftUp(normalMob);
+					else ShiftDown(normalMob);
+				}
+				else if (direction == 1) {
+					if (playerPosX - normalMobPosX < 0) ShiftLeft(normalMob);
+					else ShiftRight(normalMob);
+				}
+
+			}
+			else {
+				if (normalMob->isExplosion == 0)
+					normalMob->isExplosion = 1;
+
+			}
+
+		}
+	}
+
 }
 void ShiftDown(NormalMobInfo* normalMob) {
 	if (NormalMobDetectedCollision(normalMob->pos.X, normalMob->pos.Y + 1, normalMob->numberingMob) == 1)
@@ -271,19 +312,23 @@ void ShiftUp(NormalMobInfo* normalMob) {
 	ShowOneNormalMob(normalMob);
 }
 void NormalMobShoot(NormalMobInfo* normalMob) {
-	srand(time(NULL));
 
+	normalMob->attackMobIdleTime -= Time.deltaTime;
+	if (normalMob->attackMobIdleTime < 0) {
+		SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
 
-	SetCurrentCursorPos(normalMob->pos.X + 5, normalMob->pos.Y + 2);
+		//double speed = 0.5 + ((double)rand() / RAND_MAX) * 0.05;
+		MakeBullet(normalMob->pos.X + 5, normalMob->pos.Y + 2, 4, 0.05f);
 
-	//double speed = 0.5 + ((double)rand() / RAND_MAX) * 0.05;
-	MakeBullet(normalMob->pos.X + 5, normalMob->pos.Y + 2, 4, 0.1f);
+		normalMob->attackMobIdleTime = 0.4;
+	}
+
 
 
 
 }
 NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
-	// «ˆ¿Á √º∑¬ «—ƒ≠ ¡Ÿ¿Ã∞Ì ¥ŸΩ√ UIø° «•Ω√
+	// ÌòÑÏû¨ Ï≤¥Î†• ÌïúÏπ∏ Ï§ÑÏù¥Í≥† Îã§Ïãú UIÏóê ÌëúÏãú
 	for (int i = 0; i < normalMob->mobHp; i++)
 	{
 		SetCurrentCursorPos(normalMob->pos.X + i, normalMob->pos.Y - 1);
@@ -292,10 +337,11 @@ NormalMobInfo* DecreaseNormalMobHp(NormalMobInfo* normalMob) {
 	normalMob->mobHp--;
 	if (normalMob->mobHp == 0) {
 		DeleteOneNormalMob(normalMob);
-		COORD itemPos = normalMob->pos;
-		itemPos.Y -= 1;
-		DropItem(itemPos);
-		mobCount--;
+		if (normalMob->type == 1) {
+			COORD itemPos = normalMob->pos;
+			itemPos.Y -= 1;
+			DropItem(itemPos);
+		}
 		return RemoveNormalMob(normalMob);
 	}
 	ShowNormalMobHp(normalMob);
@@ -329,19 +375,29 @@ int NormalMobDetectedCollision(int posX, int posY, int numbering) {
 	}
 	return 0;
 }
-COORD MakeNormalMobPos() {
-	NormalMobInfo* normalMob = normalMobListHead;
-	int cnt = 0;
-	while (normalMob != NULL) {
-		cnt++;
-		normalMob = normalMob->next;
+void UpdateIdleNormalMob(NormalMobInfo* normalMob) {
 
+
+	if (normalMob->moveTime < 0) {
+		normalMob->moveTime = 2 + rand() % 2;
+		if (normalMob->type == 1)
+			normalMob->state = 1;
 	}
-	COORD pos = { 13 + 20 * cnt, 17 };
-	return pos;
+	else {
+		MoveNormalMob(normalMob);
+		normalMob->moveTime -= Time.deltaTime;
+	}
 }
-
-int tempState = 0;
+void UpdateAttackNormalMob(NormalMobInfo* normalMob) {
+	if (normalMob->attackTime < 0) {
+		normalMob->attackTime = 2 + rand() % 2;
+		normalMob->state = 0;
+	}
+	else {
+		NormalMobShoot(normalMob);
+		normalMob->attackTime -= Time.deltaTime;
+	}
+}
 
 void NormalMobUpdate() {
 	NormalMobInfo* normalMob = normalMobListHead;
@@ -353,71 +409,37 @@ void NormalMobUpdate() {
 			normalMob = DecreaseNormalMobHp(normalMob);
 			if (normalMob == NULL) break;
 		}
-		// ∆¯≈∫ ∏˜¿« ∞ÊøÏ MoveNormalMobø°º≠ ∏˜¿ª ªË¡¶«œ±‚ ∂ßπÆø°
-		// ªË¡¶ ¿¸¿« next∏¶ ¿˙¿Â«ÿ≥ıæ∆æﬂ «‘
+		// Ìè≠ÌÉÑ Î™πÏùò Í≤ΩÏö∞ MoveNormalMobÏóêÏÑú Î™πÏùÑ ÏÇ≠Ï†úÌïòÍ∏∞ ÎïåÎ¨∏Ïóê
+		// ÏÇ≠Ï†ú Ï†ÑÏùò nextÎ•º Ï†ÄÏû•Ìï¥ÎÜìÏïÑÏïº Ìï®
+
 		NormalMobInfo* temp = normalMob->next;
 
-		normalMob->tempIdleTime -= Time.deltaTime;
 
-		if (normalMob->tempIdleTime < 0) {
-			
-			if (normalMob->type == 1) { //¿œπ› ∏˜
-				if (normalMob->moveTime > 0 && normalMob->state == 0)
-					normalMob->moveTime -= Time.deltaTime;
-				else if (normalMob->moveTime < 0) {
-					normalMob->state = rand() % 2 + 1;
-					normalMob->moveTime = 1;
-				}
-
-				if (normalMob->state == 1 && normalMob->attackTime > 0)
-					normalMob->attackTime -= Time.deltaTime;
-				else if (normalMob->attackTime < 0) {
-					normalMob->state = (rand() % 2) * 2;
-					normalMob->attackTime = 0.2;
-				}
-
-				if (normalMob->state == 2 && normalMob->mobIdleTime > 0)
-					normalMob->mobIdleTime -= Time.deltaTime;
-				else if (normalMob->mobIdleTime < 0) {
-					normalMob->state = rand() % 2;
-					normalMob->mobIdleTime = 2;
-				}
-
-				/*if (normalMob->state == 3 && normalMob->tempIdleTime > 0)
-					normalMob->tempIdleTime -= Time.deltaTime;
-				else if (normalMob->tempIdleTime < 0) {
-					normalMob->state = tempState;
-					normalMob->tempIdleTime = 0.2;
-					normalMob = normalMob->next;
-					continue;
-				}*/
-			}
-			switch (normalMob->state) {
-			case 0:
-				MoveNormalMob(normalMob);
-				/*tempState = normalMob->state;
-				normalMob->state = 3;*/
-				break;
-			case 1:
-				NormalMobShoot(normalMob);
-				/*tempState = normalMob->state;
-				normalMob->state = 3;*/
-				break;
-			case 4:
-				MoveNormalMob(normalMob);
-				break;
-			default:
-				break;
-			}
-			normalMob->tempIdleTime = 0.2;
+		switch (normalMob->state) {
+		case 0:
+			UpdateIdleNormalMob(normalMob);
+			break;
+		case 1:
+			UpdateAttackNormalMob(normalMob);
+			break;
 		}
+
+
+
+
 		normalMob = temp;
 
 	}
 
-
-
 }
+void ChangeMobStateToExpired() {
+	NormalMobInfo* normalMob = normalMobListHead;
+	while (normalMob != NULL) {
+		normalMob->isExpired = 1;
+		normalMob = normalMob->next;
+	}
+}
+
 int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob) {
 	int arrX = (normalMob->pos.X - GBOARD_ORIGIN_X) / 2;
 	int arrY = normalMob->pos.Y + 1 - GBOARD_ORIGIN_Y;

@@ -12,10 +12,8 @@
 #define HP_ITEM 5
 #define UPGRADE_ITEM 6
 #define BOSS 7
-#define NORMAL_MOB_1 8
-#define NORMAL_MOB_1 9
-#define NORMAL_MOB_1 10
-#define NORMAL_MOB_1 11
+#define NORMAL_MOB_1 1000
+
 #define LAZER 20
 
 // ¸Ê Å©±â
@@ -39,3 +37,4 @@ extern TimeStruct Time;
 void InitTime();
 void UpdateTime();
 void DrawGameBoard(void);
+void InitBoard();

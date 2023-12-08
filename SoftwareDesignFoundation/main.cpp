@@ -1,12 +1,33 @@
 #include "GameManager.h"
 #include "Init.h"
 #include "Update.h"
+#include "StartPage.h"
 
 int main() {
+	int isStartPage;
 	srand(time(NULL));
 	RemoveCursor();
 	system("mode con:cols=100 lines=50");
 	SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y);
+
+	InitTime();
+	playerInit();
+	PlayerShowModel();
+	ScreenInit();
+	InitText();
+
+	while (1) {
+		Render();
+		ProcessKeyInput();
+		UpdateTime();
+		UpdateBullet();
+		PlayerUpdate();
+		isStartPage = UpdateText();
+		if (isStartPage == 0) break;
+		if (isStartPage == -1) {
+			return 0;
+		}
+	}
 
 	Init();
 	while (1) {

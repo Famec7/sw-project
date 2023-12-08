@@ -1,5 +1,7 @@
 #include "Item.h"
 #include "gameInfo.h"
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 
 char itemModel[][3][3] = { {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}},
 						  {{0, 0, 0}, {0, 2, 0}, {0, 0, 0}} };
@@ -174,6 +176,7 @@ void DecreseItemHp(ITEM* item) {
 	item->itemHp--;
 	if (item->itemHp == 0) {
 		DeleteItem(*item);
+		mciSendString(TEXT("play ./sound/getItem.wav"), NULL, 0, NULL);
 		for (x = 0; x < 3; x++) {
 			DeleteBullet((item->itemPos.X - GBOARD_ORIGIN_X) / 2 + x,
 				item->itemPos.Y - GBOARD_ORIGIN_Y + 3);
@@ -181,6 +184,7 @@ void DecreseItemHp(ITEM* item) {
 		if (item->itemId == 0) {
 			if (HP < MAX_HP) {
 				HP++;
+				PlayerStatOutput();
 			}
 		}
 		else if (item->itemId == 1) {
