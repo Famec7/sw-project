@@ -404,7 +404,7 @@ void BossRandomMove() {
 void SummonNormalMob() {
 	if (boss.curPhase == 0) {
 
-		int cnt = rand() % 3 + 2; // 2 ~ 4
+		int cnt = rand() % 2 + 1; // 1 ~ 2
 		for (int i = 0; i < cnt; i++) {
 			short x = 13 + 20 * i;
 			CreateNormalMob(1, { x, 17 });
@@ -414,7 +414,7 @@ void SummonNormalMob() {
 	else if (boss.curPhase == 1) {
 		int random = rand() % 2;
 		if (random == 0) {
-			int cnt = rand() % 3 + 2;  // 2 ~ 4
+			int cnt = rand() % 2 + 2;  // 2 ~ 3
 			int type = rand() % 2 + 1; // 1, 2
 			for (int i = 0; i < cnt; i++) {
 				short x = 13 + 20 * i;
@@ -431,20 +431,20 @@ void SummonNormalMob() {
 	else {
 		int random = rand() % 3;
 		if (random == 0) {
-			/*CreateNormalMob(2, { 13, 17 });*/
+			CreateNormalMob(2, { 13, 17 });
 			CreateNormalMob(2, { 13, 22 });
 			CreateNormalMob(2, { 13, 27 });
-			//CreateNormalMob(2, { 13, 32 });
-			//CreateNormalMob(2, { 13, 37 });
+			CreateNormalMob(2, { 13, 32 });
+			CreateNormalMob(2, { 13, 37 });
 			CreateNormalMob(2, { 33, 17 });
 			CreateNormalMob(2, { 33, 37 });
 			CreateNormalMob(2, { 53, 17 });
-			//CreateNormalMob(2, { 53, 37 });
-			//CreateNormalMob(2, { 73, 17 });
+			CreateNormalMob(2, { 53, 37 });
+			CreateNormalMob(2, { 73, 17 });
 			CreateNormalMob(2, { 73, 22 });
 			CreateNormalMob(2, { 73, 27 });
-			//CreateNormalMob(2, { 73, 32 });
-			//CreateNormalMob(2, { 73, 37 });
+			CreateNormalMob(2, { 73, 32 });
+			CreateNormalMob(2, { 73, 37 });
 		}
 		else if (random == 1) {
 			int cnt = rand() % 3 + 2;  // 2 ~ 4
@@ -704,11 +704,25 @@ void StartSummonState() {
 	curState = BossState::Summon;
 	SummonNormalMob();
 }
+
+double SUMMON_DURATION = 25;
+
 void UpdateSummonState() {
+	SUMMON_DURATION -= Time.deltaTime;
+	if (SUMMON_DURATION < 0) {
+		AttackedPlayerProcessing(GetNormalMobCount() * 2);
+		InitNormalMob();
+		SUMMON_DURATION = 25;
+	}
+	else if (SUMMON_DURATION < 2) {
+		ChangeMobStateToExpired();
+	}
 	if (EmptyNormalMob())
 		ChangeState(BossState::Idle);
 	BossRandomMove();
+
 }
+
 
 int dx = 0, dy = 0;
 void StartGoToDown() {
