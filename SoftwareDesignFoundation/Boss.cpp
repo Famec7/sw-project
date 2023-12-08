@@ -358,10 +358,14 @@ int BossDetectionCollision(int posX, int posY) {
 			if (bossModel[y][x] != 0) {
 				if (IsAscII(gameBoardInfo[arrY + y][arrX + x]))
 				{
-					mciSendString(TEXT("play Sound\\BossHit.wav"), NULL, 0, NULL);
 					if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
 						gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
+					{
+						mciSendString(TEXT("play Sound\\BossHit.wav"), NULL, 0, NULL);
 						return 1;
+					}
+					else
+						mciSendString(TEXT("play Sound\\BossNotHit.wav"), NULL, 0, NULL);
 				}
 			}
 		}
