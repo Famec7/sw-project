@@ -337,6 +337,17 @@ int BossCullingCollision(int posX, int posY) {
 	}
 	return 0;
 }
+
+int IsAscII(int num)
+{
+	if (num >= 65 && num <= 90)
+		return 1;
+	else if (num >= 97 && num <= 122)
+		return 1;
+	else
+		return 0;
+}
+
 int BossDetectionCollision(int posX, int posY) {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
@@ -345,11 +356,18 @@ int BossDetectionCollision(int posX, int posY) {
 	for (int y = 0; y < BOSS_SIZE_Y; y++) {
 		for (int x = 0; x < BOSS_SIZE_X; x++) {
 			if (bossModel[y][x] != 0) {
-				if (gameBoardInfo[arrY + y][arrX + x] ==
-					int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
-					gameBoardInfo[arrY + y][arrX + x] - 32 ==
-					int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
-					return 1;
+				if (IsAscII(gameBoardInfo[arrY + y][arrX + x]))
+				{
+					if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
+						gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
+					{
+						mciSendString(TEXT("play Sound\\BossHit.wav"), NULL, 0, NULL);
+						DeleteBullet(arrX + x, arrY + y);
+						return 1;
+					}
+					else
+						mciSendString(TEXT("play Sound\\BossNotHit.wav"), NULL, 0, NULL);
+				}
 			}
 		}
 	}
@@ -563,7 +581,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(BossState::Lazer);
+		ChangeState(BossState::Idle);
 	}
 	else {
 		BossRandomMove();
