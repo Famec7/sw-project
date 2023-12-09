@@ -361,12 +361,12 @@ int BossDetectionCollision(int posX, int posY) {
 					if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
 						gameBoardInfo[arrY + y][arrX + x] - 32 == int(boss.hpString[boss.curPhase][length - boss.curBossHp]))
 					{
-						mciSendString(TEXT("play Sound\\BossHit.wav"), NULL, 0, NULL);
+						mciSendString(TEXT("play Sound\\Hit.wav"), NULL, 0, NULL);
 						DeleteBullet(arrX + x, arrY + y);
 						return 1;
 					}
 					else
-						mciSendString(TEXT("play Sound\\BossNotHit.wav"), NULL, 0, NULL);
+						mciSendString(TEXT("play Sound\\NotHit.wav"), NULL, 0, NULL);
 				}
 			}
 		}
