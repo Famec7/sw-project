@@ -361,16 +361,6 @@ int BossCullingCollision(int posX, int posY) {
 	return 0;
 }
 
-int IsAscII(int num)
-{
-	if (num >= 65 && num <= 90)
-		return 1;
-	else if (num >= 97 && num <= 122)
-		return 1;
-	else
-		return 0;
-}
-
 int BossDetectionCollision(int posX, int posY) {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;

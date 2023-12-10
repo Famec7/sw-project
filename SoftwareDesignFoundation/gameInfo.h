@@ -38,3 +38,4 @@ void InitTime();
 void UpdateTime();
 void DrawGameBoard(void);
 void InitBoard();
+int IsAscII(int num);

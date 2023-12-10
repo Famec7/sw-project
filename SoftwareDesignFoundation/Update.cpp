@@ -18,9 +18,11 @@ void Update() {
 
 		if(IsBossCleared())
 			SceneChange(GameClear);
+		if(IsGameOver())
+			SceneChange(GameOver);
 	}
 
-	if (IsGameOver()) {
+	if (Gamestate == GameOver) {
 		dead_page();
 		// 게임 오버 메뉴
 	}

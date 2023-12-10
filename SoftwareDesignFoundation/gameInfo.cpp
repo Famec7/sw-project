@@ -92,3 +92,13 @@ void InitBoard()
         }
     }
 }
+
+int IsAscII(int num)
+{
+    if (num >= 65 && num <= 90)
+        return 1;
+    else if (num >= 97 && num <= 122)
+        return 1;
+    else
+        return 0;
+}

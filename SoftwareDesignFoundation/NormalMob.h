@@ -64,7 +64,6 @@ int NormalMobDetectedCollision(int posX, int posY, int numbering);
 void UpdateIdleNormalMob(NormalMobInfo* normalMob);
 void UpdateAttackNormalMob(NormalMobInfo* normalMob);
 void ChangeMobStateToExpired();
-int IsAscII(int num);
 
 int GetNormalMobCount();
 int EmptyNormalMob();
