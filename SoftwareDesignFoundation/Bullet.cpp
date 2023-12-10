@@ -15,7 +15,15 @@ void PrintBullet(int info)
 
 void InitBullet()
 {
-	bullets.clear();
+	for (auto itr = bullets.begin(); itr != bullets.end(); itr++)
+	{
+		int arrX = ((*itr).curPos.X - GBOARD_ORIGIN_X) / 2;
+		int arrY = (*itr).curPos.Y - GBOARD_ORIGIN_Y;
+		SetCurrentCursorPos((*itr).curPos.X, (*itr).curPos.Y);
+		printf("  ");
+		gameBoardInfo[arrY][arrX] = 0;
+		itr = bullets.erase(itr);
+	}
 }
 
 void MakeBullet(int posX, int posY, int info, double speed)

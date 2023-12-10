@@ -48,6 +48,7 @@ void BossInit();
 void UpdateBoss();
 void ShowBossHpUI();
 int IsBossCleared();
+void BossStatusInit();
 
 // lazer ∆–≈œ
 void PrintLazerBlock(int idx);
