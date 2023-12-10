@@ -451,16 +451,31 @@ int NormalMobDetectedBulletCollision(NormalMobInfo* normalMob) {
 		{
 			if (NORMAL_MOB_MODEL[y][x] != 0)
 			{
-				if (gameBoardInfo[arrY + y][arrX + x] == int(normalMob->hp[length - normalMob->mobHp]) ||
-					gameBoardInfo[arrY + y][arrX + x] - 32 == int(normalMob->hp[length - normalMob->mobHp]))
+				if (IsAscII(gameBoardInfo[arrY + y][arrX + x]))
 				{
-					DeleteBullet(arrX + x, arrY + y);
-					return 1;
+					if (gameBoardInfo[arrY + y][arrX + x] == int(normalMob->hp[length - normalMob->mobHp]) ||
+						gameBoardInfo[arrY + y][arrX + x] - 32 == int(normalMob->hp[length - normalMob->mobHp]))
+					{
+						mciSendString(TEXT("play Sound\\Hit.wav"), NULL, 0, NULL);
+						DeleteBullet(arrX + x, arrY + y);
+						return 1;
+					}
+					else
+						mciSendString(TEXT("play Sound\\NotHit.wav"), NULL, 0, NULL);
 				}
 			}
 		}
 	}
 	return 0;
+}
+int IsAscII(int num)
+{
+	if (num >= 65 && num <= 90)
+		return 1;
+	else if (num >= 97 && num <= 122)
+		return 1;
+	else
+		return 0;
 }
 
 int GetNormalMobCount() {
