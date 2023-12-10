@@ -894,13 +894,13 @@ void InitLazer() {
 	int i;
 	lazerIdx = 0;
 	if (boss.curPhase == 0) {
-		maxLazerTime = 10;
+		maxLazerTime = 5;
 	}
 	else if (boss.curPhase == 1) {
-		maxLazerTime = 15;
+		maxLazerTime = 10;
 	}
 	else if (boss.curPhase == 2) {
-		maxLazerTime = 20;
+		maxLazerTime = 15;
 	}
 	for (i = 0; i < MAX_LAZER_NUM; i++) {
 		lazerBlock[i].lazerTime = maxLazerTime;

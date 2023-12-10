@@ -128,7 +128,7 @@ void ShowItem(ITEM item) {
 int CreateItemRandom() {
 	int createItem;
 	createItem = rand() % 100;
-	if (createItem < 30 && (HP < MAX_HP || bulletNum < MAX_BULLET))
+	if (createItem < 50 && (HP < MAX_HP || bulletNum < MAX_BULLET))
 		return 1;
 	else
 		return 0;
@@ -136,10 +136,10 @@ int CreateItemRandom() {
 
 int ItemIdRandom() {
 	int createItemId;
-	createItemId = rand() % 2;
-	if (createItemId == 0 && HP < MAX_HP)
+	createItemId = rand() % 10;
+	if (createItemId < 7 && HP < MAX_HP)
 		return 0;
-	else if (createItemId == 1 && bulletNum < MAX_BULLET)
+	else if (createItemId >= 7 && bulletNum < MAX_BULLET)
 		return 1;
 }
 
@@ -184,7 +184,12 @@ void DecreseItemHp(ITEM* item) {
 		}
 		if (item->itemId == 0) {
 			if (HP < MAX_HP) {
-				HP++;
+				if (HP + 2 > MAX_HP) {
+					HP = MAX_HP;
+				}
+				else {
+					HP += 2;
+				}
 				PlayerStatOutput();
 			}
 		}
