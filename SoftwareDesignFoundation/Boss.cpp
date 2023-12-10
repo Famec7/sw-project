@@ -795,7 +795,7 @@ void UpdateGoTo() {
 	static double time = 0.25;
 
 	if (!PlayerDetectedCollision(playerCurPos.X + dx, playerCurPos.Y + dy)) {
-		// 벽에 충돌한 효과음 추가
+		mciSendString(TEXT("play ./sound/smashwall.wav"), NULL, 0, NULL);
 		DeleteFinger();
 		CantControl = 0;
 		time = 0.025;

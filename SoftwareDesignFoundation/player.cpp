@@ -25,7 +25,17 @@ char hpText[] = { 'P', 'l', 'a', 'y', 'e', 'r', 'h',
 char shieldText[] = { 's', 'h', 'i', 'e', 'l', 'd' };
 
 void playerInit() {
-	HP = MAX_HP;
+	imHit = 0;
+	CantControl = 0;
+
+	HP = MAX_HP;            // HP 초기화
+	shield = MAX_SHIELD; // 실드 초기화
+	pre_shield = MAX_SHIELD;
+
+	bulletNum = 1; // 초알의 개수
+	isShield_Flag = 0;
+	 playerColor = 7;
+	playerSpeed = 0;
 	playerCurPos.X = 45;
 	playerCurPos.Y = 35;
 	PlayerStatOutput();
@@ -80,6 +90,7 @@ int PlayerDetectedLazer(int x, int y) {
 				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == LAZER) {
 					HP--;
 					imHit = 1;
+					mciSendString(TEXT("play ./sound/playerhit.wav"), NULL, 0, NULL);
 					PlayerStatOutput();
 					PlayerDeleteModel();
 					PlayerShowModel();
@@ -98,6 +109,7 @@ int PlayerDetectedCollision(int x, int y) {
 			if (isShield_Flag == 0) {
 				if (playerModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] == BULLET) {
 					HP--;
+					mciSendString(TEXT("play ./sound/playerhit.wav"), NULL, 0, NULL);
 					imHit = 1;
 					PlayerStatOutput();
 					PlayerDeleteModel();
@@ -241,6 +253,7 @@ void UseShield() {
 	if (shield >= 6.0f) {
 		isShield_Flag = 1; // 실드 사용중
 		playerColor = 9;   // 플레이어의 색은 파란색
+		mciSendString(TEXT("play ./sound/shield.wav"), NULL, 0, NULL);
 		PlayerDeleteModel();
 		PlayerShowModel();
 	}
