@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "NormalMob.h"
 #include "gameInfo.h"
+#include "Time.h"
 #include <vector>
 #include "SceneControl.h"
 #include <mmsystem.h>
@@ -742,8 +743,13 @@ void UpdateSummonState() {
 	else if (SUMMON_DURATION < 2) {
 		ChangeMobStateToExpired();
 	}
-	if (EmptyNormalMob())
+	if (EmptyNormalMob()) {
 		ChangeState(BossState::Idle);
+		if (SUMMON_DURATION > 0) {
+			InitNormalMob();
+			SUMMON_DURATION = 25;
+		}
+	}
 	BossRandomMove();
 
 }

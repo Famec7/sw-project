@@ -7,5 +7,6 @@
 #include "Item.h"
 #include "NormalMob.h"
 #include "Render.h"
+#include "Time.h"
 
 void Init();

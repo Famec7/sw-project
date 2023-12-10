@@ -1,8 +1,14 @@
-#include "Init.h"
 #include "Update.h"
+#include "GameManager.h"
+#include "gameInfo.h"
+#include "player.h"
+#include "Boss.h"
+#include "Bullet.h"
+#include "Item.h"
+#include "NormalMob.h"
+#include "Init.h"
 #include "Menu.h"
 #include "SceneControl.h"
-#include <stdlib.h>
 
 void Update() {
 	if (Gamestate == Game) {

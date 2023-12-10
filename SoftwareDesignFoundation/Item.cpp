@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "gameInfo.h"
+#include "Time.h"
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 

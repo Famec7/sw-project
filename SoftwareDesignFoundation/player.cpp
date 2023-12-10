@@ -1,6 +1,7 @@
 #include "player.h"
 #include "Bullet.h"
 #include "gameInfo.h"
+#include "Time.h"
 #include "SceneControl.h"
 
 double imHit = 0;

@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS 
 #include "NormalMob.h"
 #include "Item.h"
+#include "Time.h"
 
 NormalMobInfo* normalMobListHead = NULL;
 int mobCount = 0;

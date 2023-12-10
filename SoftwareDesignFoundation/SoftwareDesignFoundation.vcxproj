@@ -141,6 +141,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="SceneControl.cpp" />
     <ClCompile Include="SceneControl.h" />
+    <ClCompile Include="Time.cpp" />
     <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="Update.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

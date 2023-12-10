@@ -1,4 +1,5 @@
 #include "Bullet.h"
+#include "Time.h"
 #include <iostream>
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")

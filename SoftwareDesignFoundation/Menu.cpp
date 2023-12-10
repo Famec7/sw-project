@@ -1,11 +1,11 @@
 ﻿#include "Menu.h"
 #include <stdio.h>
 #include "Cursor.h"
+#include "Time.h"
 #include "gameInfo.h"
 #include "Bullet.h"
 #include "Player.h"
 #include "Render.h"
-#include "Init.h"
 #include "GameManager.h"
 #include "SceneControl.h"
 
@@ -472,10 +472,7 @@ void UpdateMenu()
 	PlayerUpdate();
 	int isStartPage = UpdateText();
 	if (isStartPage == 0)
-	{
-		Init();
 		SceneChange(Game);
-	}
 	if (isStartPage == -1) {
 		SceneChange(Exit);
 		return;
