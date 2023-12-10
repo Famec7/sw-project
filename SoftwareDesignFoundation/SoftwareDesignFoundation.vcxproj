@@ -138,7 +138,9 @@
     <ClCompile Include="NormalMob.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="Render.cpp" />
-    <ClCompile Include="StartPage.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="SceneControl.cpp" />
+    <ClCompile Include="SceneControl.h" />
     <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +155,7 @@
     <ClInclude Include="NormalMob.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="Render.h" />
-    <ClInclude Include="StartPage.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Update.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,6 @@
 #include "Init.h"
 #include "Update.h"
+#include "Menu.h"
 #include <stdlib.h>
 
 void Update() {
@@ -16,25 +17,17 @@ void Update() {
 	}
 
 	if (IsGameOver()) {
-		/*SetCurrentCursorPos(25, 25);
-		printf("GAME OVER!!");*/
-		Gamestate = GameOver;
 		dead_page();
-		Init();
 		// 게임 오버 메뉴
 	}
-	else if (IsBossCleared()) {
-		Gamestate = GameClear;
+	if (IsBossCleared()) {
 		clear_page();
-		Init();
-		InitBoard();
 		// 게임 클리어 메뉴
 	}
 
 	if (Gamestate == Menu)
 	{
-		Gamestate = Game;
-		// UpdateMenu();
+		UpdateMenu();
 	}
 }
 
@@ -64,8 +57,8 @@ void dead_page() {
 		Sleep(250);
 	} while (!GetAsyncKeyState(VK_RETURN));
 
-	Gamestate = Game;
 	system("cls");
+	SceneChange(Game);
 }
 
 void clear_page() {
@@ -93,6 +86,6 @@ void clear_page() {
 		Sleep(250);
 	}
 	_getch();
-	Gamestate = Game;
 	system("cls");
+	SceneChange(Game);
 }

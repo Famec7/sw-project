@@ -84,13 +84,12 @@ void DrawGameBoard(void)
 
 void InitBoard()
 {
-    int arrX = (GBOARD_WIDTH - GBOARD_ORIGIN_X) / 2;
-    int arrY = GBOARD_HEIGHT - GBOARD_ORIGIN_Y;
-    for (int y = 0; y < GBOARD_HEIGHT; y++)
+    for (int y = 1; y < GBOARD_HEIGHT; y++)
     {
-        for (int x = 0; x < GBOARD_WIDTH; x++)
+        for (int x = 1; x < GBOARD_WIDTH + 1; x++)
         {
-            gameBoardInfo[arrY + y][arrX + x] = 0;
+            gameBoardInfo[y][x] = 0;
         }
     }
+    DrawGameBoard();
 }

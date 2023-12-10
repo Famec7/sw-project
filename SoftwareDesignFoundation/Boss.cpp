@@ -3,6 +3,7 @@
 #include "NormalMob.h"
 #include "gameInfo.h"
 #include <vector>
+#include "SceneControl.h"
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 
@@ -209,7 +210,16 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 				 boss.curPos.Y + BOSS_SIZE_Y };
 
 int isCleared = 0;
-int IsBossCleared() { return isCleared; }
+int IsBossCleared()
+{ 
+	if (isCleared)
+	{
+		SceneChange(GameClear);
+		return 1;
+	}
+
+	return 0;
+}
 
 /****************보스 모델을 띄우는 함수*********************/
 void ShowBossModel() {
@@ -313,7 +323,9 @@ void BossLifeDecrease() {
 	boss.curBossHp--;
 	if (boss.curBossHp == 0)
 		ChangePhase();
-	ShowBossHpUI();
+
+	if(boss.curPhase < 3)
+		ShowBossHpUI();
 }
 /****************보스 충돌 함수*********************/
 int BossCullingCollision(int posX, int posY) {
@@ -474,6 +486,7 @@ void SummonNormalMob() {
 
 /****************보스 스탯 초기화 함수*********************/
 void BossInit() {
+	isCleared = 0;
 	boss.curPhase = 0;
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };

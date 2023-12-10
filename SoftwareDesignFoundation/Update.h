@@ -7,7 +7,7 @@
 #include "Item.h"
 #include "NormalMob.h"
 #include "GameManager.h"
-#include "StartPage.h"
+#include "Menu.h"
 
 void Update();
 

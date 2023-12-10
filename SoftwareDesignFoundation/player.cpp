@@ -1,6 +1,7 @@
 #include "player.h"
 #include "Bullet.h"
 #include "gameInfo.h"
+#include "SceneControl.h"
 
 double imHit = 0;
 int CantControl = 0;
@@ -120,40 +121,40 @@ int PlayerDetectedCollision(int x, int y) {
 	return 1;
 }
 int PlayerShiftLeft() {
-  if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y))
-    return 0;
-  PlayerDeleteModel();
-  playerCurPos.X -= 2;
-  SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
-  PlayerShowModel();
-  return 1;
+	if (!PlayerDetectedCollision(playerCurPos.X - 2, playerCurPos.Y))
+		return 0;
+	PlayerDeleteModel();
+	playerCurPos.X -= 2;
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
+	PlayerShowModel();
+	return 1;
 }
 int PlayerShiftRight() {
-  if (!PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y))
-    return 0;
-  PlayerDeleteModel();
-  playerCurPos.X += 2;
-  SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
-  PlayerShowModel();
-  return 1;
+	if (!PlayerDetectedCollision(playerCurPos.X + 2, playerCurPos.Y))
+		return 0;
+	PlayerDeleteModel();
+	playerCurPos.X += 2;
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
+	PlayerShowModel();
+	return 1;
 }
 int PlayerShiftUp() {
-  if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1))
-    return 0;
-  PlayerDeleteModel();
-  playerCurPos.Y -= 1;
-  SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
-  PlayerShowModel();
-  return 1;
+	if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y - 1))
+		return 0;
+	PlayerDeleteModel();
+	playerCurPos.Y -= 1;
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
+	PlayerShowModel();
+	return 1;
 }
 int PlayerShiftDown() {
-  if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1))
-    return 0;
-  PlayerDeleteModel();
-  playerCurPos.Y += 1;
-  SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
-  PlayerShowModel();
-  return 1;
+	if (!PlayerDetectedCollision(playerCurPos.X, playerCurPos.Y + 1))
+		return 0;
+	PlayerDeleteModel();
+	playerCurPos.Y += 1;
+	SetCurrentCursorPos(playerCurPos.X, playerCurPos.Y);
+	PlayerShowModel();
+	return 1;
 }
 void PlayerStatOutput() {
 	SetCurrentCursorPos(10, 45);
@@ -286,10 +287,13 @@ void PlayerUpdate() {
 	playerSpeed -= Time.deltaTime;
 }
 int IsGameOver() {
-  if (HP <= 0)
-    return 1;
-  else
-    return 0;
+	if (HP <= 0)
+	{
+		SceneChange(GameOver);
+		return 1;
+	}
+	else
+		return 0;
 }
 
 COORD GetPlayerPos() { return playerCurPos; }

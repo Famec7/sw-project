@@ -3,7 +3,6 @@
 void Init()
 {
 	InitTime();
-	DrawGameBoard();
 	ScreenInit();
 	playerInit();
 	BossInit();
