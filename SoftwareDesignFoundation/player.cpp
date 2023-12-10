@@ -312,9 +312,11 @@ int IsGameOver() {
 COORD GetPlayerPos() { return playerCurPos; }
 
 void AttackedPlayerProcessing(int n) {
-	HP -= n;
-	imHit = 1;
-	PlayerStatOutput();
-	PlayerDeleteModel();
-	PlayerShowModel();
+	if (isShield_Flag == 0) {
+		HP -= n;
+		imHit = 1;
+		PlayerStatOutput();
+		PlayerDeleteModel();
+		PlayerShowModel();
+	}
 }
