@@ -728,13 +728,13 @@ void UpdateBlurState() {
 	}*/
 	ChangeState(BossState::Idle);
 }
+
+double SUMMON_DURATION = 25;
 void StartSummonState() {
 	curState = BossState::Summon;
 	SUMMON_DURATION = 25;
 	SummonNormalMob();
 }
-
-double SUMMON_DURATION = 25;
 
 void UpdateSummonState() {
 	SUMMON_DURATION -= Time.deltaTime;
@@ -808,7 +808,7 @@ void UpdateGoTo() {
 		ChangeState(nextState);
 		return;
 	}
-	else if (time > 0) {
+	else if (knockBackTime > 0) {
 		knockBackTime -= Time.deltaTime;
 	}
 	else {
