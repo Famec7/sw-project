@@ -15,13 +15,18 @@ void Update() {
 		ProcessKeyInput();
 		PlayerUpdate();
 		ManageShield();
+
+		if(IsBossCleared())
+			SceneChange(GameClear);
+		if(IsGameOver())
+			SceneChange(GameOver);
 	}
 
-	if (IsGameOver()) {
+	if (Gamestate == GameOver) {
 		dead_page();
 		// 게임 오버 메뉴
 	}
-	if (IsBossCleared()) {
+	if (Gamestate == GameClear) {
 		clear_page();
 		// 게임 클리어 메뉴
 	}

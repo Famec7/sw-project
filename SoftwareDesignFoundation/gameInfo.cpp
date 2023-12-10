@@ -84,12 +84,21 @@ void DrawGameBoard(void)
 
 void InitBoard()
 {
-    for (int y = 1; y < GBOARD_HEIGHT; y++)
+    for (int y = 0; y <= GBOARD_HEIGHT; y++)
     {
-        for (int x = 1; x < GBOARD_WIDTH + 1; x++)
+        for (int x = 0; x <= GBOARD_WIDTH + 1; x++)
         {
             gameBoardInfo[y][x] = 0;
         }
     }
-    DrawGameBoard();
+}
+
+int IsAscII(int num)
+{
+    if (num >= 65 && num <= 90)
+        return 1;
+    else if (num >= 97 && num <= 122)
+        return 1;
+    else
+        return 0;
 }

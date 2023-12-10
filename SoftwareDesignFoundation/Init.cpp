@@ -2,6 +2,7 @@
 
 void Init()
 {
+	DrawGameBoard();
 	InitTime();
 	ScreenInit();
 	playerInit();

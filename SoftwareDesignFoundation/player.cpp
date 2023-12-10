@@ -302,7 +302,6 @@ void PlayerUpdate() {
 int IsGameOver() {
 	if (HP <= 0)
 	{
-		SceneChange(GameOver);
 		return 1;
 	}
 	else

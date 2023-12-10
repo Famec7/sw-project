@@ -212,13 +212,7 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 int isCleared = 0;
 int IsBossCleared()
 { 
-	if (isCleared)
-	{
-		SceneChange(GameClear);
-		return 1;
-	}
-
-	return 0;
+	return isCleared;
 }
 
 /****************보스 모델을 띄우는 함수*********************/
@@ -365,16 +359,6 @@ int BossCullingCollision(int posX, int posY) {
 		}
 	}
 	return 0;
-}
-
-int IsAscII(int num)
-{
-	if (num >= 65 && num <= 90)
-		return 1;
-	else if (num >= 97 && num <= 122)
-		return 1;
-	else
-		return 0;
 }
 
 int BossDetectionCollision(int posX, int posY) {
