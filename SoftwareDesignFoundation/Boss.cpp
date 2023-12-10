@@ -651,7 +651,8 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(BossState::GoToRight);
+
+		ChangeState(nextState);
 	}
 	else {
 		BossRandomMove();
@@ -775,12 +776,13 @@ void UpdateBlurState() {
 	}*/
 	ChangeState(BossState::Idle);
 }
-void StartSummonState() {
-	curState = BossState::Summon;
-	SummonNormalMob();
-}
 
 double SUMMON_DURATION = 25;
+void StartSummonState() {
+	curState = BossState::Summon;
+	SUMMON_DURATION = 25;
+	SummonNormalMob();
+}
 
 void UpdateSummonState() {
 	SUMMON_DURATION -= Time.deltaTime;
@@ -793,18 +795,18 @@ void UpdateSummonState() {
 		ChangeMobStateToExpired();
 	}
 	if (EmptyNormalMob()) {
-		ChangeState(BossState::Idle);
 		if (SUMMON_DURATION > 0) {
 			InitNormalMob();
 			SUMMON_DURATION = 25;
 		}
+		ChangeState(BossState::Idle);
 	}
 	BossRandomMove();
-
 }
 
 
 int dx = 0, dy = 0;
+double knockBackTime = 0.025;
 void StartGoToDown() {
 	ShowFinger(0);
 	Sleep(100);
@@ -813,6 +815,7 @@ void StartGoToDown() {
 	ShowFinger(2);
 	curState = BossState::GoToDown;
 	dx = 0, dy = 1;
+	knockBackTime = 0.025;
 }
 void StartGoToLeft() {
 	ShowFinger(1);
@@ -822,6 +825,7 @@ void StartGoToLeft() {
 	ShowFinger(3);
 	curState = BossState::GoToLeft;
 	dx = -2, dy = 0;
+	knockBackTime = 0.025;
 }
 void StartGoToRight() {
 	ShowFinger(3);
@@ -831,15 +835,15 @@ void StartGoToRight() {
 	ShowFinger(1);
 	curState = BossState::GoToRight;
 	dx = 2, dy = 1;
+	knockBackTime = 0.025;
 }
 void UpdateGoTo() {
-	static double time = 0.25;
 
 	if (!PlayerDetectedCollision(playerCurPos.X + dx, playerCurPos.Y + dy)) {
 		mciSendString(TEXT("play ./sound/smashwall.wav"), NULL, 0, NULL);
 		DeleteFinger();
 		CantControl = 0;
-		time = 0.025;
+		knockBackTime = 0.025;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
 		if (curState == BossState::GoToDown) {
@@ -850,9 +854,10 @@ void UpdateGoTo() {
 				nextState = BossState::HellBullet;
 		}
 		ChangeState(nextState);
+		return;
 	}
-	else if (time > 0) {
-		time -= Time.deltaTime;
+	else if (knockBackTime > 0) {
+		knockBackTime -= Time.deltaTime;
 	}
 	else {
 		switch (curState) {
@@ -868,7 +873,7 @@ void UpdateGoTo() {
 		default:
 			break;
 		}
-		time = 0.025;
+		knockBackTime = 0.025;
 	}
 }
 

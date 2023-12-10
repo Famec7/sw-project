@@ -174,9 +174,9 @@ void ShiftRight(NormalMobInfo* normalMob) {
 }
 
 void InitNormalMob() {
-	DeleteNormalMob();
 	NormalMobInfo* normalMob = normalMobListHead;
-	while (normalMob != nullptr) {
+	while (normalMob != NULL) {
+		DeleteOneNormalMob(normalMob);
 		normalMob = RemoveNormalMob(normalMob);
 	}
 }
@@ -231,6 +231,7 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 		normalMob->explosionTime -= Time.deltaTime;
 		if (normalMob->explosionTime < 0) {
 			
+			
 
 			normalMob->delayExplosion -= Time.deltaTime;
 
@@ -247,6 +248,10 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 
 
 
+		}
+		else {
+			DeleteOneNormalMob(normalMob);
+			ShowOneNormalMob(normalMob);
 		}
 	}
 
@@ -289,8 +294,12 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 
 			}
 			else {
-				if (normalMob->isExplosion == 0)
+				if (normalMob->isExplosion == 0) {
 					normalMob->isExplosion = 1;
+					DeleteOneNormalMob(normalMob);
+					ShowOneNormalMob(normalMob);
+				}
+				
 
 			}
 
@@ -403,7 +412,6 @@ void UpdateAttackNormalMob(NormalMobInfo* normalMob) {
 void NormalMobUpdate() {
 	NormalMobInfo* normalMob = normalMobListHead;
 
-	ShowNormalMob();
 
 	while (normalMob != NULL) {
 		if (NormalMobDetectedBulletCollision(normalMob) == 1) {
