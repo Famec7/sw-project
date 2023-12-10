@@ -178,10 +178,10 @@ int bossModel[][BOSS_SIZE_Y][BOSS_SIZE_X] = { {
 
 
 
-			▲▲
+				▲▲
 			  ◀■▣▶
 			  ◀▣■▶
-					▼▼
+				▼▼
 
 
 	*/
@@ -211,7 +211,7 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 
 int isCleared = 0;
 int IsBossCleared()
-{ 
+{
 	return isCleared;
 }
 
@@ -256,8 +256,8 @@ void DeleteBossModel() {
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
 			if (bossModel[boss.curPhase][y][x] != 0) {
 				printf("  ");
-				gameBoardInfo[arrY + y][arrX + x] = 0;
 			}
+			gameBoardInfo[arrY + y][arrX + x] = 0;
 		}
 	}
 
@@ -301,6 +301,7 @@ void ChangePhase() {
 	DeleteBossModel();
 	BossStatusInit();
 	InitBullet();
+	DeleteBossModel();
 	boss.curPhase += 1;
 	if (boss.curPhase == 3) {
 		isCleared = 1;
@@ -335,7 +336,7 @@ void BossLifeDecrease() {
 	if (boss.curBossHp == 0)
 		ChangePhase();
 
-	if(boss.curPhase < 3)
+	if (boss.curPhase < 3)
 		ShowBossHpUI();
 }
 /****************보스 충돌 함수*********************/
@@ -346,7 +347,7 @@ int BossCullingCollision(int posX, int posY) {
 	int length = boss.hpString[boss.curPhase].length();
 	for (int y = 0; y < BOSS_SIZE_Y; y++) {
 		for (int x = 0; x < BOSS_SIZE_X; x++) {
-			if (bossModel[y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS) {
+			if (bossModel[boss.curPhase][y][x] != 0 && gameBoardInfo[arrY + y][arrX + x] != BOSS) {
 				if (gameBoardInfo[arrY + y][arrX + x] != 0) {
 					if (gameBoardInfo[arrY + y][arrX + x] != MAP_BOUNDARY) {
 						SetCurrentCursorPos(posX + x * 2, posY + y);
@@ -368,7 +369,7 @@ int BossDetectionCollision(int posX, int posY) {
 	int length = boss.hpString[boss.curPhase].length();
 	for (int y = 0; y < BOSS_SIZE_Y; y++) {
 		for (int x = 0; x < BOSS_SIZE_X; x++) {
-			if (bossModel[y][x] != 0) {
+			if (bossModel[boss.curPhase][y][x] != 0) {
 				if (IsAscII(gameBoardInfo[arrY + y][arrX + x]))
 				{
 					if (gameBoardInfo[arrY + y][arrX + x] == int(boss.hpString[boss.curPhase][length - boss.curBossHp]) ||
