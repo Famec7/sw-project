@@ -256,8 +256,8 @@ void DeleteBossModel() {
 			SetCurrentCursorPos(boss.curPos.X + (x * 2), boss.curPos.Y + y);
 			if (bossModel[boss.curPhase][y][x] != 0) {
 				printf("  ");
+				gameBoardInfo[arrY + y][arrX + x] = 0;
 			}
-			gameBoardInfo[arrY + y][arrX + x] = 0;
 		}
 	}
 
