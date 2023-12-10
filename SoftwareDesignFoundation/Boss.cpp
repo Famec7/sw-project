@@ -35,41 +35,85 @@ int fingerLeftModel[5][5] = { {0, 0, 0, 0, 0},
 							 {2, 2, 2, 2, 2},
 							 {0, 0, 2, 2, 2},
 							 {0, 0, 2, 2, 0} };
-
+int finger_lr = 0;	//left = 0, right = 1
 void ShowFinger(int num) {
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
-				boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
-			if (num == 0) { // up
-				if (fingerUpModel[y][x] == 2) {
-					printf("■");
+	int arrX = (boss.curPos.X - GBOARD_ORIGIN_X) / 2;
+	if (arrX < GBOARD_WIDTH / 2) {
+		finger_lr = 1;
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 5; x++) {
+				SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
+					boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+				if (num == 0) { // up
+					if (fingerUpModel[y][x] == 2) {
+						printf("■");
+					}
+				}
+				else if (num == 1) { // right
+					if (fingerRightModel[y][x] == 2) {
+						printf("■");
+					}
+				}
+				else if (num == 2) { // down
+					if (fingerDownModel[y][x] == 2) {
+						printf("■");
+					}
+				}
+				else if (num == 3) { // left
+					if (fingerLeftModel[y][x] == 2) {
+						printf("■");
+					}
 				}
 			}
-			else if (num == 1) { // right
-				if (fingerRightModel[y][x] == 2) {
-					printf("■");
+		}
+	}
+	else {
+		finger_lr = 0;
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 5; x++) {
+				SetCurrentCursorPos(boss.curPos.X  - 12 + (x * 2),
+					boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+				if (num == 0) { // up
+					if (fingerUpModel[y][x] == 2) {
+						printf("■");
+					}
 				}
-			}
-			else if (num == 2) { // down
-				if (fingerDownModel[y][x] == 2) {
-					printf("■");
+				else if (num == 1) { // right
+					if (fingerRightModel[y][x] == 2) {
+						printf("■");
+					}
 				}
-			}
-			else if (num == 3) { // left
-				if (fingerLeftModel[y][x] == 2) {
-					printf("■");
+				else if (num == 2) { // down
+					if (fingerDownModel[y][x] == 2) {
+						printf("■");
+					}
+				}
+				else if (num == 3) { // left
+					if (fingerLeftModel[y][x] == 2) {
+						printf("■");
+					}
 				}
 			}
 		}
 	}
 }
 void DeleteFinger() {
-	for (int y = 0; y < 5; y++) {
-		for (int x = 0; x < 5; x++) {
-			SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
-				boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
-			printf("  ");
+	if (finger_lr == 1) {
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 5; x++) {
+				SetCurrentCursorPos(boss.curPos.X + 2 * BOSS_SIZE_X + (x * 2),
+					boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+				printf("  ");
+			}
+		}
+	}
+	else if (finger_lr == 0) {
+		for (int y = 0; y < 5; y++) {
+			for (int x = 0; x < 5; x++) {
+				SetCurrentCursorPos(boss.curPos.X - 12 + (x * 2),
+					boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
+				printf("  ");
+			}
 		}
 	}
 }
@@ -305,6 +349,10 @@ void ChangePhase() {
 	InitBullet();
 	DeleteBossModel();
 	boss.curPhase += 1;
+	//added by yunhyeok
+	DeleteFinger();
+	CantControl = 0;
+	//added by yunhyeok
 	if (boss.curPhase == 3) {
 		isCleared = 1;
 	}
@@ -603,7 +651,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(nextState);
+		ChangeState(BossState::GoToRight);
 	}
 	else {
 		BossRandomMove();
