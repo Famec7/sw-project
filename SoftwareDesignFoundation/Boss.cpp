@@ -300,6 +300,7 @@ void ShowBossHpUI() {
 void ChangePhase() {
 	DeleteBossModel();
 	BossStatusInit();
+	InitNormalMob();
 	InitBullet();
 	DeleteBossModel();
 	boss.curPhase += 1;
