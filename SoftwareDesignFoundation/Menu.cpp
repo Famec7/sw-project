@@ -92,9 +92,11 @@ int UpdateText() {
 }
 
 void InitText() {
+	textHp = MAX_TEXT_HP;
 	InitTextGBoard();
 	InitTextPos();
 	textHp = MAX_TEXT_HP;
+	PlaySound(TEXT("./Sound/login.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 void InitTextGBoard() {
