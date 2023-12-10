@@ -602,7 +602,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(BossState::Idle);
+		ChangeState(nextState);
 	}
 	else {
 		BossRandomMove();
@@ -824,6 +824,7 @@ void UpdateGoTo() {
 }
 
 // lazer패턴 구현
+double maxLazerTime;
 
 void StartLazerState() {
 	int i;
@@ -849,7 +850,7 @@ void UpdateLazerState() {
 		lazerIdx++;
 	}
 	for (int i = 0; i < lazerIdx; i++) {
-		if (lazerBlock[i].lazerTime < 4 && lazerBlock[i].lazerTime > 0) {
+		if (lazerBlock[i].lazerTime < maxLazerTime-1 && lazerBlock[i].lazerTime > 0) {
 			ShootLazer(i);
 			mciSendString(TEXT("play ./sound/lazer.wav"), NULL, 0, NULL);
 		}
@@ -889,8 +890,17 @@ void UpdateLazerState() {
 void InitLazer() {
 	int i;
 	lazerIdx = 0;
+	if (boss.curPhase == 0) {
+		maxLazerTime = 10;
+	}
+	else if (boss.curPhase == 1) {
+		maxLazerTime = 15;
+	}
+	else if (boss.curPhase == 2) {
+		maxLazerTime = 20;
+	}
 	for (i = 0; i < MAX_LAZER_NUM; i++) {
-		lazerBlock[i].lazerTime = 5;
+		lazerBlock[i].lazerTime = maxLazerTime;
 		lazerBlock[i].hp = 1;
 	}
 }
