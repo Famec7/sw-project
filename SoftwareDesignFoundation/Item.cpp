@@ -16,7 +16,7 @@ int item_id = 0;
 
 void DropItem(COORD pos) {
 	int itemId;
-	if (curCreateItem < maxCreateItem && CreateItemRandom()) {
+	if ((curCreateItem < maxCreateItem) && CreateItemRandom()) {
 		itemId = ItemIdRandom();
 		CreateItem(pos, itemId);
 	}
