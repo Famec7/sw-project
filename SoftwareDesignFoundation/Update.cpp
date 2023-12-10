@@ -5,6 +5,7 @@
 
 void Update() {
 	if (Gamestate == Game) {
+		DrawGameBoard();
 		UpdateTime();
 		UpdateBullet();
 		UpdateItem();
