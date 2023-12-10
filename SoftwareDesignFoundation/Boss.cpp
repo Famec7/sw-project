@@ -729,6 +729,7 @@ void UpdateBlurState() {
 }
 void StartSummonState() {
 	curState = BossState::Summon;
+	SUMMON_DURATION = 25;
 	SummonNormalMob();
 }
 
