@@ -496,8 +496,8 @@ void BossStatusInit() {
 	int length = boss.hpString[boss.curPhase].length();
 	curState = BossState::Idle;
 	boss.isAttack = false;
-	ShowBossHpUI();
 	InitBlur();
+	ShowBossHpUI();
 }
 void BossInit() {
 	isCleared = 0;
