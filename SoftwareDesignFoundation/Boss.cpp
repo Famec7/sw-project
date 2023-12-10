@@ -496,8 +496,8 @@ void BossStatusInit() {
 	int length = boss.hpString[boss.curPhase].length();
 	curState = BossState::Idle;
 	boss.isAttack = false;
-	ShowBossHpUI();
 	InitBlur();
+	ShowBossHpUI();
 }
 void BossInit() {
 	isCleared = 0;
@@ -682,7 +682,7 @@ void UpdateHellBulletState() {
 		}
 	}
 
-	if (count == 3 + boss.curPhase) {
+	if (count == 1 + boss.curPhase * 2) {
 		DeleteMuzzle();
 		count = 0;
 		ChangeState(BossState::Idle);
