@@ -603,7 +603,7 @@ void UpdateIdleState() {
 		idleTime = rand() % 2 + 2;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
-		ChangeState(nextState);
+		ChangeState(BossState::HellBullet);
 	}
 	else {
 		BossRandomMove();
@@ -752,11 +752,11 @@ void UpdateSummonState() {
 		}
 	}
 	BossRandomMove();
-
 }
 
 
 int dx = 0, dy = 0;
+double knockBackTime = 0.025;
 void StartGoToDown() {
 	ShowFinger(0);
 	Sleep(100);
@@ -765,6 +765,7 @@ void StartGoToDown() {
 	ShowFinger(2);
 	curState = BossState::GoToDown;
 	dx = 0, dy = 1;
+	knockBackTime = 0.025;
 }
 void StartGoToLeft() {
 	ShowFinger(1);
@@ -774,6 +775,7 @@ void StartGoToLeft() {
 	ShowFinger(3);
 	curState = BossState::GoToLeft;
 	dx = -2, dy = 0;
+	knockBackTime = 0.025;
 }
 void StartGoToRight() {
 	ShowFinger(3);
@@ -783,15 +785,15 @@ void StartGoToRight() {
 	ShowFinger(1);
 	curState = BossState::GoToRight;
 	dx = 2, dy = 1;
+	knockBackTime = 0.025;
 }
 void UpdateGoTo() {
-	static double time = 0.25;
 
 	if (!PlayerDetectedCollision(playerCurPos.X + dx, playerCurPos.Y + dy)) {
 		mciSendString(TEXT("play ./sound/smashwall.wav"), NULL, 0, NULL);
 		DeleteFinger();
 		CantControl = 0;
-		time = 0.025;
+		knockBackTime = 0.025;
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 4) + 1);
 		if (curState == BossState::GoToDown) {
@@ -804,7 +806,7 @@ void UpdateGoTo() {
 		ChangeState(nextState);
 	}
 	else if (time > 0) {
-		time -= Time.deltaTime;
+		knockBackTime -= Time.deltaTime;
 	}
 	else {
 		switch (curState) {
@@ -820,7 +822,7 @@ void UpdateGoTo() {
 		default:
 			break;
 		}
-		time = 0.025;
+		knockBackTime = 0.025;
 	}
 }
 
