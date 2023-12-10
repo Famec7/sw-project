@@ -305,24 +305,29 @@ void ShowBossHpUI() {
 }
 void ChangePhase() {
 	DeleteBossModel();
-	BossInit();
+	BossStatusInit();
+	InitBullet();
 	boss.curPhase += 1;
 	if (boss.curPhase == 3) {
 		isCleared = 1;
 	}
-	// 난이도 변수
-	ShowBossModel();
-	switch (boss.curPhase)
+
+	else
 	{
-	case 0:
-		PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-		break;
-	case 1:
-		PlaySound(TEXT("Sound\\Phase2.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-		break;
-	case 2:
-		PlaySound(TEXT("Sound\\Phase3.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-		break;
+		// 난이도 변수
+		ShowBossModel();
+		switch (boss.curPhase)
+		{
+		case 0:
+			PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+			break;
+		case 1:
+			PlaySound(TEXT("Sound\\Phase2.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+			break;
+		case 2:
+			PlaySound(TEXT("Sound\\Phase3.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+			break;
+		}
 	}
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
@@ -497,9 +502,7 @@ void SummonNormalMob() {
 }
 
 /****************보스 스탯 초기화 함수*********************/
-void BossInit() {
-	isCleared = 0;
-	boss.curPhase = 0;
+void BossStatusInit() {
 	boss.curBossHp = boss.hpString[boss.curPhase].length();
 	boss.curPos = { BOSS_ORIGIN_X, BOSS_ORIGIN_Y };
 	boss.speed = 0.2;
@@ -508,6 +511,11 @@ void BossInit() {
 	boss.isAttack = false;
 	ShowBossHpUI();
 	InitBlur();
+}
+void BossInit() {
+	isCleared = 0;
+	boss.curPhase = 0;
+	BossStatusInit();
 	PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
