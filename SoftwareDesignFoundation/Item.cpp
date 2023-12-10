@@ -138,9 +138,9 @@ int CreateItemRandom() {
 int ItemIdRandom() {
 	int createItemId;
 	createItemId = rand() % 10;
-	if (createItemId < 7 && HP < MAX_HP)
+	if (createItemId < 7 || HP < 7)
 		return 0;
-	else if (createItemId >= 7 && bulletNum < MAX_BULLET)
+	else if (createItemId >= 7)
 		return 1;
 }
 
