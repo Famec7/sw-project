@@ -899,6 +899,11 @@ void StartLazerState() {
 }
 
 void UpdateLazerState() {
+	PrintLazerWall();
+	for (int i = 0; i < lazerIdx; i++) {
+		SetCurrentCursorPos(lazerBlock[i].pos.X + 1, lazerBlock[i].pos.Y);
+		printf("□");
+	}
 	if (totalLazerTime > lazerIdx && lazerNum > lazerIdx) {
 		PrintLazerBlock(lazerIdx);
 		lazerIdx++;
