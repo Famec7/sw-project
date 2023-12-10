@@ -10,6 +10,7 @@ int main() {
 	system("mode con:cols=100 lines=50");
 	SetCurrentCursorPos(GBOARD_ORIGIN_X, GBOARD_ORIGIN_Y);
 
+	DrawGameBoard();
 	InitMenu();
 	while (1) {
 		Render();

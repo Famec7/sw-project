@@ -312,6 +312,18 @@ void ChangePhase() {
 	}
 	// 난이도 변수
 	ShowBossModel();
+	switch (boss.curPhase)
+	{
+	case 0:
+		PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+		break;
+	case 1:
+		PlaySound(TEXT("Sound\\Phase2.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+		break;
+	case 2:
+		PlaySound(TEXT("Sound\\Phase3.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+		break;
+	}
 }
 /****************보스 체력 한칸 줄이는 함수*********************/
 void BossLifeDecrease() {
@@ -496,6 +508,7 @@ void BossInit() {
 	boss.isAttack = false;
 	ShowBossHpUI();
 	InitBlur();
+	PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 /****************보스의 패턴*********************/

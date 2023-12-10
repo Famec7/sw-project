@@ -94,6 +94,7 @@ int UpdateText() {
 void InitText() {
 	InitTextGBoard();
 	InitTextPos();
+	textHp = MAX_TEXT_HP;
 }
 
 void InitTextGBoard() {

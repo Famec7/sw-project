@@ -58,7 +58,7 @@ void dead_page() {
 	} while (!GetAsyncKeyState(VK_RETURN));
 
 	system("cls");
-	SceneChange(Game);
+	SceneChange(Menu);
 }
 
 void clear_page() {
@@ -87,5 +87,5 @@ void clear_page() {
 	}
 	_getch();
 	system("cls");
-	SceneChange(Game);
+	SceneChange(Menu);
 }
