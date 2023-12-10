@@ -885,13 +885,13 @@ void StartLazerState() {
 	InitLazer();
 	totalLazerTime = 0;
 	if (boss.curPhase == 0) {
-		lazerNum = 10;
+		lazerNum = 7;
 	}
 	else if (boss.curPhase == 1) {
-		lazerNum = 15;
+		lazerNum = 11;
 	}
 	else if (boss.curPhase == 2) {
-		lazerNum = 20;
+		lazerNum = 15;
 	}
 	PrintLazerWall();
 	// PrintLazerBlock();
@@ -913,7 +913,7 @@ void UpdateLazerState() {
 		}
 	}
 	// 레이저 생성후 사라짐
-	for (int i = 0; i < lazerIdx; i++) {
+	/*for (int i = 0; i < lazerIdx; i++) {
 		if (lazerBlock[i].hp == 1 && lazerBlock[i].lazerTime < 0) {
 			StopLazer(i);
 			DeleteLazerBlock(i);
@@ -927,17 +927,17 @@ void UpdateLazerState() {
 		}
 		DeleteLazerWall();
 		ChangeState(BossState::Idle);
-	}
+	}*/
 
 	// 레이저 생성후 안사라짐
-	/*if (totalLazerTime > lazerNum+2) {
+	if (totalLazerTime > lazerNum+2) {
 			for (int i = 0; i < lazerIdx; i++) {
 					StopLazer(i);
 					DeleteLazerBlock(i);
 			}
 			DeleteLazerWall();
 			ChangeState(BossState::Idle);
-	}*/
+	}
 	totalLazerTime += Time.deltaTime;
 }
 
