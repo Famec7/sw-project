@@ -212,13 +212,7 @@ RECT bossRect = { boss.curPos.X, boss.curPos.Y, boss.curPos.X + BOSS_SIZE_X * 2,
 int isCleared = 0;
 int IsBossCleared()
 { 
-	if (isCleared)
-	{
-		SceneChange(GameClear);
-		return 1;
-	}
-
-	return 0;
+	return isCleared;
 }
 
 /****************보스 모델을 띄우는 함수*********************/

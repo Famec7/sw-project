@@ -15,7 +15,7 @@ void PrintBullet(int info)
 
 void InitBullet()
 {
-	for (auto itr = bullets.begin(); itr != bullets.end(); itr++)
+	for (auto itr = bullets.begin(); itr != bullets.end();)
 	{
 		int arrX = ((*itr).curPos.X - GBOARD_ORIGIN_X) / 2;
 		int arrY = (*itr).curPos.Y - GBOARD_ORIGIN_Y;
@@ -24,6 +24,8 @@ void InitBullet()
 		gameBoardInfo[arrY][arrX] = 0;
 		itr = bullets.erase(itr);
 	}
+
+	bullets.clear();
 }
 
 void MakeBullet(int posX, int posY, int info, double speed)
