@@ -7,6 +7,7 @@
 #include "Render.h"
 #include "Init.h"
 #include "GameManager.h"
+#include "SceneControl.h"
 
 // text model
 extern char strG[5][8] = {

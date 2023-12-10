@@ -1,6 +1,7 @@
 #include "Init.h"
 #include "Update.h"
 #include "Menu.h"
+#include "SceneControl.h"
 #include <stdlib.h>
 
 void Update() {

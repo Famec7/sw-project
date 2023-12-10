@@ -1,6 +1,5 @@
 #pragma once
 #include <Windows.h>
-#include "SceneControl.h"
 
 #define MAX_TEXT_HP 9
 
