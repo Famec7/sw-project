@@ -682,7 +682,7 @@ void UpdateHellBulletState() {
 		}
 	}
 
-	if (count == 3 + boss.curPhase) {
+	if (count == 1 + boss.curPhase * 2) {
 		DeleteMuzzle();
 		count = 0;
 		ChangeState(BossState::Idle);
