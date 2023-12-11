@@ -153,14 +153,13 @@ void DeleteMuzzle() {
 	}
 }
 
-void FireBullet() {
-	srand(time(NULL));
+void FireBullet(double start, double end) {
 	SetCurrentCursorPos(muzzleCurPos.X, muzzleCurPos.Y);
 
 	for (int i = 0; i < 40; i++) {
 		SetCurrentCursorPos(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1);
 		if (hellBulletModel[i] == 2) {
-			double speed = 0.01 + ((double)rand() / RAND_MAX) * 0.05;
+			double speed = start + ((double)rand() / RAND_MAX) * end;
 			MakeBullet(muzzleCurPos.X + i * 2, muzzleCurPos.Y + 1, 4, speed);
 		}
 	}
@@ -652,7 +651,7 @@ void UpdateIdleState() {
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
 
-		ChangeState(nextState);
+		ChangeState(BossState::HellBullet);
 	}
 	else {
 		BossRandomMove();
@@ -721,7 +720,7 @@ void UpdateHellBulletState() {
 	else {
 		fireCycleTime -= Time.deltaTime;
 		if (fireCycleTime < 0) {
-			FireBullet();
+			FireBullet(0.01 * count, 0.05 + count * 0.01);
 			fireCycleTime = 0.2;
 		}
 		fireBulletTime -= Time.deltaTime;
