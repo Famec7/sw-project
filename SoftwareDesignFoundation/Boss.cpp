@@ -1017,8 +1017,7 @@ void PrintLazerBlock(int idx) {
 void ShootLazer(int idx) {
 	int x, y;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED);
-	for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X;
-		x++) {
+	for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X + 1; x++) {
 		SetCurrentCursorPos(x, lazerBlock[idx].pos.Y);
 		if (!(x - lazerBlock[idx].pos.X <= 1 && x - lazerBlock[idx].pos.X > 0)) {
 			printf(" ");
@@ -1040,8 +1039,7 @@ void ShootLazer(int idx) {
 void StopLazer(int idx) {
 	int x, y;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0x0007);
-	for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X;
-		x++) {
+	for (x = GBOARD_ORIGIN_X + 2; x <= (GBOARD_WIDTH) * 2 + GBOARD_ORIGIN_X + 1; x++) {
 		SetCurrentCursorPos(x, lazerBlock[idx].pos.Y);
 		if (!(x - lazerBlock[idx].pos.X <= 1 && x - lazerBlock[idx].pos.X > 0)) {
 			printf(" ");
