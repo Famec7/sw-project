@@ -523,7 +523,7 @@ void SummonNormalMob() {
 			}
 		}
 		else {
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 3; i++) {
 				short x = 13 + 20 * i;
 				CreateNormalMob(1, { x, 17 });
 			}
