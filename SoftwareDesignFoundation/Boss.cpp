@@ -651,7 +651,7 @@ void UpdateIdleState() {
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
 
-		ChangeState(nextState);
+		ChangeState(BossState::Lazer);
 	}
 	else {
 		BossRandomMove();
@@ -878,6 +878,7 @@ void UpdateGoTo() {
 
 // lazer패턴 구현
 double maxLazerTime;
+int LAZER_BLOCK_COLOR = 5<<4;
 
 void StartLazerState() {
 	int i;
@@ -901,6 +902,10 @@ void UpdateLazerState() {
 	PrintLazerWall();
 	for (int i = 0; i < lazerIdx; i++) {
 		SetCurrentCursorPos(lazerBlock[i].pos.X + 1, lazerBlock[i].pos.Y);
+		if (lazerBlock[i].hp == 1) {
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), LAZER_BLOCK_COLOR);
+		}
+		else SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 		printf("□");
 	}
 	if (totalLazerTime > lazerIdx && lazerNum > lazerIdx) {
@@ -909,6 +914,7 @@ void UpdateLazerState() {
 	}
 	for (int i = 0; i < lazerIdx; i++) {
 		if (lazerBlock[i].lazerTime < maxLazerTime-1 && lazerBlock[i].lazerTime > 0) {
+			lazerBlock[i].hp = 0;
 			ShootLazer(i);
 			mciSendString(TEXT("play ./sound/lazer.wav"), NULL, 0, NULL);
 		}
@@ -943,6 +949,7 @@ void UpdateLazerState() {
 			ChangeState(BossState::Idle);
 	}
 	totalLazerTime += Time.deltaTime;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 void InitLazer() {
@@ -987,11 +994,9 @@ void PrintLazerBlock(int idx) {
 	int j, k = 0, x, y;
 	while (1) {
 		k = 0;
-		lazerBlock[idx].pos.X =
-			(rand() % (GBOARD_WIDTH * 2 - 2) + GBOARD_ORIGIN_X + 2) / 2;
+		lazerBlock[idx].pos.X = (rand() % (GBOARD_WIDTH * 2 - 2) + GBOARD_ORIGIN_X + 2) / 2;
 		lazerBlock[idx].pos.X *= 2;
-		lazerBlock[idx].pos.Y =
-			rand() % (GBOARD_HEIGHT - 19) + GBOARD_ORIGIN_Y + 18;
+		lazerBlock[idx].pos.Y = rand() % (GBOARD_HEIGHT - 19) + GBOARD_ORIGIN_Y + 18;
 		if (idx == 0)
 			lazerBlock[idx].pos.Y = GBOARD_ORIGIN_Y + 18;
 		for (j = 0; j < idx; j++) {
@@ -1009,9 +1014,13 @@ void PrintLazerBlock(int idx) {
 			break;
 	}
 	SetCurrentCursorPos(lazerBlock[idx].pos.X + 1, lazerBlock[idx].pos.Y);
+	if (lazerBlock[idx].hp == 1) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
+	}
 	printf("□");
 	gameBoardInfo[lazerBlock[idx].pos.Y - GBOARD_ORIGIN_Y]
 		[(lazerBlock[idx].pos.X - GBOARD_ORIGIN_X) / 2] = 1;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 void ShootLazer(int idx) {
