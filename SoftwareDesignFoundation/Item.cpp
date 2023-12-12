@@ -2,6 +2,7 @@
 #include "gameInfo.h"
 #include "Time.h"
 #include <mmsystem.h>
+#include "Boss.h"
 #pragma comment(lib,"winmm.lib")
 
 char itemModel[][3][3] = { {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}},
@@ -139,7 +140,8 @@ int ItemIdRandom() {
 	int createItemId;
 	createItemId = rand() % 10;
 	if (HP == MAX_HP) return 1;
-	else if (createItemId < 7 || HP < 7)
+	if (bulletNum >= 3 && boss.curPhase == 0) return 0;
+	if (createItemId < 7 || HP < 7)
 		return 0;
 	else if (createItemId >= 7)
 		return 1;
@@ -186,11 +188,11 @@ void DecreseItemHp(ITEM* item) {
 		}
 		if (item->itemId == 0) {
 			if (HP < MAX_HP) {
-				if (HP + 2 > MAX_HP) {
+				if (HP + 3 > MAX_HP) {
 					HP = MAX_HP;
 				}
 				else {
-					HP += 2;
+					HP += 3;
 				}
 				PlayerStatOutput();
 			}
