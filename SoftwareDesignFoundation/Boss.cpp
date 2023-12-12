@@ -678,7 +678,6 @@ void SetMuzzleState(int s, int e) {
 }
 
 void InitHellBulletState() {
-	count = 0;
 	if (boss.curPhase == 0) {
 		showMuzzleTime = 0.5;
 		fireBulletTime = 1;
@@ -708,6 +707,7 @@ void InitHellBulletState() {
 }
 void StartHellBulletState() {
 	curState = BossState::HellBullet;
+	count = 0;
 	InitHellBulletState();
 	int num = rand() % 40;
 	SetMuzzleState(num - 3, num + 2);
