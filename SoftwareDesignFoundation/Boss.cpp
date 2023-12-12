@@ -651,7 +651,7 @@ void UpdateIdleState() {
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
 
-		ChangeState(BossState::HellBullet);
+		ChangeState(nextState);
 	}
 	else {
 		BossRandomMove();
