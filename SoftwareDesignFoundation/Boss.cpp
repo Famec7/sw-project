@@ -662,6 +662,7 @@ void UpdateIdleState() {
 double showMuzzleTime;
 double fireBulletTime;
 double fireCycleTime;
+int count;
 
 void SetMuzzleState(int s, int e) {
 	start = s;
@@ -677,6 +678,7 @@ void SetMuzzleState(int s, int e) {
 }
 
 void InitHellBulletState() {
+	count = 0;
 	if (boss.curPhase == 0) {
 		showMuzzleTime = 0.5;
 		fireBulletTime = 1;
@@ -712,8 +714,6 @@ void StartHellBulletState() {
 	ShowMuzzle();
 }
 void UpdateHellBulletState() {
-	static int count = 0;
-
 	if (showMuzzleTime > 0) {
 		showMuzzleTime -= Time.deltaTime;
 	}
