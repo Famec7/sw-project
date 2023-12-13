@@ -71,7 +71,7 @@ void ShowFinger(int num) {
 		finger_lr = 0;
 		for (int y = 0; y < 5; y++) {
 			for (int x = 0; x < 5; x++) {
-				SetCurrentCursorPos(boss.curPos.X  - 12 + (x * 2),
+				SetCurrentCursorPos(boss.curPos.X - 12 + (x * 2),
 					boss.curPos.Y + BOSS_SIZE_Y / 2 + y);
 				if (num == 0) { // up
 					if (fingerUpModel[y][x] == 2) {
@@ -548,10 +548,10 @@ void BossStatusInit() {
 }
 void BossInit() {
 	isCleared = 0;
-	boss.curPhase = 0;
+	boss.curPhase = 2;
 	DeleteFinger();
 	BossStatusInit();
-	PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Sound\\Phase3.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 /****************보스의 패턴*********************/
@@ -651,7 +651,7 @@ void UpdateIdleState() {
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
 
-		ChangeState(nextState);
+		ChangeState(BossState::Lazer);
 	}
 	else {
 		BossRandomMove();
@@ -777,13 +777,10 @@ void UpdateBlurState() {
 }
 
 double SUMMON_DURATION = 25;
-int isExpired = 0;
-
 void StartSummonState() {
 	curState = BossState::Summon;
 	SUMMON_DURATION = 25;
 	SummonNormalMob();
-	isExpired = 0;
 }
 
 void UpdateSummonState() {
@@ -792,21 +789,14 @@ void UpdateSummonState() {
 		AttackedPlayerProcessing(GetNormalMobCount() * 2);
 		InitNormalMob();
 		SUMMON_DURATION = 25;
-		isExpired = 0;
 	}
 	else if (SUMMON_DURATION < 2) {
 		ChangeMobStateToExpired();
-		if (isExpired == 0) {
-			DeleteNormalMob();
-			ShowNormalMob();
-			isExpired = 1;
-		}
 	}
 	if (EmptyNormalMob()) {
 		if (SUMMON_DURATION > 0) {
 			InitNormalMob();
 			SUMMON_DURATION = 25;
-			isExpired = 0;
 		}
 		ChangeState(BossState::Idle);
 	}
@@ -888,7 +878,7 @@ void UpdateGoTo() {
 
 // lazer패턴 구현
 double maxLazerTime;
-int LAZER_BLOCK_COLOR = 5<<4;
+int LAZER_BLOCK_COLOR = 5 << 4;
 
 void StartLazerState() {
 	int i;
@@ -898,10 +888,10 @@ void StartLazerState() {
 		lazerNum = 7;
 	}
 	else if (boss.curPhase == 1) {
-		lazerNum = 11;
+		lazerNum = 12;
 	}
 	else if (boss.curPhase == 2) {
-		lazerNum = 15;
+		lazerNum = 17;
 	}
 	PrintLazerWall();
 	// PrintLazerBlock();
@@ -918,12 +908,12 @@ void UpdateLazerState() {
 		else SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 		printf("□");
 	}
-	if (totalLazerTime > lazerIdx && lazerNum > lazerIdx) {
+	if (totalLazerTime > (double)lazerIdx / 2 && lazerNum > lazerIdx) {
 		PrintLazerBlock(lazerIdx);
 		lazerIdx++;
 	}
 	for (int i = 0; i < lazerIdx; i++) {
-		if (lazerBlock[i].lazerTime < maxLazerTime-1 && lazerBlock[i].lazerTime > 0) {
+		if (lazerBlock[i].lazerTime < maxLazerTime - 0.5 && lazerBlock[i].lazerTime > 0) {
 			lazerBlock[i].hp = 0;
 			ShootLazer(i);
 			mciSendString(TEXT("play ./sound/lazer.wav"), NULL, 0, NULL);
@@ -950,13 +940,13 @@ void UpdateLazerState() {
 	}*/
 
 	// 레이저 생성후 안사라짐
-	if (totalLazerTime > lazerNum+2) {
-			for (int i = 0; i < lazerIdx; i++) {
-					StopLazer(i);
-					DeleteLazerBlock(i);
-			}
-			DeleteLazerWall();
-			ChangeState(BossState::Idle);
+	if (totalLazerTime * 1.9 > lazerNum + 2) {
+		for (int i = 0; i < lazerIdx; i++) {
+			StopLazer(i);
+			DeleteLazerBlock(i);
+		}
+		DeleteLazerWall();
+		ChangeState(BossState::Idle);
 	}
 	totalLazerTime += Time.deltaTime;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
