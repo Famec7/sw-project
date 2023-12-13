@@ -250,7 +250,6 @@ void MoveNormalMob(NormalMobInfo* normalMob) { // 랜덤하게 좌, 우로 움�
 
 		}
 		else {
-			DeleteOneNormalMob(normalMob);
 			ShowOneNormalMob(normalMob);
 		}
 	}
