@@ -57,6 +57,10 @@ int BulletDetectedCollision(int posX, int posY, int info) {
 	int arrX = (posX - GBOARD_ORIGIN_X) / 2;
 	int arrY = posY - GBOARD_ORIGIN_Y;
 
+	if (info == BULLET && IsAscII(gameBoardInfo[arrY][arrX]))
+		return 1;
+	else if (IsAscII(info) && gameBoardInfo[arrY][arrX] == BULLET)
+		return 0;
 	if (gameBoardInfo[arrY][arrX] != 0)
 		return 0;
 
