@@ -651,7 +651,7 @@ void UpdateIdleState() {
 		BossState nextState = (enum BossState)(
 			(int)(Time.time * 100) % ((int)BossState::StateCount - 3) + 3);
 
-		ChangeState(BossState::HellBullet);
+		ChangeState(BossState::Summon);
 	}
 	else {
 		BossRandomMove();
@@ -777,10 +777,13 @@ void UpdateBlurState() {
 }
 
 double SUMMON_DURATION = 25;
+int isExpired = 0;
+
 void StartSummonState() {
 	curState = BossState::Summon;
 	SUMMON_DURATION = 25;
 	SummonNormalMob();
+	isExpired = 0;
 }
 
 void UpdateSummonState() {
@@ -789,14 +792,21 @@ void UpdateSummonState() {
 		AttackedPlayerProcessing(GetNormalMobCount() * 2);
 		InitNormalMob();
 		SUMMON_DURATION = 25;
+		isExpired = 0;
 	}
 	else if (SUMMON_DURATION < 2) {
 		ChangeMobStateToExpired();
+		if (isExpired == 0) {
+			DeleteNormalMob();
+			ShowNormalMob();
+			isExpired = 1;
+		}
 	}
 	if (EmptyNormalMob()) {
 		if (SUMMON_DURATION > 0) {
 			InitNormalMob();
 			SUMMON_DURATION = 25;
+			isExpired = 0;
 		}
 		ChangeState(BossState::Idle);
 	}
