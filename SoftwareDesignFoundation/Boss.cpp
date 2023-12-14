@@ -548,10 +548,10 @@ void BossStatusInit() {
 }
 void BossInit() {
 	isCleared = 0;
-	boss.curPhase = 2;
+	boss.curPhase = 0;
 	DeleteFinger();
 	BossStatusInit();
-	PlaySound(TEXT("Sound\\Phase3.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Sound\\Phase1.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 /****************보스의 패턴*********************/
